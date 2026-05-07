@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareLink | Nursing Home Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+/* =====================================================================
+   DESIGN TOKENS — Dark CAD System
+   ===================================================================== */
+:root {
+  --background: 0 0% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 6%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 7%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 84% 50%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 0 0% 14.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 14.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 50%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 14.9%;
+  --input: 0 0% 14.9%;
+  --ring: 0 84% 50%;
+  --sidebar: 0 0% 5%;
+  --sidebar-foreground: 0 0% 95.9%;
+  --sidebar-border: 0 0% 12%;
+  --sidebar-accent: 0 0% 12%;
+  --radius: 0.5rem;
+  /* Status colors */
+  --status-new: 0 84% 50%;
+  --status-accepted: 217 91% 60%;
+  --status-closed: 142 76% 46%;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Roboto', sans-serif;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* =====================================================================
+   ROUTING — views
+   ===================================================================== */
+.view { display: none; }
+.view.active { display: flex; }
+
+/* =====================================================================
+   LOGIN PAGE
+   ===================================================================== */
+#view-login {
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--background));
+}
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  margin: 24px;
+}
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.login-logo-icon {
+  width: 48px; height: 48px;
+  background: hsl(var(--primary));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  font-size: 22px;
+}
+.login-logo-text h1 { margin: 0; font-size: 22px; font-weight: 700; }
+.login-logo-text p { margin: 0; font-size: 13px; color: hsl(var(--muted-foreground)); }
+.login-title { font-size: 20px; font-weight: 600; margin: 0 0 4px; }
+.login-sub { color: hsl(var(--muted-foreground)); font-size: 14px; margin: 0 0 28px; }
+
+/* =====================================================================
+   MAIN APP LAYOUT
+   ===================================================================== */
+#view-app {
+  min-height: 100vh;
+  width: 100%;
+}
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* =====================================================================
+   SIDEBAR
+   ===================================================================== */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: hsl(var(--sidebar));
+  border-right: 1px solid hsl(var(--sidebar-border));
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+}
+.sidebar-header {
+  padding: 16px 12px 12px;
+  border-bottom: 1px solid hsl(var(--sidebar-border));
+}
+.sidebar-brand {
+  display: flex; align-items: center; gap: 10px;
+}
+.sidebar-brand-icon {
+  width: 36px; height: 36px;
+  background: hsl(var(--primary));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.sidebar-brand-name { font-size: 15px; font-weight: 700; }
+.sidebar-brand-sub { font-size: 11px; color: hsl(var(--muted-foreground)); }
+.sidebar-content { flex: 1; padding: 8px; display: flex; flex-direction: column; gap: 2px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; height: 36px; padding: 0 10px;
+  background: transparent; border: none;
+  color: hsl(var(--sidebar-foreground));
+  border-radius: 6px; cursor: pointer;
+  font-size: 14px; font-family: inherit;
+  text-align: left; text-decoration: none;
+  transition: background 0.15s;
+}
+.nav-item:hover { background: hsl(var(--sidebar-accent)); }
+.nav-item.active { background: hsl(var(--sidebar-accent)); font-weight: 500; }
+.nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+.sidebar-footer {
+  border-top: 1px solid hsl(var(--sidebar-border));
+  padding: 8px;
+}
+.sidebar-footer-items { display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
+.user-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: 6px;
+  cursor: pointer;
+}
+.user-row:hover { background: hsl(var(--sidebar-accent)); }
+.user-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: hsl(var(--primary));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 12px; flex-shrink: 0;
+}
+.user-name-text { font-size: 13px; font-weight: 500; }
+.user-role-text { font-size: 11px; color: hsl(var(--muted-foreground)); }
+.nav-separator {
+  height: 1px; background: hsl(var(--sidebar-border));
+  margin: 4px 0;
+}
+
+/* =====================================================================
+   MAIN CONTENT
+   ===================================================================== */
+.main {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column;
+}
+.page-header {
+  height: 56px;
+  border-bottom: 1px solid hsl(var(--border));
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  flex-shrink: 0;
+}
+.page-title { font-size: 18px; font-weight: 600; }
+.page-header-right { display: flex; align-items: center; gap: 10px; }
+.page-content { flex: 1; padding: 24px; overflow-y: auto; }
+
+/* =====================================================================
+   BUTTONS
+   ===================================================================== */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 36px; padding: 0 14px;
+  font-size: 14px; font-weight: 500;
+  border-radius: 6px; border: 1px solid transparent;
+  cursor: pointer; font-family: inherit;
+  transition: background 0.15s, opacity 0.15s;
+  white-space: nowrap;
+}
+.btn svg { width: 16px; height: 16px; }
+.btn-primary {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+.btn-primary:hover { opacity: 0.9; }
+.btn-outline {
+  background: transparent;
+  border-color: hsl(var(--border));
+  color: hsl(var(--foreground));
+}
+.btn-outline:hover { background: hsl(var(--accent)); }
+.btn-ghost {
+  background: transparent;
+  color: hsl(var(--muted-foreground));
+  border: none;
+}
+.btn-ghost:hover { background: hsl(var(--accent)); color: hsl(var(--foreground)); }
+.btn-sm { height: 30px; padding: 0 10px; font-size: 13px; }
+.btn-icon { width: 32px; padding: 0; justify-content: center; }
+.btn-icon-sm { width: 28px; height: 28px; padding: 0; justify-content: center; }
+.btn-destructive {
+  background: transparent;
+  color: hsl(0 80% 65%);
+  border: none;
+}
+.btn-destructive:hover { background: hsl(0 80% 20% / 0.3); }
+
+/* =====================================================================
+   SEARCH INPUT
+   ===================================================================== */
+.search-wrap { position: relative; }
+.search-wrap svg {
+  position: absolute; top: 50%; left: 10px;
+  transform: translateY(-50%);
+  width: 15px; height: 15px;
+  color: hsl(var(--muted-foreground));
+  pointer-events: none;
+}
+.search-input {
+  height: 36px; padding: 0 12px 0 32px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  color: hsl(var(--foreground));
+  font-size: 14px; font-family: inherit;
+  outline: none; width: 260px;
+}
+.search-input:focus { border-color: hsl(var(--ring)); }
+
+/* =====================================================================
+   TABLE
+   ===================================================================== */
+.table-wrap {
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px; overflow: hidden;
+}
+.table-scroll { overflow-x: auto; }
+table.data-table {
+  width: 100%; border-collapse: collapse; font-size: 14px;
+}
+.data-table thead { background: hsl(var(--muted)); }
+.data-table th {
+  text-align: left; font-weight: 500;
+  padding: 0 14px; height: 40px;
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+  border-bottom: 1px solid hsl(var(--border));
+  white-space: nowrap; cursor: pointer; user-select: none;
+}
+.data-table th:hover { color: hsl(var(--foreground)); }
+.data-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid hsl(var(--border));
+  vertical-align: middle;
+}
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background: hsl(var(--muted) / 0.4); cursor: pointer; }
+
+/* Status badges */
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 2px 10px; font-size: 12px; font-weight: 500;
+  border-radius: 9999px; border: 1px solid transparent;
+}
+.badge-new {
+  background: hsl(0 84% 50% / 0.15);
+  color: hsl(0 84% 65%);
+  border-color: hsl(0 84% 50% / 0.3);
+}
+.badge-accepted {
+  background: hsl(217 91% 60% / 0.15);
+  color: hsl(217 91% 70%);
+  border-color: hsl(217 91% 60% / 0.3);
+}
+.badge-closed {
+  background: hsl(142 76% 46% / 0.15);
+  color: hsl(142 76% 60%);
+  border-color: hsl(142 76% 46% / 0.3);
+}
+.badge-admin {
+  background: hsl(280 70% 50% / 0.15);
+  color: hsl(280 70% 70%);
+  border-color: hsl(280 70% 50% / 0.3);
+}
+.badge-user {
+  background: hsl(0 0% 20%);
+  color: hsl(var(--muted-foreground));
+  border-color: hsl(var(--border));
+}
+
+/* Row left border indicator */
+.data-table tbody tr { position: relative; }
+.border-new td:first-child { border-left: 3px solid hsl(var(--status-new)); }
+.border-accepted td:first-child { border-left: 3px solid hsl(var(--status-accepted)); }
+.border-closed td:first-child { border-left: 3px solid hsl(var(--status-closed)); }
+
+/* =====================================================================
+   ACTION MENU (dropdown)
+   ===================================================================== */
+.action-menu-wrap { position: relative; display: inline-block; }
+.action-menu {
+  position: absolute; top: calc(100% + 4px); right: 0;
+  background: hsl(var(--popover));
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px; padding: 4px;
+  min-width: 150px; z-index: 200;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  display: none;
+}
+.action-menu.open { display: block; }
+.action-menu button {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; height: 32px; padding: 0 10px;
+  background: transparent; border: none;
+  color: hsl(var(--foreground));
+  border-radius: 4px; cursor: pointer;
+  font-family: inherit; font-size: 14px; text-align: left;
+}
+.action-menu button:hover { background: hsl(var(--accent)); }
+.action-menu button svg { width: 14px; height: 14px; }
+.action-menu button.destructive { color: hsl(0 80% 65%); }
+.action-menu-sep { height: 1px; background: hsl(var(--border)); margin: 4px 0; }
+
+/* =====================================================================
+   MODAL
+   ===================================================================== */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(2px);
+  z-index: 300; display: none;
+  align-items: center; justify-content: center;
+  padding: 16px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  width: 100%; max-width: 520px;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  animation: modal-in 0.2s ease;
+}
+@keyframes modal-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid hsl(var(--border));
+}
+.modal-title { font-size: 17px; font-weight: 600; margin: 0; }
+.modal-close {
+  width: 32px; height: 32px;
+  background: transparent; border: none;
+  color: hsl(var(--muted-foreground));
+  border-radius: 6px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { background: hsl(var(--accent)); color: hsl(var(--foreground)); }
+.modal-close svg { width: 18px; height: 18px; }
+.modal-body { padding: 20px 24px; }
+.modal-footer {
+  display: flex; gap: 8px; justify-content: flex-end;
+  padding: 16px 24px;
+  border-top: 1px solid hsl(var(--border));
+}
+
+/* =====================================================================
+   FORM FIELDS
+   ===================================================================== */
+.field { margin-bottom: 16px; }
+.field-label {
+  display: block; font-size: 14px; font-weight: 500;
+  margin-bottom: 6px;
+}
+.field-label .req { color: hsl(0 80% 60%); margin-left: 2px; }
+.input, .textarea, .select {
+  width: 100%; height: 36px;
+  padding: 0 12px;
+  background: hsl(var(--input));
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  color: hsl(var(--foreground));
+  font-size: 14px; font-family: inherit; outline: none;
+}
+.input:focus, .textarea:focus, .select:focus {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 1px hsl(var(--ring) / 0.5);
+}
+.textarea {
+  height: auto; min-height: 80px;
+  padding: 8px 12px; resize: vertical;
+}
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  padding-right: 36px;
+}
+.select option { background: hsl(var(--popover)); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field-hint { font-size: 12px; color: hsl(var(--muted-foreground)); margin-top: 4px; }
+
+/* =====================================================================
+   DETAIL PANEL (slide-in)
+   ===================================================================== */
+.panel-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 150; opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+.panel-overlay.open { opacity: 1; pointer-events: auto; }
+.panel {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: min(600px, 100vw);
+  background: hsl(var(--background));
+  border-left: 1px solid hsl(var(--border));
+  z-index: 151;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
+}
+.panel.open { transform: translateX(0); }
+.panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid hsl(var(--border));
+  flex-shrink: 0;
+}
+.panel-title { font-size: 16px; font-weight: 600; margin: 0; }
+.panel-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+
+/* =====================================================================
+   CHAT (inside emergency detail panel)
+   ===================================================================== */
+.chat-wrap {
+  display: flex; flex-direction: column;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px; overflow: hidden;
+}
+.chat-header {
+  padding: 12px 16px;
+  background: hsl(var(--muted));
+  border-bottom: 1px solid hsl(var(--border));
+  font-size: 13px; font-weight: 500;
+  display: flex; align-items: center; gap: 8px;
+}
+.chat-messages {
+  padding: 16px; display: flex; flex-direction: column; gap: 12px;
+  min-height: 200px; max-height: 280px; overflow-y: auto;
+  background: hsl(0 0% 5%);
+}
+.chat-msg { display: flex; flex-direction: column; gap: 3px; }
+.chat-msg-meta { font-size: 11px; color: hsl(var(--muted-foreground)); }
+.chat-msg-bubble {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  max-width: 85%;
+  line-height: 1.4;
+}
+.chat-msg.incoming .chat-msg-bubble {
+  background: hsl(var(--muted));
+  border-bottom-left-radius: 2px;
+}
+.chat-msg.outgoing {
+  align-items: flex-end;
+}
+.chat-msg.outgoing .chat-msg-bubble {
+  background: hsl(var(--primary) / 0.2);
+  border: 1px solid hsl(var(--primary) / 0.3);
+  border-bottom-right-radius: 2px;
+}
+.chat-input-wrap {
+  display: flex; gap: 8px; padding: 12px;
+  border-top: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+}
+.chat-input {
+  flex: 1; height: 36px; padding: 0 12px;
+  background: hsl(var(--input));
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  color: hsl(var(--foreground));
+  font-size: 14px; font-family: inherit; outline: none;
+}
+.chat-input:focus { border-color: hsl(var(--ring)); }
+
+/* =====================================================================
+   EMERGENCY DETAIL INFO
+   ===================================================================== */
+.detail-section { margin-bottom: 20px; }
+.detail-section-title {
+  font-size: 12px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.06em; color: hsl(var(--muted-foreground));
+  margin-bottom: 10px;
+}
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.detail-item {}
+.detail-item-label { font-size: 11px; color: hsl(var(--muted-foreground)); margin-bottom: 2px; }
+.detail-item-value { font-size: 14px; font-weight: 500; }
+
+/* =====================================================================
+   TOAST
+   ===================================================================== */
+#toast-container {
+  position: fixed; bottom: 24px; right: 24px;
+  display: flex; flex-direction: column; gap: 8px;
+  z-index: 500;
+}
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  font-size: 14px;
+  animation: toast-in 0.3s ease;
+  max-width: 320px;
+}
+@keyframes toast-in {
+  from { transform: translateX(60px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.toast.success { border-color: hsl(142 76% 46% / 0.5); }
+.toast.success .toast-dot { background: hsl(142 76% 46%); }
+.toast.error { border-color: hsl(0 84% 50% / 0.5); }
+.toast.error .toast-dot { background: hsl(0 84% 50%); }
+.toast-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* =====================================================================
+   QR CODE PAGE (mobile-first scan page)
+   ===================================================================== */
+#view-scan {
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, hsl(0 0% 4%) 0%, hsl(0 40% 8%) 100%);
+}
+.scan-header {
+  width: 100%;
+  padding: 16px 20px;
+  background: rgba(0,0,0,0.4);
+  border-bottom: 1px solid hsl(var(--border));
+  display: flex; align-items: center; gap: 10px;
+}
+.scan-header-brand {
+  display: flex; align-items: center; gap: 8px;
+}
+.scan-logo-badge {
+  width: 32px; height: 32px;
+  background: hsl(var(--primary));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 14px;
+}
+.scan-brand-text { font-size: 15px; font-weight: 700; }
+.scan-brand-sub { font-size: 11px; color: hsl(var(--muted-foreground)); }
+
+.scan-emergency-banner {
+  width: 100%; max-width: 500px;
+  margin: 24px 16px 0;
+  padding: 16px 20px;
+  background: hsl(0 84% 50% / 0.15);
+  border: 1px solid hsl(0 84% 50% / 0.4);
+  border-radius: 10px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.scan-emergency-banner-icon {
+  width: 40px; height: 40px;
+  background: hsl(var(--primary));
+  border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: white;
+}
+.scan-emergency-banner-title {
+  font-size: 15px; font-weight: 700; color: hsl(0 84% 65%);
+  margin-bottom: 2px;
+}
+.scan-emergency-banner-sub { font-size: 13px; color: hsl(var(--muted-foreground)); }
+
+.scan-card {
+  width: 100%; max-width: 500px;
+  margin: 16px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  overflow: hidden;
+}
+.scan-card-header {
+  padding: 16px 20px;
+  background: hsl(var(--muted));
+  border-bottom: 1px solid hsl(var(--border));
+}
+.scan-resident-name { font-size: 18px; font-weight: 700; margin: 0 0 2px; }
+.scan-resident-sub { font-size: 13px; color: hsl(var(--muted-foreground)); }
+.scan-card-body { padding: 20px; }
+.scan-success {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px;
+  text-align: center;
+  gap: 12px;
+}
+.scan-success-icon {
+  width: 64px; height: 64px;
+  background: hsl(142 76% 46% / 0.15);
+  border: 2px solid hsl(142 76% 46% / 0.4);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+}
+.scan-success-title { font-size: 18px; font-weight: 700; }
+.scan-success-sub { font-size: 14px; color: hsl(var(--muted-foreground)); }
+
+/* =====================================================================
+   QR PRINT MODAL
+   ===================================================================== */
+.qr-modal-content { text-align: center; }
+#qr-code-canvas {
+  width: 200px; height: 200px;
+  margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+}
+.qr-info-grid { display: grid; gap: 8px; text-align: left; margin-top: 16px; }
+.qr-info-row {
+  display: flex; gap: 8px;
+  padding: 8px 12px;
+  background: hsl(var(--muted));
+  border-radius: 6px;
+}
+.qr-info-label { font-size: 12px; color: hsl(var(--muted-foreground)); min-width: 110px; }
+.qr-info-value { font-size: 13px; font-weight: 500; }
+
+/* QR Printable card design */
+@media print {
+  body * { visibility: hidden; }
+  #qr-print-area, #qr-print-area * { visibility: visible; }
+  #qr-print-area { position: fixed; inset: 0; }
+}
+#qr-print-area {
+  display: none;
+}
+.qr-card-print {
+  width: 280px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  color: black;
+  border-radius: 12px;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+.qr-card-print-header {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; margin-bottom: 12px;
+}
+.qr-card-emergency-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #dc2626;
+  margin-bottom: 4px;
+}
+.qr-card-name { font-size: 18px; font-weight: 700; color: #111; margin-bottom: 2px; }
+.qr-card-room { font-size: 13px; color: #666; margin-bottom: 12px; }
+.qr-card-qr { background: white; padding: 8px; border-radius: 8px; display: inline-block; margin-bottom: 12px; }
+.qr-card-instruction {
+  font-size: 12px; color: #444; line-height: 1.5;
+  border-top: 1px solid #eee; padding-top: 10px;
+}
+
+/* =====================================================================
+   STAT CARDS
+   ===================================================================== */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  padding: 16px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+}
+.stat-card-label { font-size: 12px; color: hsl(var(--muted-foreground)); margin-bottom: 6px; }
+.stat-card-value { font-size: 28px; font-weight: 700; line-height: 1; }
+.stat-card-value.red { color: hsl(0 84% 60%); }
+.stat-card-value.blue { color: hsl(217 91% 65%); }
+.stat-card-value.green { color: hsl(142 76% 55%); }
+
+/* =====================================================================
+   EMPTY STATE
+   ===================================================================== */
+.empty-state {
+  text-align: center; padding: 60px 24px;
+  color: hsl(var(--muted-foreground));
+}
+.empty-state svg { width: 40px; height: 40px; margin: 0 auto 12px; opacity: 0.4; }
+.empty-state p { margin: 0; font-size: 14px; }
+
+/* Toolbar */
+.toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.toolbar-left { display: flex; align-items: center; gap: 8px; }
+
+/* =====================================================================
+   DIVIDER
+   ===================================================================== */
+.divider { height: 1px; background: hsl(var(--border)); margin: 16px 0; }
+
+/* Live dot */
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: hsl(0 84% 55%);
+  animation: pulse 1.5s infinite;
+  display: inline-block;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 3px; }
+
+/* Filter pill */
+.filter-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 30px; padding: 0 12px;
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: 9999px;
+  font-size: 13px; color: hsl(var(--muted-foreground));
+  cursor: pointer;
+}
+.filter-pill.active {
+  background: hsl(var(--primary) / 0.15);
+  border-color: hsl(var(--primary) / 0.4);
+  color: hsl(var(--primary));
+}
+</style>
+</head>
+<body>
+<div id="toast-container"></div>
+
+<!-- ===================================================================
+     LOGIN VIEW
+     =================================================================== -->
+<div id="view-login" class="view active">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">🏥</div>
+      <div class="login-logo-text">
+        <h1>CareLink</h1>
+        <p>Nursing Home Portal</p>
+      </div>
+    </div>
+    <p class="login-title">Welcome back</p>
+    <p class="login-sub">Sign in to your account</p>
+    <div class="field">
+      <label class="field-label">Email address</label>
+      <input class="input" type="email" id="login-email" placeholder="nurse@facility.com" value="admin@greenmadows.com">
+    </div>
+    <div class="field">
+      <label class="field-label">Password</label>
+      <input class="input" type="password" id="login-pass" placeholder="••••••••" value="demo1234">
+    </div>
+    <button class="btn btn-primary" style="width:100%; justify-content:center; height:40px; margin-top:8px;" onclick="doLogin()">Sign in</button>
+    <p style="text-align:center; margin-top:16px; font-size:12px; color: hsl(var(--muted-foreground));">Demo: any credentials work</p>
+  </div>
+</div>
+
+<!-- ===================================================================
+     MAIN APP VIEW
+     =================================================================== -->
+<div id="view-app" class="view" style="flex-direction:column;">
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon">🏥</div>
+          <div>
+            <div class="sidebar-brand-name">CareLink</div>
+            <div class="sidebar-brand-sub">Green Meadows</div>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-content">
+        <button class="nav-item active" id="nav-emergencies" onclick="showPage('emergencies')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Active Emergencies
+        </button>
+        <button class="nav-item" id="nav-residents" onclick="showPage('residents')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Resident Management
+        </button>
+        <button class="nav-item" id="nav-employees" onclick="showPage('employees')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Employee Management
+        </button>
+        <div class="nav-separator"></div>
+        <button class="nav-item" onclick="showToast('Settings coming soon','success')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+          Settings
+        </button>
+        <button class="nav-item" onclick="showToast('Help center opening…','success')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Help
+        </button>
+      </div>
+      <div class="sidebar-footer">
+        <div class="user-row" onclick="showToast('Profile settings coming soon','success')">
+          <div class="user-avatar">MB</div>
+          <div>
+            <div class="user-name-text">Moshe Braun</div>
+            <div class="user-role-text">Administrator</div>
+          </div>
+        </div>
+        <button class="nav-item" onclick="doLogout()" style="margin-top:4px;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Log out
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+      <!-- EMERGENCIES PAGE -->
+      <div id="page-emergencies" class="page-content" style="display:block;">
+        <div class="page-header">
+          <span class="page-title">Active emergencies</span>
+          <div class="page-header-right">
+            <div class="search-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="search-input" placeholder="Search emergencies..." oninput="filterEmergencies(this.value)">
+            </div>
+            <button class="btn btn-primary" onclick="openCreateEmergency()">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Create emergency
+            </button>
+          </div>
+        </div>
+        <div style="padding: 20px 24px 8px; display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="filter-pill active" id="filter-all" onclick="setEFilter('all',this)">All</button>
+          <button class="filter-pill" id="filter-new" onclick="setEFilter('New',this)">🔴 New</button>
+          <button class="filter-pill" id="filter-accepted" onclick="setEFilter('Accepted',this)">🔵 Accepted</button>
+          <button class="filter-pill" id="filter-closed" onclick="setEFilter('Closed',this)">🟢 Closed</button>
+        </div>
+        <div style="padding: 0 24px 8px;">
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-card-label">New</div>
+              <div class="stat-card-value red" id="stat-new">3</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label">Accepted</div>
+              <div class="stat-card-value blue" id="stat-accepted">2</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label">Closed today</div>
+              <div class="stat-card-value green" id="stat-closed">3</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Resident</th>
+                    <th>Status</th>
+                    <th>Emergency Type</th>
+                    <th>Description</th>
+                    <th>Room</th>
+                    <th>Time</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="emergencies-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESIDENTS PAGE -->
+      <div id="page-residents" class="page-content" style="display:none;">
+        <div class="page-header">
+          <span class="page-title">Resident management</span>
+          <div class="page-header-right">
+            <div class="search-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="search-input" placeholder="Search residents..." oninput="filterResidents(this.value)">
+            </div>
+            <button class="btn btn-primary" onclick="openAddResident()">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add resident
+            </button>
+          </div>
+        </div>
+        <div style="padding: 20px 24px;">
+          <div class="table-wrap">
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Room</th>
+                    <th>Date of Birth</th>
+                    <th>Sex</th>
+                    <th>Allergies</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="residents-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMPLOYEES PAGE -->
+      <div id="page-employees" class="page-content" style="display:none;">
+        <div class="page-header">
+          <span class="page-title">Employee management</span>
+          <div class="page-header-right">
+            <div class="search-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="search-input" placeholder="Search employees..." oninput="filterEmployees(this.value)">
+            </div>
+            <button class="btn btn-primary" onclick="openAddEmployee()">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add employee
+            </button>
+          </div>
+        </div>
+        <div style="padding: 20px 24px;">
+          <div class="table-wrap">
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Role</th>
+                    <th>Department</th>
+                    <th>Email address</th>
+                    <th>Phone number</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="employees-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===================================================================
+     QR SCAN VIEW (mobile friendly)
+     =================================================================== -->
+<div id="view-scan" class="view" style="min-height:100vh; flex-direction:column; align-items:center;">
+  <div class="scan-header">
+    <div class="scan-header-brand">
+      <div class="scan-logo-badge">🏥</div>
+      <div>
+        <div class="scan-brand-text">CareLink</div>
+        <div class="scan-brand-sub">Emergency Response System</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scan-emergency-banner" style="max-width:500px; width:calc(100% - 32px);">
+    <div class="scan-emergency-banner-icon">🚨</div>
+    <div>
+      <div class="scan-emergency-banner-title">Emergency Request Form</div>
+      <div class="scan-emergency-banner-sub">This form will immediately alert emergency dispatch. Only use in case of a real emergency.</div>
+    </div>
+  </div>
+
+  <div class="scan-card" style="max-width:500px; width:calc(100% - 32px);">
+    <div class="scan-card-header">
+      <div class="scan-resident-name" id="scan-resident-name">Loading resident...</div>
+      <div class="scan-resident-sub" id="scan-resident-info">Room — · Green Meadows Care Center</div>
+    </div>
+    <div class="scan-card-body" id="scan-form-area">
+      <div class="field">
+        <label class="field-label">Emergency type <span class="req">*</span></label>
+        <input class="input" id="scan-etype" placeholder="e.g. Fall, Chest pain, Difficulty breathing">
+      </div>
+      <div class="field">
+        <label class="field-label">Severity <span class="req">*</span></label>
+        <select class="select" id="scan-severity">
+          <option value="">Select severity</option>
+          <option value="Low">Low — Stable, non-urgent</option>
+          <option value="Medium">Medium — Needs attention soon</option>
+          <option value="High">High — Urgent, possible life threat</option>
+          <option value="Critical">Critical — Life-threatening</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Description</label>
+        <textarea class="textarea" id="scan-desc" placeholder="Describe what you see. Any symptoms, observations, relevant history..."></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Your name <span class="req">*</span></label>
+        <input class="input" id="scan-nurse" placeholder="Nurse / staff name">
+      </div>
+      <button class="btn btn-primary" style="width:100%; justify-content:center; height:44px; font-size:15px; margin-top:4px; background: hsl(0 84% 48%);" onclick="submitScanEmergency()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Submit Emergency Request
+      </button>
+    </div>
+    <div class="scan-success" id="scan-success-area">
+      <div class="scan-success-icon">✅</div>
+      <div class="scan-success-title">Emergency Request Sent</div>
+      <div class="scan-success-sub">Your request has been received by dispatch. Help is on the way. Stay with the resident and keep this page open for updates.</div>
+      <div style="margin-top:12px; padding:12px 16px; background: hsl(var(--muted)); border-radius:8px; font-size:13px; color:hsl(var(--muted-foreground));">
+        <span class="live-dot"></span> Waiting for dispatcher to accept...
+      </div>
+    </div>
+  </div>
+  <div style="padding:24px 16px; font-size:12px; color:hsl(var(--muted-foreground)); text-align:center;">
+    CareLink Emergency Response System · Green Meadows Care Center<br>
+    <strong style="color:hsl(0 84% 60%);">If this is a life-threatening emergency, also call 911 immediately.</strong>
+  </div>
+</div>
+
+<!-- ===================================================================
+     MODALS
+     =================================================================== -->
+
+<!-- Create Emergency Modal -->
+<div class="modal-overlay" id="modal-create-emergency">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Create emergency request</h3>
+      <button class="modal-close" onclick="closeModal('modal-create-emergency')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label">Resident <span class="req">*</span></label>
+        <select class="select" id="ce-resident"><option value="">Select Resident</option></select>
+      </div>
+      <div class="field">
+        <label class="field-label">Emergency type <span class="req">*</span></label>
+        <input class="input" id="ce-type" placeholder="e.g. Fall, Chest pain, Difficulty breathing">
+      </div>
+      <div class="field">
+        <label class="field-label">Severity</label>
+        <select class="select" id="ce-severity">
+          <option value="Low">Low</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="High">High</option>
+          <option value="Critical">Critical</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Description</label>
+        <textarea class="textarea" id="ce-desc" placeholder="Describe the situation..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-create-emergency')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitCreateEmergency()">Submit emergency</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add / Edit Resident Modal -->
+<div class="modal-overlay" id="modal-resident">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-resident-title">Add resident</h3>
+      <button class="modal-close" onclick="closeModal('modal-resident')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label">First name <span class="req">*</span></label>
+          <input class="input" id="r-firstname" placeholder="First name">
+        </div>
+        <div class="field">
+          <label class="field-label">Last name <span class="req">*</span></label>
+          <input class="input" id="r-lastname" placeholder="Last name">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label">Room <span class="req">*</span></label>
+          <input class="input" id="r-room" placeholder="e.g. 204A">
+        </div>
+        <div class="field">
+          <label class="field-label">Date of Birth</label>
+          <input class="input" type="date" id="r-dob">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label">Sex</label>
+          <select class="select" id="r-sex">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Blood type</label>
+          <select class="select" id="r-blood">
+            <option value="">Unknown</option>
+            <option value="A+">A+</option><option value="A-">A-</option>
+            <option value="B+">B+</option><option value="B-">B-</option>
+            <option value="AB+">AB+</option><option value="AB-">AB-</option>
+            <option value="O+">O+</option><option value="O-">O-</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Allergies</label>
+        <input class="input" id="r-allergies" placeholder="e.g. Penicillin, Latex (leave blank if none)">
+      </div>
+      <div class="field">
+        <label class="field-label">Emergency contact</label>
+        <input class="input" id="r-contact" placeholder="Name, phone number">
+      </div>
+      <div class="field">
+        <label class="field-label">Medical notes</label>
+        <textarea class="textarea" id="r-notes" placeholder="Relevant medical history, conditions..." style="min-height:60px;"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-resident')">Cancel</button>
+      <button class="btn btn-primary" id="resident-save-btn" onclick="saveResident()">Add resident</button>
+    </div>
+  </div>
+</div>
+
+<!-- QR Code Modal -->
+<div class="modal-overlay" id="modal-qr">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Resident QR Code</h3>
+      <button class="modal-close" onclick="closeModal('modal-qr')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body qr-modal-content">
+      <div id="qr-code-canvas"></div>
+      <p style="font-size:12px; color:hsl(var(--muted-foreground)); margin:0 0 16px;">Scan this code to initiate an emergency request for this resident</p>
+      <div class="qr-info-grid" id="qr-info-grid"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-qr')">Close</button>
+      <button class="btn btn-primary" onclick="printQR()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print QR Code
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Employee Modal -->
+<div class="modal-overlay" id="modal-employee">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-employee-title">Add employee</h3>
+      <button class="modal-close" onclick="closeModal('modal-employee')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label">First name <span class="req">*</span></label>
+          <input class="input" id="emp-firstname" placeholder="First name">
+        </div>
+        <div class="field">
+          <label class="field-label">Last name <span class="req">*</span></label>
+          <input class="input" id="emp-lastname" placeholder="Last name">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label">Role</label>
+          <select class="select" id="emp-role">
+            <option value="Employee">Employee</option>
+            <option value="Administrator">Administrator</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Department</label>
+          <select class="select" id="emp-dept">
+            <option>Medical</option>
+            <option>Therapy</option>
+            <option>Care</option>
+            <option>Administration</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Email address <span class="req">*</span></label>
+        <input class="input" type="email" id="emp-email" placeholder="email@example.com">
+      </div>
+      <div class="field">
+        <label class="field-label">Phone number</label>
+        <input class="input" id="emp-phone" placeholder="+1 (555) 000-0000">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-employee')">Cancel</button>
+      <button class="btn btn-primary" id="emp-save-btn" onclick="saveEmployee()">Add employee</button>
+    </div>
+  </div>
+</div>
+
+<!-- Emergency Detail Panel -->
+<div class="panel-overlay" id="panel-overlay" onclick="closePanel()"></div>
+<div class="panel" id="panel-emergency">
+  <div class="panel-header">
+    <div>
+      <h3 class="panel-title" id="panel-e-title">Emergency details</h3>
+      <div id="panel-e-badge" style="margin-top:4px;"></div>
+    </div>
+    <button class="btn btn-ghost btn-icon" onclick="closePanel()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="panel-body" id="panel-body"></div>
+</div>
+
+<!-- Resident Detail Panel -->
+<div class="panel-overlay" id="panel-res-overlay" onclick="closeResPanel()"></div>
+<div class="panel" id="panel-resident">
+  <div class="panel-header">
+    <div>
+      <h3 class="panel-title" id="panel-res-title">Resident details</h3>
+    </div>
+    <button class="btn btn-ghost btn-icon" onclick="closeResPanel()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="panel-body" id="panel-res-body"></div>
+</div>
+
+<!-- Hidden QR print area -->
+<div id="qr-print-area"></div>
+
+<script>
+// =====================================================================
+//  DATA
+// =====================================================================
+let currentResidentId = null;
+let currentEmployeeId = null;
+let emergencyFilter = 'all';
+let emergencySearch = '';
+
+const RESIDENTS = [
+  { id:'RES001', firstName:'Jennifer', lastName:'Villanueva', room:'200A', dob:'1954-03-12', sex:'Female', bloodType:'A+', allergies:'Penicillin', contact:'Claude Bogisich, 660.660.5742', notes:'History of hypertension. On blood thinners.' },
+  { id:'RES002', firstName:'Brian', lastName:'Johnson', room:'200B', dob:'1935-07-24', sex:'Male', bloodType:'O+', allergies:'None', contact:'Sandra Johnson, 555-234-5678', notes:'Diabetic. Check blood sugar regularly.' },
+  { id:'RES003', firstName:'Alexis', lastName:'Cole', room:'200C', dob:'1955-11-03', sex:'Female', bloodType:'B-', allergies:'Latex', contact:'Mark Cole, 555-345-6789', notes:'Recent hip replacement. Fall risk.' },
+  { id:'RES004', firstName:'Kristen', lastName:'Graves', room:'200D', dob:'1941-06-15', sex:'Female', bloodType:'AB+', allergies:'Sulfa drugs', contact:'Tom Graves, 555-456-7890', notes:'Mild dementia. Requires supervision.' },
+  { id:'RES005', firstName:'Leslie', lastName:'Hogan', room:'200E', dob:'1936-09-28', sex:'Female', bloodType:'A-', allergies:'None', contact:'Amy Hogan, 555-567-8901', notes:'COPD. Has rescue inhaler nearby.' },
+  { id:'RES006', firstName:'Tammy', lastName:'Orr', room:'200F', dob:'1950-02-18', sex:'Female', bloodType:'O-', allergies:'Aspirin', contact:'Joel Orr, 555-678-9012', notes:'Pacemaker. No MRI.' },
+  { id:'RES007', firstName:'Brett', lastName:'Cooper', room:'200G', dob:'1950-12-05', sex:'Male', bloodType:'B+', allergies:'None', contact:'Lisa Cooper, 555-789-0123', notes:'Post-stroke. Limited mobility right side.' },
+  { id:'RES008', firstName:'Dakota', lastName:'Garcia', room:'200H', dob:'1951-04-22', sex:'Male', bloodType:'A+', allergies:'Codeine', contact:'Maria Garcia, 555-890-1234', notes:'Anxiety disorder. Calm approach required.' },
+  { id:'RES009', firstName:'Ryan', lastName:'Daniel', room:'200I', dob:'1931-08-11', sex:'Female', bloodType:'O+', allergies:'None', contact:'Peter Daniel, 555-901-2345', notes:'Oldest resident. Very frail.' },
+  { id:'RES010', firstName:'Alicia', lastName:'Brown', room:'200J', dob:'1951-05-30', sex:'Female', bloodType:'AB-', allergies:'None', contact:'George Brown, 555-012-3456', notes:'Early Parkinson\'s. Tremors.' },
+  { id:'RES011', firstName:'Juan', lastName:'Robinson', room:'200K', dob:'1946-10-07', sex:'Male', bloodType:'A+', allergies:'Shellfish', contact:'Carlos Robinson, 555-111-2222', notes:'Hearing impaired. Speak clearly.' },
+  { id:'RES012', firstName:'Christopher', lastName:'Scott', room:'200L', dob:'1927-01-19', sex:'Male', bloodType:'B+', allergies:'None', contact:'Helen Scott, 555-222-3333', notes:'Recovering from pneumonia.' },
+  { id:'RES013', firstName:'Andrew', lastName:'Crosby', room:'200M', dob:'1956-03-14', sex:'Male', bloodType:'O+', allergies:'Morphine', contact:'Nancy Crosby, 555-333-4444', notes:'Prior cardiac history.' },
+  { id:'RES014', firstName:'John', lastName:'Jones', room:'200N', dob:'1954-07-29', sex:'Male', bloodType:'A-', allergies:'None', contact:'Mary Jones, 555-444-5555', notes:'Visually impaired.' },
+  { id:'RES015', firstName:'Tammy', lastName:'Farmer', room:'200O', dob:'1927-11-22', sex:'Female', bloodType:'B-', allergies:'Ibuprofen', contact:'Steve Farmer, 555-555-6666', notes:'Chronic back pain.' },
+  { id:'RES016', firstName:'Lisa', lastName:'Armstrong', room:'200P', dob:'1949-02-04', sex:'Female', bloodType:'O+', allergies:'None', contact:'Paul Armstrong, 555-666-7777', notes:'Type 2 diabetes.' },
+  { id:'RES017', firstName:'Tiffany', lastName:'Jensen', room:'200Q', dob:'1939-05-17', sex:'Female', bloodType:'A+', allergies:'None', contact:'Carl Jensen, 555-777-8888', notes:'Mild cognitive impairment.' },
+  { id:'RES018', firstName:'Eric', lastName:'Barnes', room:'200R', dob:'1948-09-03', sex:'Male', bloodType:'AB+', allergies:'Latex', contact:'Sara Barnes, 555-888-9999', notes:'Requires oxygen at night.' },
+  { id:'RES019', firstName:'Michael', lastName:'Diaz', room:'200S', dob:'1935-12-16', sex:'Male', bloodType:'O-', allergies:'None', contact:'Carmen Diaz, 555-999-0000', notes:'Pacemaker.' },
+  { id:'RES020', firstName:'Nathan', lastName:'Benjamin', room:'200T', dob:'1931-06-25', sex:'Male', bloodType:'B+', allergies:'Penicillin', contact:'Rachel Benjamin, 555-100-2000', notes:'End-stage renal disease. Dialysis 3x/week.' },
+];
+
+const EMERGENCIES = [
+  { id:'EMG001', residentId:'RES001', type:'Fall, Hip injury', desc:'Resident fell in bathroom, possible hip injury', room:'200A', time: new Date(Date.now()-120000), status:'New', severity:'High', chat:[{who:'Dispatcher',msg:'Unit dispatched. ETA 4 minutes.', ts:new Date(Date.now()-90000)}] },
+  { id:'EMG002', residentId:'RES002', type:'Allergic reaction', desc:'Skin rash developed, possible allergic reaction', room:'200B', time: new Date(Date.now()-300000), status:'New', severity:'Medium', chat:[] },
+  { id:'EMG003', residentId:'RES003', type:'Migraine, Headache', desc:'Severe headache, history of migraines', room:'200C', time: new Date(Date.now()-600000), status:'New', severity:'Medium', chat:[] },
+  { id:'EMG004', residentId:'RES004', type:'Dizziness, Dehydration', desc:'Patient reported dizziness, potential dehydration', room:'200D', time: new Date(Date.now()-900000), status:'Accepted', severity:'Low', chat:[{who:'Dispatcher',msg:'CFS accepted. Unit 1002 assigned.',ts:new Date(Date.now()-840000)},{who:'Nurse Sarah',msg:'Patient is still dizzy, gave water.',ts:new Date(Date.now()-720000)}] },
+  { id:'EMG005', residentId:'RES005', type:'Asthma, Breathing issue', desc:'Patient experiencing shortness of breath, possible asthma attack', room:'200E', time: new Date(Date.now()-1020000), status:'Accepted', severity:'High', chat:[{who:'Dispatcher',msg:'Paramedics en route. Keep patient calm.',ts:new Date(Date.now()-960000)}] },
+  { id:'EMG006', residentId:'RES007', type:'Stroke symptoms', desc:'New onset of confusion, possible stroke symptoms', room:'200G', time: new Date(Date.now()-1800000), status:'Closed', severity:'Critical', chat:[{who:'Dispatcher',msg:'CFS closed. Patient transported to hospital.',ts:new Date(Date.now()-900000)}] },
+  { id:'EMG007', residentId:'RES010', type:'Chest pain', desc:'Chest pain radiating to left arm, anxiety reported', room:'200J', time: new Date(Date.now()-2700000), status:'Closed', severity:'High', chat:[] },
+  { id:'EMG008', residentId:'RES012', type:'Headache, Disoriented', desc:'Severe headache with nausea, patient appears disoriented', room:'200L', time: new Date(Date.now()-3600000), status:'Closed', severity:'Medium', chat:[] },
+];
+
+const EMPLOYEES = [
+  { id:'EMP001', firstName:'Sylvia', lastName:'Walker', role:'Employee', dept:'Therapy', email:'sylvia.walker@greenmeadows.com', phone:'001-444-753-9042' },
+  { id:'EMP002', firstName:'Eric', lastName:'Valenzuela', role:'Administrator', dept:'Medical', email:'eric.v@greenmeadows.com', phone:'(994)101-4744' },
+  { id:'EMP003', firstName:'Eric', lastName:'Osborn', role:'Employee', dept:'Administration', email:'eric.osborn@greenmeadows.com', phone:'+1-102-920-4122' },
+  { id:'EMP004', firstName:'Ryan', lastName:'Skinner', role:'Administrator', dept:'Care', email:'ryan.skinner@greenmeadows.com', phone:'+1-521-526-8834' },
+  { id:'EMP005', firstName:'Michael', lastName:'Goodwin', role:'Employee', dept:'Medical', email:'m.goodwin@greenmeadows.com', phone:'(613)976-1415' },
+  { id:'EMP006', firstName:'Logan', lastName:'Brown', role:'Administrator', dept:'Therapy', email:'l.brown@greenmeadows.com', phone:'769-391-0091' },
+  { id:'EMP007', firstName:'Mark', lastName:'Smith', role:'Employee', dept:'Administration', email:'mark.smith@greenmeadows.com', phone:'937-505-1032' },
+  { id:'EMP008', firstName:'Julie', lastName:'Ritter', role:'Employee', dept:'Medical', email:'julie.ritter@greenmeadows.com', phone:'+1-351-193-4841' },
+  { id:'EMP009', firstName:'Christina', lastName:'Riddle', role:'Administrator', dept:'Therapy', email:'c.riddle@greenmeadows.com', phone:'9608314830' },
+  { id:'EMP010', firstName:'Steven', lastName:'Phillips', role:'Employee', dept:'Care', email:'s.phillips@greenmeadows.com', phone:'327-560-5604' },
+  { id:'EMP011', firstName:'Amanda', lastName:'Moreno', role:'Administrator', dept:'Administration', email:'a.moreno@greenmeadows.com', phone:'199-509-0932' },
+  { id:'EMP012', firstName:'Hannah', lastName:'Andrews', role:'Administrator', dept:'Care', email:'h.andrews@greenmeadows.com', phone:'+1-002-185-5787' },
+  { id:'EMP013', firstName:'Timothy', lastName:'Torres', role:'Employee', dept:'Administration', email:'t.torres@greenmeadows.com', phone:'152.930.0196' },
+  { id:'EMP014', firstName:'Robert', lastName:'Boyd', role:'Administrator', dept:'Medical', email:'r.boyd@greenmeadows.com', phone:'790.212.3322' },
+  { id:'EMP015', firstName:'Wendy', lastName:'Olson', role:'Employee', dept:'Care', email:'w.olson@greenmeadows.com', phone:'(321)815-3384' },
+];
+
+// =====================================================================
+//  ROUTING
+// =====================================================================
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showPage(page) {
+  document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).style.display = 'block';
+  document.getElementById('nav-' + page).classList.add('active');
+  if (page === 'emergencies') renderEmergencies();
+  if (page === 'residents') renderResidents();
+  if (page === 'employees') renderEmployees();
+}
+
+// =====================================================================
+//  AUTH
+// =====================================================================
+function doLogin() {
+  showView('view-app');
+  renderEmergencies();
+  updateStats();
+}
+function doLogout() {
+  showView('view-login');
+}
+
+// =====================================================================
+//  HELPERS
+// =====================================================================
+function timeAgo(date) {
+  const s = Math.floor((Date.now() - date) / 1000);
+  if (s < 60) return s + 's ago';
+  if (s < 3600) return Math.floor(s/60) + 'm ago';
+  if (s < 86400) return Math.floor(s/3600) + 'h ago';
+  return Math.floor(s/86400) + 'd ago';
+}
+function uid() {
+  return Math.random().toString(36).substr(2,9).toUpperCase();
+}
+function getResident(id) {
+  return RESIDENTS.find(r => r.id === id);
+}
+function closeAllMenus() {
+  document.querySelectorAll('.action-menu.open').forEach(m => m.classList.remove('open'));
+}
+document.addEventListener('click', closeAllMenus);
+
+function showToast(msg, type = 'success') {
+  const tc = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.innerHTML = `<span class="toast-dot"></span><span>${msg}</span>`;
+  tc.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+function openPanel() {
+  document.getElementById('panel-overlay').classList.add('open');
+  document.getElementById('panel-emergency').classList.add('open');
+}
+function closePanel() {
+  document.getElementById('panel-overlay').classList.remove('open');
+  document.getElementById('panel-emergency').classList.remove('open');
+}
+function openResPanel() {
+  document.getElementById('panel-res-overlay').classList.add('open');
+  document.getElementById('panel-resident').classList.add('open');
+}
+function closeResPanel() {
+  document.getElementById('panel-res-overlay').classList.remove('open');
+  document.getElementById('panel-resident').classList.remove('open');
+}
+
+// =====================================================================
+//  EMERGENCIES
+// =====================================================================
+function updateStats() {
+  document.getElementById('stat-new').textContent = EMERGENCIES.filter(e => e.status === 'New').length;
+  document.getElementById('stat-accepted').textContent = EMERGENCIES.filter(e => e.status === 'Accepted').length;
+  document.getElementById('stat-closed').textContent = EMERGENCIES.filter(e => e.status === 'Closed').length;
+}
+
+function setEFilter(f, btn) {
+  emergencyFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderEmergencies();
+}
+function filterEmergencies(q) {
+  emergencySearch = q.toLowerCase();
+  renderEmergencies();
+}
+
+function renderEmergencies() {
+  const tbody = document.getElementById('emergencies-tbody');
+  let list = [...EMERGENCIES].sort((a,b) => b.time - a.time);
+  if (emergencyFilter !== 'all') list = list.filter(e => e.status === emergencyFilter);
+  if (emergencySearch) list = list.filter(e => {
+    const r = getResident(e.residentId);
+    return (r && (r.firstName+' '+r.lastName).toLowerCase().includes(emergencySearch))
+      || e.type.toLowerCase().includes(emergencySearch)
+      || e.desc.toLowerCase().includes(emergencySearch);
+  });
+  if (!list.length) {
+    tbody.innerHTML = '<tr class="empty"><td colspan="7">No emergencies found</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(e => {
+    const r = getResident(e.residentId);
+    const name = r ? r.firstName + ' ' + r.lastName : 'Unknown';
+    const sc = e.status === 'New' ? 'border-new' : e.status === 'Accepted' ? 'border-accepted' : 'border-closed';
+    const bc = e.status === 'New' ? 'badge-new' : e.status === 'Accepted' ? 'badge-accepted' : 'badge-closed';
+    return `<tr class="${sc}" onclick="openEmergencyDetail('${e.id}')">
+      <td style="font-weight:500;">${name}</td>
+      <td><span class="badge ${bc}">${e.status}</span></td>
+      <td>${e.type}</td>
+      <td style="color:hsl(var(--muted-foreground)); max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${e.desc}</td>
+      <td>${e.room}</td>
+      <td style="color:hsl(var(--muted-foreground)); white-space:nowrap;">${timeAgo(e.time)}</td>
+      <td onclick="event.stopPropagation()">
+        <div class="action-menu-wrap">
+          <button class="btn btn-ghost btn-icon" onclick="toggleMenu('emenu-${e.id}')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+          </button>
+          <div class="action-menu" id="emenu-${e.id}">
+            <button onclick="openEmergencyDetail('${e.id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> View
+            </button>
+            ${e.status === 'New' ? `<button onclick="contactEMS('${e.id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.6 19.79 19.79 0 0 1 1.61 5a2 2 0 0 1 1.99-2H6.6a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 10.3a16 16 0 0 0 5.79 5.79l.95-.95a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 17.41z"/></svg> Contact EMS
+            </button>` : ''}
+            <div class="action-menu-sep"></div>
+            <button class="destructive" onclick="deleteEmergency('${e.id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg> Delete
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleMenu(id) {
+  event.stopPropagation();
+  const menu = document.getElementById(id);
+  const wasOpen = menu.classList.contains('open');
+  closeAllMenus();
+  if (!wasOpen) menu.classList.add('open');
+}
+
+function contactEMS(id) {
+  const e = EMERGENCIES.find(em => em.id === id);
+  if (!e) return;
+  e.status = 'Accepted';
+  showToast('EMS contacted — emergency accepted', 'success');
+  renderEmergencies();
+  updateStats();
+}
+
+function deleteEmergency(id) {
+  const idx = EMERGENCIES.findIndex(e => e.id === id);
+  if (idx > -1) EMERGENCIES.splice(idx, 1);
+  renderEmergencies();
+  updateStats();
+  showToast('Emergency deleted', 'success');
+}
+
+function openEmergencyDetail(id) {
+  const e = EMERGENCIES.find(em => em.id === id);
+  if (!e) return;
+  const r = getResident(e.residentId);
+  const name = r ? r.firstName + ' ' + r.lastName : 'Unknown';
+  const bc = e.status === 'New' ? 'badge-new' : e.status === 'Accepted' ? 'badge-accepted' : 'badge-closed';
+  document.getElementById('panel-e-title').textContent = name + ' — Emergency';
+  document.getElementById('panel-e-badge').innerHTML = `<span class="badge ${bc}">${e.status}</span> <span style="font-size:12px; color:hsl(var(--muted-foreground)); margin-left:6px;">${e.id}</span>`;
+
+  const chatHtml = e.chat.map(c => `
+    <div class="chat-msg ${c.who === 'Dispatcher' ? 'incoming' : 'outgoing'}">
+      <div class="chat-msg-meta">${c.who} · ${timeAgo(c.ts)}</div>
+      <div class="chat-msg-bubble">${c.msg}</div>
+    </div>`).join('') || '<p style="text-align:center; color:hsl(var(--muted-foreground)); font-size:13px; padding:20px 0;">No messages yet</p>';
+
+  document.getElementById('panel-body').innerHTML = `
+    <div class="detail-section">
+      <div class="detail-section-title">Emergency Information</div>
+      <div class="detail-grid">
+        <div class="detail-item"><div class="detail-item-label">Emergency Type</div><div class="detail-item-value">${e.type}</div></div>
+        <div class="detail-item"><div class="detail-item-label">Severity</div><div class="detail-item-value">${e.severity}</div></div>
+        <div class="detail-item"><div class="detail-item-label">Room</div><div class="detail-item-value">${e.room}</div></div>
+        <div class="detail-item"><div class="detail-item-label">Time</div><div class="detail-item-value">${timeAgo(e.time)}</div></div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Description</div>
+      <p style="margin:0; font-size:14px; line-height:1.6; color:hsl(var(--muted-foreground));">${e.desc}</p>
+    </div>
+    ${r ? `<div class="detail-section">
+      <div class="detail-section-title">Resident Info</div>
+      <div class="detail-grid">
+        <div class="detail-item"><div class="detail-item-label">Name</div><div class="detail-item-value">${r.firstName} ${r.lastName}</div></div>
+        <div class="detail-item"><div class="detail-item-label">Date of Birth</div><div class="detail-item-value">${r.dob || '—'}</div></div>
+        <div class="detail-item"><div class="detail-item-label">Blood Type</div><div class="detail-item-value">${r.bloodType || '—'}</div></div>
+        <div class="detail-item"><div class="detail-item-label">Allergies</div><div class="detail-item-value" style="color:${r.allergies!=='None'?'hsl(0 80% 65%)':'inherit'}">${r.allergies || 'None'}</div></div>
+        <div class="detail-item" style="grid-column:1/-1"><div class="detail-item-label">Emergency Contact</div><div class="detail-item-value">${r.contact || '—'}</div></div>
+        ${r.notes ? `<div class="detail-item" style="grid-column:1/-1"><div class="detail-item-label">Medical Notes</div><div class="detail-item-value" style="font-weight:400; font-size:13px; color:hsl(var(--muted-foreground));">${r.notes}</div></div>` : ''}
+      </div>
+    </div>` : ''}
+    <div class="detail-section">
+      <div class="detail-section-title" style="display:flex; align-items:center; gap:8px;">
+        Dispatcher Chat
+        <span class="live-dot"></span>
+      </div>
+      <div class="chat-wrap">
+        <div class="chat-messages" id="chat-msgs-${e.id}">${chatHtml}</div>
+        <div class="chat-input-wrap">
+          <input class="chat-input" id="chat-input-${e.id}" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat('${e.id}')">
+          <button class="btn btn-primary btn-sm" onclick="sendChat('${e.id}')">Send</button>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;">
+      ${e.status === 'New' ? `<button class="btn btn-primary" onclick="contactEMS('${e.id}');closePanel();">Contact EMS</button>` : ''}
+      ${e.status === 'Accepted' ? `<button class="btn btn-outline" onclick="closeEmergencyFromPanel('${e.id}')">Mark as Closed</button>` : ''}
+    </div>
+  `;
+  openPanel();
+}
+
+function closeEmergencyFromPanel(id) {
+  const e = EMERGENCIES.find(em => em.id === id);
+  if (e) { e.status = 'Closed'; showToast('Emergency marked as closed', 'success'); updateStats(); renderEmergencies(); closePanel(); }
+}
+
+function sendChat(eid) {
+  const e = EMERGENCIES.find(em => em.id === eid);
+  const inp = document.getElementById('chat-input-' + eid);
+  if (!e || !inp.value.trim()) return;
+  e.chat.push({ who: 'Nurse', msg: inp.value.trim(), ts: new Date() });
+  inp.value = '';
+  const msgs = document.getElementById('chat-msgs-' + eid);
+  if (msgs) {
+    msgs.innerHTML = e.chat.map(c => `
+      <div class="chat-msg ${c.who === 'Dispatcher' ? 'incoming' : 'outgoing'}">
+        <div class="chat-msg-meta">${c.who} · ${timeAgo(c.ts)}</div>
+        <div class="chat-msg-bubble">${c.msg}</div>
+      </div>`).join('');
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+}
+
+// Create Emergency
+function openCreateEmergency() {
+  const sel = document.getElementById('ce-resident');
+  sel.innerHTML = '<option value="">Select Resident</option>' + RESIDENTS.map(r => `<option value="${r.id}">${r.firstName} ${r.lastName} — Room ${r.room}</option>`).join('');
+  document.getElementById('ce-type').value = '';
+  document.getElementById('ce-desc').value = '';
+  openModal('modal-create-emergency');
+}
+
+function submitCreateEmergency() {
+  const rid = document.getElementById('ce-resident').value;
+  const type = document.getElementById('ce-type').value.trim();
+  if (!rid) { showToast('Please select a resident', 'error'); return; }
+  if (!type) { showToast('Please enter emergency type', 'error'); return; }
+  const r = getResident(rid);
+  const newE = {
+    id: 'EMG' + uid(),
+    residentId: rid,
+    type, desc: document.getElementById('ce-desc').value.trim() || type,
+    room: r ? r.room : '—',
+    time: new Date(), status: 'New',
+    severity: document.getElementById('ce-severity').value,
+    chat: []
+  };
+  EMERGENCIES.unshift(newE);
+  closeModal('modal-create-emergency');
+  renderEmergencies();
+  updateStats();
+  showToast('Emergency created and sent to dispatch', 'success');
+}
+
+// =====================================================================
+//  RESIDENTS
+// =====================================================================
+let residentSearch = '';
+function filterResidents(q) {
+  residentSearch = q.toLowerCase();
+  renderResidents();
+}
+
+function renderResidents() {
+  const tbody = document.getElementById('residents-tbody');
+  let list = RESIDENTS.filter(r =>
+    !residentSearch ||
+    (r.firstName + ' ' + r.lastName).toLowerCase().includes(residentSearch) ||
+    r.room.toLowerCase().includes(residentSearch)
+  );
+  tbody.innerHTML = list.map(r => `
+    <tr onclick="openResidentDetail('${r.id}')">
+      <td style="font-weight:500;">${r.firstName}</td>
+      <td>${r.lastName}</td>
+      <td>${r.room}</td>
+      <td>${r.dob || '—'}</td>
+      <td>${r.sex}</td>
+      <td style="color:${r.allergies && r.allergies !== 'None' ? 'hsl(0 80% 65%)' : 'hsl(var(--muted-foreground))'};">${r.allergies || 'None'}</td>
+      <td onclick="event.stopPropagation()">
+        <div class="action-menu-wrap">
+          <button class="btn btn-ghost btn-icon" onclick="toggleMenu('rmenu-${r.id}')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+          </button>
+          <div class="action-menu" id="rmenu-${r.id}">
+            <button onclick="openResidentDetail('${r.id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> View
+            </button>
+            <button onclick="newEmergencyForResident('${r.id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> New emergency
+            </button>
+            <button onclick="editResident('${r.id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit
+            </button>
+            <button onclick="showQRCode('${r.id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> QR Code
+            </button>
+            <div class="action-menu-sep"></div>
+            <button class="destructive" onclick="deleteResident('${r.id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg> Delete
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openResidentDetail(id) {
+  const r = RESIDENTS.find(res => res.id === id);
+  if (!r) return;
+  document.getElementById('panel-res-title').textContent = r.firstName + ' ' + r.lastName;
+  const resEmergencies = EMERGENCIES.filter(e => e.residentId === id).sort((a,b) => b.time - a.time);
+  document.getElementById('panel-res-body').innerHTML = `
+    <div class="detail-section">
+      <div class="detail-section-title">Personal Information</div>
+      <div class="detail-grid">
+        <div class="detail-item"><div class="detail-item-label">Full Name</div><div class="detail-item-value">${r.firstName} ${r.lastName}</div></div>
+        <div class="detail-item"><div class="detail-item-label">Room</div><div class="detail-item-value">${r.room}</div></div>
+        <div class="detail-item"><div class="detail-item-label">Date of Birth</div><div class="detail-item-value">${r.dob || '—'}</div></div>
+        <div class="detail-item"><div class="detail-item-label">Sex</div><div class="detail-item-value">${r.sex}</div></div>
+        <div class="detail-item"><div class="detail-item-label">Blood Type</div><div class="detail-item-value">${r.bloodType || '—'}</div></div>
+        <div class="detail-item"><div class="detail-item-label">Allergies</div><div class="detail-item-value" style="color:${r.allergies !== 'None' ? 'hsl(0 80% 65%)' : 'inherit'}">${r.allergies || 'None'}</div></div>
+        <div class="detail-item" style="grid-column:1/-1"><div class="detail-item-label">Emergency Contact</div><div class="detail-item-value">${r.contact || '—'}</div></div>
+        ${r.notes ? `<div class="detail-item" style="grid-column:1/-1"><div class="detail-item-label">Medical Notes</div><div class="detail-item-value" style="font-weight:400; font-size:13px;">${r.notes}</div></div>` : ''}
+      </div>
+    </div>
+    <div style="display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;">
+      <button class="btn btn-primary btn-sm" onclick="newEmergencyForResident('${id}'); closeResPanel();">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> New Emergency
+      </button>
+      <button class="btn btn-outline btn-sm" onclick="editResident('${id}'); closeResPanel();">Edit</button>
+      <button class="btn btn-outline btn-sm" onclick="showQRCode('${id}'); closeResPanel();">QR Code</button>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Emergency History</div>
+      ${resEmergencies.length === 0 ? '<p style="color:hsl(var(--muted-foreground)); font-size:13px;">No emergencies on record</p>' :
+        resEmergencies.map(e => {
+          const bc = e.status === 'New' ? 'badge-new' : e.status === 'Accepted' ? 'badge-accepted' : 'badge-closed';
+          return `<div style="padding:10px 12px; background:hsl(var(--muted)); border-radius:6px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+            <div>
+              <div style="font-size:14px; font-weight:500;">${e.type}</div>
+              <div style="font-size:12px; color:hsl(var(--muted-foreground)); margin-top:2px;">${timeAgo(e.time)}</div>
+            </div>
+            <span class="badge ${bc}">${e.status}</span>
+          </div>`;
+        }).join('')
+      }
+    </div>
+  `;
+  openResPanel();
+}
+
+function newEmergencyForResident(id) {
+  const sel = document.getElementById('ce-resident');
+  sel.innerHTML = '<option value="">Select Resident</option>' + RESIDENTS.map(r => `<option value="${r.id}">${r.firstName} ${r.lastName} — Room ${r.room}</option>`).join('');
+  sel.value = id;
+  document.getElementById('ce-type').value = '';
+  document.getElementById('ce-desc').value = '';
+  openModal('modal-create-emergency');
+  showPage('emergencies');
+}
+
+function openAddResident() {
+  currentResidentId = null;
+  document.getElementById('modal-resident-title').textContent = 'Add resident';
+  document.getElementById('resident-save-btn').textContent = 'Add resident';
+  ['r-firstname','r-lastname','r-room','r-allergies','r-contact','r-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('r-sex').value = 'Male';
+  document.getElementById('r-blood').value = '';
+  document.getElementById('r-dob').value = '';
+  openModal('modal-resident');
+}
+
+function editResident(id) {
+  const r = RESIDENTS.find(res => res.id === id);
+  if (!r) return;
+  currentResidentId = id;
+  document.getElementById('modal-resident-title').textContent = 'Edit resident';
+  document.getElementById('resident-save-btn').textContent = 'Save changes';
+  document.getElementById('r-firstname').value = r.firstName;
+  document.getElementById('r-lastname').value = r.lastName;
+  document.getElementById('r-room').value = r.room;
+  document.getElementById('r-dob').value = r.dob || '';
+  document.getElementById('r-sex').value = r.sex;
+  document.getElementById('r-blood').value = r.bloodType || '';
+  document.getElementById('r-allergies').value = r.allergies === 'None' ? '' : (r.allergies || '');
+  document.getElementById('r-contact').value = r.contact || '';
+  document.getElementById('r-notes').value = r.notes || '';
+  openModal('modal-resident');
+}
+
+function saveResident() {
+  const fn = document.getElementById('r-firstname').value.trim();
+  const ln = document.getElementById('r-lastname').value.trim();
+  const room = document.getElementById('r-room').value.trim();
+  if (!fn || !ln || !room) { showToast('Please fill required fields', 'error'); return; }
+  const data = {
+    firstName: fn, lastName: ln, room,
+    dob: document.getElementById('r-dob').value,
+    sex: document.getElementById('r-sex').value,
+    bloodType: document.getElementById('r-blood').value,
+    allergies: document.getElementById('r-allergies').value.trim() || 'None',
+    contact: document.getElementById('r-contact').value.trim(),
+    notes: document.getElementById('r-notes').value.trim()
+  };
+  if (currentResidentId) {
+    const idx = RESIDENTS.findIndex(r => r.id === currentResidentId);
+    if (idx > -1) Object.assign(RESIDENTS[idx], data);
+    showToast('Resident updated', 'success');
+  } else {
+    RESIDENTS.push({ id: 'RES' + uid(), ...data });
+    showToast('Resident added', 'success');
+  }
+  closeModal('modal-resident');
+  renderResidents();
+}
+
+function deleteResident(id) {
+  const idx = RESIDENTS.findIndex(r => r.id === id);
+  if (idx > -1) RESIDENTS.splice(idx, 1);
+  renderResidents();
+  showToast('Resident deleted', 'success');
+}
+
+// =====================================================================
+//  QR CODE
+// =====================================================================
+let currentQRResident = null;
+
+function showQRCode(id) {
+  const r = RESIDENTS.find(res => res.id === id);
+  if (!r) return;
+  currentQRResident = r;
+  const qrContainer = document.getElementById('qr-code-canvas');
+  qrContainer.innerHTML = '';
+
+  // Build the URL pointing to the same page with ?scan=1&rid=XXX
+  const scanUrl = window.location.href.split('?')[0] + '?scan=1&rid=' + r.id;
+
+  new QRCode(qrContainer, {
+    text: scanUrl,
+    width: 176, height: 176,
+    colorDark: '#000000', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  document.getElementById('qr-info-grid').innerHTML = `
+    <div class="qr-info-row"><span class="qr-info-label">Resident ID</span><span class="qr-info-value">${r.id}</span></div>
+    <div class="qr-info-row"><span class="qr-info-label">Name</span><span class="qr-info-value">${r.firstName} ${r.lastName}</span></div>
+    <div class="qr-info-row"><span class="qr-info-label">Room</span><span class="qr-info-value">${r.room}</span></div>
+    <div class="qr-info-row"><span class="qr-info-label">Emergency Contact</span><span class="qr-info-value">${r.contact || '—'}</span></div>
+    <div class="qr-info-row"><span class="qr-info-label">Allergies</span><span class="qr-info-value" style="color:${r.allergies !== 'None' ? 'hsl(0 80% 65%)' : 'inherit'}">${r.allergies || 'None'}</span></div>
+  `;
+  openModal('modal-qr');
+}
+
+function printQR() {
+  const r = currentQRResident;
+  if (!r) return;
+  const scanUrl = window.location.href.split('?')[0] + '?scan=1&rid=' + r.id;
+
+  const printArea = document.getElementById('qr-print-area');
+  printArea.style.display = 'block';
+  printArea.innerHTML = `
+    <div class="qr-card-print" id="print-card">
+      <div class="qr-card-emergency-label">⚠ EMERGENCY RESPONSE</div>
+      <div class="qr-card-name">${r.firstName} ${r.lastName}</div>
+      <div class="qr-card-room">Room ${r.room} · Green Meadows Care Center</div>
+      <div id="print-qr-tmp" style="background:white; padding:8px; border-radius:8px; display:inline-block; margin-bottom:10px;"></div>
+      <div class="qr-card-instruction">
+        <strong style="color:#dc2626;">🚨 EMERGENCY USE ONLY</strong><br>
+        Scan this QR code to immediately notify emergency dispatch for this resident.<br>
+        <span style="font-size:11px; color:#999;">ID: ${r.id}</span>
+      </div>
+    </div>
+  `;
+  // Generate QR in print card
+  new QRCode(document.getElementById('print-qr-tmp'), {
+    text: scanUrl,
+    width: 160, height: 160,
+    colorDark: '#000000', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+  setTimeout(() => { window.print(); printArea.style.display = 'none'; }, 300);
+}
+
+// =====================================================================
+//  EMPLOYEES
+// =====================================================================
+let employeeSearch = '';
+function filterEmployees(q) {
+  employeeSearch = q.toLowerCase();
+  renderEmployees();
+}
+
+function renderEmployees() {
+  const tbody = document.getElementById('employees-tbody');
+  let list = EMPLOYEES.filter(e =>
+    !employeeSearch ||
+    (e.firstName + ' ' + e.lastName).toLowerCase().includes(employeeSearch) ||
+    e.email.toLowerCase().includes(employeeSearch) ||
+    e.dept.toLowerCase().includes(employeeSearch)
+  );
+  tbody.innerHTML = list.map(e => `
+    <tr>
+      <td style="font-weight:500;">${e.firstName}</td>
+      <td>${e.lastName}</td>
+      <td><span class="badge ${e.role === 'Administrator' ? 'badge-admin' : 'badge-user'}">${e.role}</span></td>
+      <td>${e.dept}</td>
+      <td style="color:hsl(var(--muted-foreground));">${e.email}</td>
+      <td style="color:hsl(var(--muted-foreground));">${e.phone}</td>
+      <td onclick="event.stopPropagation()">
+        <div class="action-menu-wrap">
+          <button class="btn btn-ghost btn-icon" onclick="toggleMenu('empmenu-${e.id}')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+          </button>
+          <div class="action-menu" id="empmenu-${e.id}">
+            <button onclick="editEmployee('${e.id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit
+            </button>
+            <button onclick="toggleRole('${e.id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg> Toggle role
+            </button>
+            <div class="action-menu-sep"></div>
+            <button class="destructive" onclick="deleteEmployee('${e.id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg> Delete
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openAddEmployee() {
+  currentEmployeeId = null;
+  document.getElementById('modal-employee-title').textContent = 'Add employee';
+  document.getElementById('emp-save-btn').textContent = 'Add employee';
+  ['emp-firstname','emp-lastname','emp-email','emp-phone'].forEach(id => document.getElementById(id).value = '');
+  openModal('modal-employee');
+}
+
+function editEmployee(id) {
+  const e = EMPLOYEES.find(emp => emp.id === id);
+  if (!e) return;
+  currentEmployeeId = id;
+  document.getElementById('modal-employee-title').textContent = 'Edit employee';
+  document.getElementById('emp-save-btn').textContent = 'Save changes';
+  document.getElementById('emp-firstname').value = e.firstName;
+  document.getElementById('emp-lastname').value = e.lastName;
+  document.getElementById('emp-role').value = e.role;
+  document.getElementById('emp-dept').value = e.dept;
+  document.getElementById('emp-email').value = e.email;
+  document.getElementById('emp-phone').value = e.phone;
+  openModal('modal-employee');
+}
+
+function saveEmployee() {
+  const fn = document.getElementById('emp-firstname').value.trim();
+  const ln = document.getElementById('emp-lastname').value.trim();
+  const email = document.getElementById('emp-email').value.trim();
+  if (!fn || !ln || !email) { showToast('Please fill required fields', 'error'); return; }
+  const data = {
+    firstName: fn, lastName: ln,
+    role: document.getElementById('emp-role').value,
+    dept: document.getElementById('emp-dept').value,
+    email, phone: document.getElementById('emp-phone').value.trim()
+  };
+  if (currentEmployeeId) {
+    const idx = EMPLOYEES.findIndex(e => e.id === currentEmployeeId);
+    if (idx > -1) Object.assign(EMPLOYEES[idx], data);
+    showToast('Employee updated', 'success');
+  } else {
+    EMPLOYEES.push({ id: 'EMP' + uid(), ...data });
+    showToast('Employee added', 'success');
+  }
+  closeModal('modal-employee');
+  renderEmployees();
+}
+
+function toggleRole(id) {
+  const e = EMPLOYEES.find(emp => emp.id === id);
+  if (!e) return;
+  e.role = e.role === 'Administrator' ? 'Employee' : 'Administrator';
+  renderEmployees();
+  showToast(`Role changed to ${e.role}`, 'success');
+}
+
+function deleteEmployee(id) {
+  const idx = EMPLOYEES.findIndex(e => e.id === id);
+  if (idx > -1) EMPLOYEES.splice(idx, 1);
+  renderEmployees();
+  showToast('Employee deleted', 'success');
+}
+
+// =====================================================================
+//  QR SCAN PAGE
+// =====================================================================
+function initScanPage() {
+  const params = new URLSearchParams(window.location.search);
+  const rid = params.get('rid');
+  if (!rid) {
+    document.getElementById('scan-resident-name').textContent = 'Unknown Resident';
+    document.getElementById('scan-resident-info').textContent = 'Invalid QR code';
+    return;
+  }
+  const r = RESIDENTS.find(res => res.id === rid);
+  if (r) {
+    document.getElementById('scan-resident-name').textContent = r.firstName + ' ' + r.lastName;
+    document.getElementById('scan-resident-info').textContent = 'Room ' + r.room + ' · Green Meadows Care Center';
+  } else {
+    document.getElementById('scan-resident-name').textContent = 'Resident #' + rid;
+    document.getElementById('scan-resident-info').textContent = 'Green Meadows Care Center';
+  }
+}
+
+function submitScanEmergency() {
+  const etype = document.getElementById('scan-etype').value.trim();
+  const sev = document.getElementById('scan-severity').value;
+  const nurse = document.getElementById('scan-nurse').value.trim();
+  if (!etype) { showToast('Please enter emergency type', 'error'); return; }
+  if (!sev) { showToast('Please select severity', 'error'); return; }
+  if (!nurse) { showToast('Please enter your name', 'error'); return; }
+
+  const params = new URLSearchParams(window.location.search);
+  const rid = params.get('rid');
+  const r = RESIDENTS.find(res => res.id === rid);
+
+  const newE = {
+    id: 'EMG' + uid(),
+    residentId: rid || 'UNKNOWN',
+    type: etype,
+    desc: document.getElementById('scan-desc').value.trim() || etype,
+    room: r ? r.room : '—',
+    time: new Date(), status: 'New',
+    severity: sev,
+    chat: [{ who: 'System', msg: 'Emergency submitted via QR scan by ' + nurse, ts: new Date() }]
+  };
+  EMERGENCIES.unshift(newE);
+
+  document.getElementById('scan-form-area').style.display = 'none';
+  document.getElementById('scan-success-area').style.display = 'flex';
+}
+
+// =====================================================================
+//  INIT — check URL params for scan page
+// =====================================================================
+(function init() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('scan') === '1') {
+    showView('view-scan');
+    initScanPage();
+  } else {
+    showView('view-login');
+  }
+})();
+</script>
+</body>
+</html>
