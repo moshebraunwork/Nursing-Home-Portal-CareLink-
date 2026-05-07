@@ -5,424 +5,341 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CareLink | Nursing Home Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-:root{
-  --bg:222.2 84% 4.9%;--fg:210 40% 98%;
-  --card:222.2 84% 4.9%;--card-fg:210 40% 98%;
-  --pop:222.2 84% 4.9%;
-  --primary:217.2 91.2% 59.8%;--primary-fg:222.2 47.4% 11.2%;
-  --secondary:217.2 32.6% 17.5%;--secondary-fg:210 40% 98%;
-  --muted:217.2 32.6% 17.5%;--muted-fg:215 20.2% 65.1%;
-  --accent:217.2 32.6% 17.5%;--accent-fg:210 40% 98%;
-  --destructive:0 62.8% 50%;--destructive-fg:210 40% 98%;
-  --border:217.2 32.6% 17.5%;--input:217.2 32.6% 17.5%;
-  --ring:224.3 76.3% 48%;
-  --sidebar:222.2 84% 3.5%;--sidebar-border:217.2 32.6% 13%;
-  --r:0.5rem;
-  --red:0 72% 51%;--red-fg:0 72% 65%;
-  --blue:217 91% 60%;--blue-fg:217 91% 72%;
-  --green:142 71% 45%;--green-fg:142 71% 60%;
-  --purple:271 91% 65%;--purple-fg:271 91% 75%;
-  --orange:25 95% 53%;--orange-fg:25 95% 65%;
-  --yellow:48 96% 53%;--yellow-fg:48 96% 60%;
+:root {
+  --bg:     #0a0a0a;
+  --s1:     #111;
+  --s2:     #161616;
+  --s3:     #1c1c1c;
+  --s4:     #222;
+  --b1:     #242424;
+  --b2:     #2e2e2e;
+  --fg:     #e8e8e8;
+  --fg2:    #888;
+  --fg3:    #444;
+  --pri:    #a9ee8a;
+  --pfg:    #0a0a0a;
+  --red:    #ef4444;
+  --blue:   #3b82f6;
+  --green:  #22c55e;
+  --orange: #f97316;
+  --yellow: #eab308;
+  --purple: #a855f7;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;}
-body{font-family:'Inter',sans-serif;background:hsl(var(--bg));color:hsl(var(--fg));font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
-.mi{font-family:'Material Icons';font-weight:normal;font-style:normal;font-size:18px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle;}
-.mio{font-family:'Material Icons Outlined';font-weight:normal;font-style:normal;font-size:18px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased;vertical-align:middle;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+.mi {font-family:'Material Icons';         font-weight:normal;font-style:normal;font-size:18px;line-height:1;display:inline-block;text-transform:none;letter-spacing:normal;word-wrap:normal;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased;font-feature-settings:'liga';vertical-align:middle;}
+.mio{font-family:'Material Icons Outlined';font-weight:normal;font-style:normal;font-size:18px;line-height:1;display:inline-block;text-transform:none;letter-spacing:normal;word-wrap:normal;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased;font-feature-settings:'liga';vertical-align:middle;}
 .view{display:none;}.view.active{display:flex;}
 
-/* LOGIN */
-#view-login{min-height:100vh;align-items:stretch;}
-/* Left panel — exact 911Systems navy/teal with SVG hex pattern */
-.ll{
-  flex:1;position:relative;
-  display:flex;align-items:center;justify-content:center;
-  min-height:100vh;overflow:hidden;
-  background-color:#0d2d3e;
-}
-/* Hex grid pattern drawn via CSS — matches the screenshot exactly */
-.ll-bg{
-  position:absolute;inset:0;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='104' viewBox='0 0 120 104'%3E%3Cpolygon points='60,2 112,28 112,76 60,102 8,76 8,28' fill='none' stroke='%23ffffff' stroke-width='0.6' stroke-opacity='0.07'/%3E%3C/svg%3E");
-  background-size:120px 104px;
-  background-position:top left;
-  opacity:1;
-}
-.ll-logo{position:relative;z-index:1;}
-.ll-logo svg{width:320px;height:auto;}
-/* Right panel — light/white like the real login */
-.lr{
-  width:480px;flex-shrink:0;
-  background:#f8fafc;
-  border-left:1px solid #e2e8f0;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:52px 44px;
-}
-.l-badge{
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:32px;
-}
-.l-badge-icon{
-  width:36px;height:36px;
-  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
-  border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:16px;font-weight:700;
-  flex-shrink:0;
-}
-.l-badge-name{font-size:16px;font-weight:700;color:#0f172a;}
-.l-badge-sub{font-size:11px;color:#64748b;margin-top:1px;}
+/* ── LOGIN ── */
+#view-login{min-height:100vh;align-items:stretch;overflow:auto;}
+.ll{flex:1;background-color:#0d2d3e;position:relative;display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden;}
+.ll-bg{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='96'%3E%3Cpolygon points='55,2 104,26 104,70 55,94 6,70 6,26' fill='none' stroke='%23ffffff' stroke-width='0.4' opacity='0.06'/%3E%3C/svg%3E");background-size:110px 96px;}
+.ll-logo{position:relative;z-index:1;}.ll-logo svg{width:270px;height:auto;}
+.lr{width:460px;flex-shrink:0;background:#f8fafc;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:52px 44px;}
+.l-badge{display:flex;align-items:center;gap:10px;margin-bottom:30px;}
+.l-badge-icon{width:36px;height:36px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;}
+.l-badge-name{font-size:15px;font-weight:700;color:#111;}.l-badge-sub{font-size:11px;color:#6b7280;margin-top:1px;}
 .l-form{width:100%;max-width:320px;}
-.l-form h1{font-size:20px;font-weight:600;color:#0f172a;margin-bottom:4px;}
-.l-form>p{color:#64748b;font-size:13px;margin-bottom:24px;}
-/* Light-mode inputs for the login panel */
-.l-input{
-  width:100%;height:38px;padding:0 12px;
-  background:#fff;
-  border:1px solid #cbd5e1;
-  border-radius:var(--r);
-  color:#0f172a;
-  font-size:14px;font-family:inherit;outline:none;
-  transition:border-color .15s,box-shadow .15s;
-}
-.l-input:focus{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.18);}
-.l-input::placeholder{color:#94a3b8;}
-.l-field{margin-bottom:14px;}
-.l-lbl{display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;}
-.l-btn{
-  width:100%;height:40px;
-  background:#a9ee8a;color:#1a1a1a;
-  border:none;border-radius:var(--r);
-  font-size:14px;font-weight:600;font-family:inherit;
-  cursor:pointer;margin-top:4px;
-  transition:opacity .15s;
-  display:flex;align-items:center;justify-content:center;gap:6px;
-}
+.l-form h1{font-size:20px;font-weight:600;color:#111;margin-bottom:4px;}
+.l-form>p{color:#6b7280;font-size:13px;margin-bottom:22px;}
+.lf{margin-bottom:13px;}.ll2{display:block;font-size:12px;font-weight:500;color:#374151;margin-bottom:4px;}
+.li{width:100%;height:38px;padding:0 12px;background:#fff;border:1px solid #d1d5db;border-radius:6px;color:#111;font-size:13px;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s;}
+.li:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12);}.li::placeholder{color:#9ca3af;}
+.l-btn{width:100%;height:40px;background:var(--pri);color:var(--pfg);border:none;border-radius:6px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:4px;transition:opacity .15s;}
 .l-btn:hover{opacity:.88;}
-@media(max-width:780px){.ll{display:none;}.lr{width:100%;border:none;background:hsl(var(--bg));}
-  .l-form h1,.l-badge-name{color:hsl(var(--fg));}
-  .l-form>p,.l-lbl,.l-badge-sub{color:hsl(var(--muted-fg));}
-  .l-input{background:hsl(var(--secondary));border-color:hsl(var(--border));color:hsl(var(--fg));}
-  .l-input::placeholder{color:hsl(var(--muted-fg));}
-}
+@media(max-width:700px){.ll{display:none;}.lr{width:100%;background:var(--bg);}.l-badge-name,.l-form h1{color:var(--fg);}.l-form>p,.ll2,.l-badge-sub{color:var(--fg2);}.li{background:var(--s2);border-color:var(--b2);color:var(--fg);}}
 
-/* APP */
-#view-app{flex-direction:row;min-height:100vh;width:100%;}
+/* ── APP ── */
+#view-app{flex-direction:row;height:100vh;width:100%;overflow:hidden;}
 
-/* SIDEBAR */
-.sb{width:236px;flex-shrink:0;background:hsl(var(--sidebar));border-right:1px solid hsl(var(--sidebar-border));display:flex;flex-direction:column;height:100vh;position:sticky;top:0;overflow-y:auto;}
-.sb-top{padding:14px 10px 10px;border-bottom:1px solid hsl(var(--sidebar-border));}
-.sb-brand{display:flex;align-items:center;gap:9px;padding:4px 6px;}
-.sb-brand img{height:26px;}
-.sb-brand-fb{width:26px;height:26px;background:hsl(var(--primary));border-radius:6px;display:flex;align-items:center;justify-content:center;color:hsl(var(--primary-fg));font-weight:700;font-size:11px;flex-shrink:0;}
-.sb-name{font-size:13px;font-weight:600;}
-.sb-sub{font-size:11px;color:hsl(var(--muted-fg));}
-.sb-nav{flex:1;padding:8px;}
-.sb-sec{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:hsl(var(--muted-fg));padding:10px 12px 4px;}
-.ni{display:flex;align-items:center;gap:9px;width:100%;height:34px;padding:0 12px;background:transparent;border:none;color:hsl(var(--muted-fg));border-radius:calc(var(--r) - 2px);cursor:pointer;font-size:13px;font-family:inherit;text-align:left;text-decoration:none;transition:background .12s,color .12s;}
-.ni:hover{background:hsl(var(--accent));color:hsl(var(--fg));}
-.ni.active{background:hsl(var(--accent));color:hsl(var(--fg));font-weight:500;}
-.ni .mi,.ni .mio{font-size:17px;flex-shrink:0;}
-.sb-sep{height:1px;background:hsl(var(--sidebar-border));margin:4px 10px;}
-.sb-foot{border-top:1px solid hsl(var(--sidebar-border));padding:8px;}
-.u-row{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:calc(var(--r) - 2px);cursor:pointer;transition:background .12s;}
-.u-row:hover{background:hsl(var(--accent));}
-.u-av{width:30px;height:30px;border-radius:50%;background:hsl(var(--primary));color:hsl(var(--primary-fg));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
-.u-name{font-size:13px;font-weight:500;}
-.u-role{font-size:11px;color:hsl(var(--muted-fg));}
+/* ── ICON SIDEBAR ── */
+.sidebar{width:44px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;align-items:center;height:100vh;}
+.sb-logo{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--b1);flex-shrink:0;}
+.sb-logo svg{width:22px;height:auto;}
+.sb-icons{flex:1;display:flex;flex-direction:column;align-items:center;padding:6px 0;gap:2px;}
+.sb-foot{padding:6px 0;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.sbi{position:relative;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:var(--fg3);border-radius:5px;cursor:pointer;transition:background .1s,color .1s;}
+.sbi:hover{background:var(--s3);color:var(--fg2);}.sbi.active{background:var(--s3);color:var(--fg);}
+.sbi .mi,.sbi .mio{font-size:17px;}
+.sbi::after{content:attr(data-tip);position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);background:var(--s4);color:var(--fg);padding:4px 8px;border-radius:4px;font-size:11px;white-space:nowrap;border:1px solid var(--b2);pointer-events:none;opacity:0;transition:opacity .1s;z-index:9999;}
+.sbi:hover::after{opacity:1;}
+.sb-sep{width:22px;height:1px;background:var(--b1);margin:3px 0;}
+.u-dot{width:28px;height:28px;border-radius:50%;background:var(--pri);color:var(--pfg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;cursor:pointer;position:relative;}
+.u-dot::after{content:attr(data-tip);position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);background:var(--s4);color:var(--fg);padding:4px 8px;border-radius:4px;font-size:11px;white-space:nowrap;border:1px solid var(--b2);pointer-events:none;opacity:0;transition:opacity .1s;z-index:9999;}
+.u-dot:hover::after{opacity:1;}
 
-/* MAIN */
-.main{flex:1;min-width:0;display:flex;flex-direction:column;}
-.topbar{height:54px;flex-shrink:0;border-bottom:1px solid hsl(var(--border));display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:hsl(var(--bg));}
-.topbar-title{font-size:15px;font-weight:600;}
-.topbar-right{display:flex;align-items:center;gap:8px;}
-.pg{flex:1;padding:22px;overflow-y:auto;}
+/* ── MAIN ── */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
 
-/* BTNS */
-.btn{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 13px;font-size:13px;font-weight:500;border-radius:var(--r);border:1px solid transparent;cursor:pointer;font-family:inherit;transition:opacity .15s,background .15s;white-space:nowrap;text-decoration:none;}
-.btn .mi,.btn .mio{font-size:15px;}
-.btn-primary{background:hsl(var(--primary));color:hsl(var(--primary-fg));}
-.btn-primary:hover{opacity:.88;}
-.btn-secondary{background:hsl(var(--secondary));color:hsl(var(--secondary-fg));}
-.btn-secondary:hover{background:hsl(217.2 32.6% 22%);}
-.btn-outline{background:transparent;border-color:hsl(var(--border));color:hsl(var(--fg));}
-.btn-outline:hover{background:hsl(var(--accent));}
-.btn-ghost{background:transparent;border:none;color:hsl(var(--muted-fg));}
-.btn-ghost:hover{background:hsl(var(--accent));color:hsl(var(--fg));}
-.btn-destruct{background:hsl(var(--destructive));color:hsl(var(--destructive-fg));}
-.btn-destruct:hover{opacity:.88;}
-.btn-sm{height:28px;padding:0 9px;font-size:12px;}
-.btn-icon{width:34px;height:34px;padding:0;justify-content:center;border:none;}
-.btn-icon .mi,.btn-icon .mio{font-size:17px;}
+/* ── TOPBAR ── */
+.topbar{height:44px;flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 16px;}
+.topbar-bc{display:flex;align-items:center;gap:5px;font-size:13px;}
+.topbar-bc .crumb{color:var(--fg2);}.topbar-bc .sep{color:var(--fg3);font-size:11px;}.topbar-bc .page{color:var(--fg);font-weight:500;}
+.topbar-r{display:flex;align-items:center;gap:8px;}
+.sw{position:relative;}.sw .mio{position:absolute;top:50%;left:8px;transform:translateY(-50%);color:var(--fg3);font-size:14px;pointer-events:none;}
+.si{height:28px;padding:0 8px 0 28px;background:var(--s2);border:1px solid var(--b2);border-radius:5px;color:var(--fg);font-size:12px;font-family:inherit;outline:none;width:200px;}
+.si:focus{border-color:var(--fg3);}.si::placeholder{color:var(--fg3);}
+.btn{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 10px;font-size:12px;font-weight:500;border-radius:5px;border:1px solid transparent;cursor:pointer;font-family:inherit;transition:opacity .12s,background .12s;white-space:nowrap;}
+.btn .mi,.btn .mio{font-size:14px;}
+.btn-pri{background:var(--pri);color:var(--pfg);}.btn-pri:hover{opacity:.88;}
+.btn-ghost{background:transparent;border:none;color:var(--fg2);}.btn-ghost:hover{background:var(--s3);color:var(--fg);}
+.btn-icon{width:28px;height:28px;padding:0;justify-content:center;border:none;}
 
-/* FIELDS */
-.field{margin-bottom:14px;}
-.lbl{display:block;font-size:13px;font-weight:500;margin-bottom:5px;}
-.lbl .req{color:hsl(var(--red));margin-left:2px;}
-.input,.sel,.ta{width:100%;height:34px;padding:0 11px;background:transparent;border:1px solid hsl(var(--border));border-radius:var(--r);color:hsl(var(--fg));font-size:13px;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s;}
-.input:focus,.sel:focus,.ta:focus{border-color:hsl(var(--ring));box-shadow:0 0 0 2px hsl(var(--ring)/.2);}
-.input::placeholder{color:hsl(var(--muted-fg));}
-.ta{height:auto;min-height:76px;padding:8px 11px;resize:vertical;}
-.sel{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 9px center;background-size:15px;padding-right:32px;cursor:pointer;}
-.sel option{background:hsl(222 84% 8%);}
+/* ── PAGE AREA ── */
+.page-area{flex:1;overflow-y:auto;padding:20px;}
+
+/* ── TABLE CARD ── */
+.tbl-card{background:var(--s1);border:1px solid var(--b1);border-radius:6px;overflow:hidden;}
+table.tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.tbl thead tr{border-bottom:1px solid var(--b1);}
+.tbl th{text-align:left;font-size:11px;font-weight:500;color:var(--fg2);padding:0 14px;height:34px;background:var(--s1);white-space:nowrap;position:sticky;top:0;z-index:2;}
+.tbl td{padding:0 14px;height:38px;border-bottom:1px solid var(--b1);color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;}
+.tbl td.m{color:var(--fg2);}
+.tbl tbody tr{cursor:pointer;transition:background .06s;}
+.tbl tbody tr:hover{background:var(--s2);}
+.tbl tbody tr:last-child td{border-bottom:none;}
+.tbl .rn>td:first-child{border-left:2px solid var(--red);}
+.tbl .ra>td:first-child{border-left:2px solid var(--blue);}
+.tbl .rc>td:first-child{border-left:2px solid var(--green);}
+
+/* ── BADGES ── */
+.bdg{display:inline-flex;align-items:center;padding:1px 7px;font-size:11px;font-weight:500;border-radius:3px;}
+.bn {background:rgba(239,68,68,.15); color:#fca5a5;}
+.ba {background:rgba(59,130,246,.15);color:#93c5fd;}
+.bc {background:rgba(34,197,94,.15); color:#86efac;}
+.badm{background:rgba(168,85,247,.15);color:#d8b4fe;}
+.bemp{background:var(--s3);color:var(--fg2);}
+.bcrit{background:rgba(239,68,68,.25);color:#fca5a5;}
+.bhigh{background:rgba(249,115,22,.15);color:#fdba74;}
+.bmed {background:rgba(234,179,8,.15); color:#fde047;}
+.blow {background:rgba(34,197,94,.15); color:#86efac;}
+
+/* ── CONTEXT MENU ── */
+.ctx{position:fixed;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:3px;min-width:190px;z-index:9000;box-shadow:0 8px 32px rgba(0,0,0,.7);animation:ctx-in .08s ease;}
+@keyframes ctx-in{from{opacity:0;transform:scale(.97) translateY(-2px);}to{opacity:1;transform:scale(1);}}
+.cxi{display:flex;align-items:center;gap:9px;width:100%;height:32px;padding:0 10px;background:transparent;border:none;color:var(--fg);border-radius:4px;cursor:pointer;font-family:inherit;font-size:13px;text-align:left;}
+.cxi:hover{background:var(--s3);}
+.cxi .mi,.cxi .mio{font-size:14px;color:var(--fg2);}
+.cxi.danger{color:var(--red);}.cxi.danger .mi,.cxi.danger .mio{color:var(--red);}
+.ctx-sep{height:1px;background:var(--b1);margin:3px 0;}
+
+/* ── SLIDE PANEL ── */
+.pscrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;opacity:0;pointer-events:none;transition:opacity .2s;}
+.pscrim.open{opacity:1;pointer-events:auto;}
+.panel{position:fixed;top:0;right:0;bottom:0;width:min(680px,58vw);background:var(--s1);border-left:1px solid var(--b1);z-index:301;transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+.panel.open{transform:translateX(0);}
+
+/* Panel header */
+.ph{display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:48px;flex-shrink:0;border-bottom:1px solid var(--b1);}
+.ph-title{font-size:15px;font-weight:600;}
+.ph-right{display:flex;align-items:center;gap:6px;}
+.ph-close{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--b2);border-radius:4px;color:var(--fg2);cursor:pointer;transition:background .1s;}
+.ph-close:hover{background:var(--s3);color:var(--fg);}
+.ph-close .mi{font-size:16px;}
+
+/* Panel body — single scroll */
+.pbody{flex:1;overflow-y:auto;padding:22px 20px;}
+
+/* Section title inside panel */
+.psec{font-size:14px;font-weight:600;color:var(--fg);margin:0 0 14px;}
+.psec-group{margin-bottom:24px;}
+.p-divider{height:1px;background:var(--b1);margin:20px 0;}
+
+/* Key-value grid — small muted label, value below */
+.kvg{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
+.kv{padding:0 0 14px;}.kv.full{grid-column:1/-1;}
+.kv-k{font-size:11px;color:var(--fg2);margin-bottom:3px;}
+.kv-v{font-size:13px;color:var(--fg);}
+.kv-v.dash{color:var(--fg3);}
+
+/* Panel footer — green button + close */
+.pfooter{flex-shrink:0;border-top:1px solid var(--b1);}
+.pf-main{display:block;width:100%;height:46px;background:var(--pri);color:var(--pfg);border:none;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity .12s;}
+.pf-main:hover{opacity:.88;}
+.pf-sec{display:block;width:100%;height:40px;background:transparent;color:var(--fg2);border:none;border-top:1px solid var(--b1);font-size:13px;font-family:inherit;cursor:pointer;transition:background .1s;}
+.pf-sec:hover{background:var(--s2);}
+
+/* Form fields inside panel */
+.field{margin-bottom:13px;}
+.flbl{display:block;font-size:12px;font-weight:500;color:var(--fg2);margin-bottom:4px;}
+.flbl .req{color:var(--red);}
+.inp,.sel,.ta{width:100%;height:34px;padding:0 10px;background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--fg);font-size:13px;font-family:inherit;outline:none;transition:border-color .12s;}
+.inp:focus,.sel:focus,.ta:focus{border-color:var(--pri);}
+.inp::placeholder{color:var(--fg3);}
+.ta{height:auto;min-height:72px;padding:8px 10px;resize:vertical;}
+.sel{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23444' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 8px center;padding-right:28px;cursor:pointer;}
+.sel option{background:#1a1a1a;}
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-/* SEARCH */
-.sw{position:relative;}
-.sw .mio{position:absolute;top:50%;left:9px;transform:translateY(-50%);color:hsl(var(--muted-fg));pointer-events:none;font-size:15px;}
-.si{height:34px;padding:0 11px 0 31px;background:hsl(var(--secondary));border:1px solid hsl(var(--border));border-radius:var(--r);color:hsl(var(--fg));font-size:13px;font-family:inherit;outline:none;width:220px;transition:border-color .15s,box-shadow .15s;}
-.si:focus{border-color:hsl(var(--ring));box-shadow:0 0 0 2px hsl(var(--ring)/.2);}
-.si::placeholder{color:hsl(var(--muted-fg));}
+/* QR inside panel */
+.qr-panel-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.qr-white-box{background:#fff;padding:14px;border-radius:5px;display:inline-block;}
+.qr-rows{width:100%;display:flex;flex-direction:column;gap:4px;}
+.qr-row{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--s2);border-radius:4px;}
+.qr-k{font-size:11px;color:var(--fg2);}.qr-v{font-size:12px;font-weight:500;}
 
-/* TABLE */
-.tw{border:1px solid hsl(var(--border));border-radius:var(--r);overflow:hidden;}
-.ts{overflow-x:auto;}
-table.t{width:100%;border-collapse:collapse;font-size:13px;}
-.t thead{background:hsl(var(--secondary));}
-.t th{text-align:left;font-weight:500;font-size:12px;color:hsl(var(--muted-fg));padding:0 14px;height:38px;border-bottom:1px solid hsl(var(--border));white-space:nowrap;}
-.t td{padding:11px 14px;border-bottom:1px solid hsl(var(--border));vertical-align:middle;}
-.t tbody tr:last-child td{border-bottom:none;}
-.t tbody tr:hover{background:hsl(var(--accent));}
-.t .cp{cursor:pointer;}
-.t .rn td:first-child{border-left:3px solid hsl(var(--red));}
-.t .ra td:first-child{border-left:3px solid hsl(var(--blue));}
-.t .rc td:first-child{border-left:3px solid hsl(var(--green));}
-
-/* BADGES */
-.bdg{display:inline-flex;align-items:center;padding:1px 8px;font-size:11px;font-weight:500;border-radius:9999px;border:1px solid transparent;white-space:nowrap;}
-.bn{background:hsl(var(--red)/.15);color:hsl(var(--red-fg));border-color:hsl(var(--red)/.25);}
-.ba{background:hsl(var(--blue)/.15);color:hsl(var(--blue-fg));border-color:hsl(var(--blue)/.25);}
-.bc{background:hsl(var(--green)/.15);color:hsl(var(--green-fg));border-color:hsl(var(--green)/.25);}
-.badmin{background:hsl(var(--purple)/.15);color:hsl(var(--purple-fg));border-color:hsl(var(--purple)/.25);}
-.bemp{background:hsl(var(--secondary));color:hsl(var(--muted-fg));border-color:hsl(var(--border));}
-.bcrit{background:hsl(0 72% 40%/.3);color:hsl(0 72% 75%);border-color:hsl(0 72% 51%/.3);}
-.bhigh{background:hsl(var(--orange)/.15);color:hsl(var(--orange-fg));border-color:hsl(var(--orange)/.25);}
-.bmed{background:hsl(var(--yellow)/.15);color:hsl(var(--yellow-fg));border-color:hsl(var(--yellow)/.25);}
-.blow{background:hsl(var(--green)/.15);color:hsl(var(--green-fg));border-color:hsl(var(--green)/.25);}
-
-/* DROPDOWN */
-.ddw{position:relative;display:inline-block;}
-.ddm{position:absolute;top:calc(100% + 4px);right:0;background:hsl(var(--pop));border:1px solid hsl(var(--border));border-radius:var(--r);padding:4px;min-width:158px;z-index:200;box-shadow:0 8px 30px rgba(0,0,0,.55);display:none;animation:ddi .1s ease;}
-@keyframes ddi{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:translateY(0);}}
-.ddm.open{display:block;}
-.ddi{display:flex;align-items:center;gap:7px;width:100%;height:30px;padding:0 8px;background:transparent;border:none;color:hsl(var(--fg));border-radius:4px;cursor:pointer;font-family:inherit;font-size:13px;text-align:left;}
-.ddi:hover{background:hsl(var(--accent));}
-.ddi .mi,.ddi .mio{font-size:14px;color:hsl(var(--muted-fg));}
-.ddi.danger{color:hsl(var(--red-fg));}
-.ddi.danger .mi,.ddi.danger .mio{color:hsl(var(--red-fg));}
-.dds{height:1px;background:hsl(var(--border));margin:3px 0;}
-
-/* MODAL */
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:16px;}
-.mo.open{display:flex;}
-.md{background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:calc(var(--r) + 3px);width:100%;max-width:490px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6);animation:mdi .17s ease;}
-@keyframes mdi{from{opacity:0;transform:scale(.97);}to{opacity:1;transform:scale(1);}}
-.md-lg{max-width:600px;}
-.mh{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid hsl(var(--border));}
-.mt{font-size:15px;font-weight:600;}
-.mb{padding:18px 22px;}
-.mf{display:flex;gap:8px;justify-content:flex-end;padding:14px 22px;border-top:1px solid hsl(var(--border));}
-
-/* PANEL */
-.ps{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150;opacity:0;pointer-events:none;transition:opacity .25s;}
-.ps.open{opacity:1;pointer-events:auto;}
-.pn{position:fixed;top:0;right:0;bottom:0;width:min(570px,100vw);background:hsl(var(--bg));border-left:1px solid hsl(var(--border));z-index:151;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
-.pn.open{transform:translateX(0);}
-.ph{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid hsl(var(--border));flex-shrink:0;}
-.pt{font-size:15px;font-weight:600;}
-.pb{flex:1;overflow-y:auto;padding:18px 22px;}
-
-/* DETAIL */
-.ds{margin-bottom:18px;}
-.dsl{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:hsl(var(--muted-fg));margin-bottom:9px;display:flex;align-items:center;gap:5px;}
-.dsl .mio{font-size:13px;}
-.dg{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-.dk{font-size:11px;color:hsl(var(--muted-fg));margin-bottom:1px;}
-.dv{font-size:13px;font-weight:500;}
-.dfw{grid-column:1/-1;}
-.ddiv{height:1px;background:hsl(var(--border));margin:14px 0;}
-
-/* CHAT */
-.cb{border:1px solid hsl(var(--border));border-radius:var(--r);overflow:hidden;}
-.cbh{padding:9px 13px;background:hsl(var(--secondary));border-bottom:1px solid hsl(var(--border));font-size:12px;font-weight:500;display:flex;align-items:center;gap:7px;}
-.cm{padding:12px;min-height:170px;max-height:240px;overflow-y:auto;background:hsl(222.2 84% 3.5%);display:flex;flex-direction:column;gap:9px;}
+/* Chat */
+.chatbox{border:1px solid var(--b1);border-radius:4px;overflow:hidden;}
+.chat-hd{padding:7px 11px;background:var(--s2);border-bottom:1px solid var(--b1);font-size:11px;font-weight:500;color:var(--fg2);display:flex;align-items:center;gap:6px;}
+.chat-msgs{padding:10px;min-height:140px;max-height:220px;overflow-y:auto;background:var(--bg);display:flex;flex-direction:column;gap:7px;}
 .msg{display:flex;flex-direction:column;gap:2px;}
-.mmeta{font-size:10px;color:hsl(var(--muted-fg));}
-.mbubble{padding:6px 10px;border-radius:7px;font-size:12px;line-height:1.45;max-width:86%;}
-.msg.in .mbubble{background:hsl(var(--secondary));border-bottom-left-radius:2px;}
+.mmeta{font-size:10px;color:var(--fg3);}
+.mbubble{padding:5px 9px;border-radius:4px;font-size:12px;line-height:1.45;max-width:85%;}
+.msg.in .mbubble{background:var(--s2);}
 .msg.out{align-items:flex-end;}
-.msg.out .mbubble{background:hsl(var(--primary)/.18);border:1px solid hsl(var(--primary)/.25);border-bottom-right-radius:2px;}
-.cir{display:flex;gap:7px;padding:9px 11px;border-top:1px solid hsl(var(--border));background:hsl(var(--card));}
-.cinp{flex:1;height:32px;padding:0 11px;background:hsl(var(--secondary));border:1px solid hsl(var(--border));border-radius:var(--r);color:hsl(var(--fg));font-size:13px;font-family:inherit;outline:none;}
-.cinp:focus{border-color:hsl(var(--ring));}
-.cinp::placeholder{color:hsl(var(--muted-fg));}
+.msg.out .mbubble{background:rgba(169,238,138,.08);border:1px solid rgba(169,238,138,.15);}
+.chat-row{display:flex;gap:6px;padding:7px 9px;border-top:1px solid var(--b1);background:var(--s1);}
+.chat-inp{flex:1;height:28px;padding:0 9px;background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--fg);font-size:12px;font-family:inherit;outline:none;}
+.chat-inp:focus{border-color:var(--pri);}
+.chat-inp::placeholder{color:var(--fg3);}
 
-/* TOAST */
-#toasts{position:fixed;bottom:18px;right:18px;display:flex;flex-direction:column;gap:7px;z-index:999;}
-.toast{display:flex;align-items:center;gap:9px;padding:10px 14px;background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--r);box-shadow:0 8px 30px rgba(0,0,0,.5);font-size:13px;max-width:280px;animation:ti .18s ease;}
-@keyframes ti{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
-.toast.ok{border-color:hsl(var(--green)/.4);}
-.toast.err{border-color:hsl(var(--red)/.4);}
-.tic{font-size:15px;flex-shrink:0;}
-.toast.ok .tic{color:hsl(var(--green-fg));}
-.toast.err .tic{color:hsl(var(--red-fg));}
+/* Toast */
+#toasts{position:fixed;bottom:14px;right:14px;display:flex;flex-direction:column;gap:5px;z-index:9999;pointer-events:none;}
+.toast{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--s2);border:1px solid var(--b2);border-radius:5px;box-shadow:0 4px 20px rgba(0,0,0,.6);font-size:12px;animation:ti .14s ease;pointer-events:auto;}
+@keyframes ti{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+.toast.ok{border-left:2px solid var(--green);}.toast.err{border-left:2px solid var(--red);}
+.tic{font-size:14px;flex-shrink:0;}.toast.ok .tic{color:var(--green);}.toast.err .tic{color:var(--red);}
 
-/* QR MODAL */
-.qrd{background:#fff;padding:14px;border-radius:7px;width:fit-content;margin:0 auto 14px;}
-.qrrows{display:flex;flex-direction:column;gap:5px;}
-.qrr{display:flex;justify-content:space-between;align-items:center;padding:7px 11px;background:hsl(var(--secondary));border-radius:var(--r);}
-.qrk{font-size:11px;color:hsl(var(--muted-fg));}
-.qrv{font-size:12px;font-weight:500;}
+/* Scan page */
+#view-scan{min-height:100vh;flex-direction:column;align-items:center;background:var(--bg);overflow-y:auto;}
+.stb{width:100%;padding:11px 14px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px;background:var(--s1);flex-shrink:0;}
+.stb svg{height:20px;width:auto;}
+.stb-name{font-size:13px;font-weight:600;}.stb-sub{font-size:10px;color:var(--fg2);}
+.sbody{width:100%;max-width:420px;padding:14px 10px;display:flex;flex-direction:column;gap:11px;}
+.salert{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:5px;}
+.sai{width:30px;height:30px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;}
+.sai .mi{font-size:15px;}
+.sat{font-size:12px;font-weight:600;color:#fca5a5;margin-bottom:2px;}
+.sas{font-size:11px;color:var(--fg2);line-height:1.5;}
+.scard{background:var(--s1);border:1px solid var(--b1);border-radius:5px;overflow:hidden;}
+.sch{padding:11px 13px;background:var(--s2);border-bottom:1px solid var(--b1);}
+.scn{font-size:15px;font-weight:600;}.scm{font-size:11px;color:var(--fg2);margin-top:2px;}
+.scb{padding:13px;}
+.ssub{width:100%;height:38px;background:var(--red);color:#fff;border:none;border-radius:5px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px;transition:opacity .12s;}
+.ssub:hover{opacity:.88;}
+.sok{display:none;flex-direction:column;align-items:center;text-align:center;padding:26px 14px;gap:9px;}
+.sokc{width:48px;height:48px;border-radius:50%;background:rgba(34,197,94,.1);border:2px solid rgba(34,197,94,.25);display:flex;align-items:center;justify-content:center;color:var(--green);}
+.sokc .mi{font-size:22px;}
+.sokt{font-size:15px;font-weight:600;}
+.soks{font-size:12px;color:var(--fg2);line-height:1.6;}
+.sftr{font-size:11px;color:var(--fg3);text-align:center;padding:7px 10px 18px;line-height:1.7;}
+.sftr strong{color:#fca5a5;}
 
-/* SCAN PAGE */
-#view-scan{min-height:100vh;flex-direction:column;align-items:center;background:hsl(var(--bg));}
-.stb{width:100%;padding:13px 18px;border-bottom:1px solid hsl(var(--border));display:flex;align-items:center;gap:11px;background:hsl(var(--sidebar));}
-.stb img{height:24px;}
-.stb-fb{width:24px;height:24px;background:hsl(var(--primary));border-radius:6px;display:flex;align-items:center;justify-content:center;color:hsl(var(--primary-fg));font-weight:700;font-size:10px;flex-shrink:0;}
-.stb-name{font-size:14px;font-weight:700;}
-.stb-sub{font-size:10px;color:hsl(var(--muted-fg));}
-.sct{width:100%;max-width:460px;padding:18px 14px;display:flex;flex-direction:column;gap:14px;}
-.salert{display:flex;align-items:flex-start;gap:11px;padding:13px 14px;background:hsl(var(--red)/.12);border:1px solid hsl(var(--red)/.3);border-radius:var(--r);}
-.sai{width:34px;height:34px;border-radius:50%;flex-shrink:0;background:hsl(var(--red));display:flex;align-items:center;justify-content:center;color:#fff;}
-.sai .mi{font-size:17px;}
-.sat{font-size:13px;font-weight:600;color:hsl(var(--red-fg));margin-bottom:2px;}
-.sas{font-size:12px;color:hsl(var(--muted-fg));line-height:1.5;}
-.scard{background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:calc(var(--r) + 2px);overflow:hidden;}
-.sch{padding:14px 16px;background:hsl(var(--secondary));border-bottom:1px solid hsl(var(--border));}
-.scn{font-size:17px;font-weight:700;}
-.scm{font-size:11px;color:hsl(var(--muted-fg));margin-top:2px;}
-.scb{padding:16px;}
-.ssub{width:100%;height:42px;background:hsl(var(--red));color:#fff;border:none;border-radius:var(--r);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:4px;transition:opacity .15s;}
-.ssub:hover{opacity:.9;}
-.sok{display:none;flex-direction:column;align-items:center;text-align:center;padding:30px 18px;gap:11px;}
-.sokc{width:56px;height:56px;border-radius:50%;background:hsl(var(--green)/.15);border:2px solid hsl(var(--green)/.4);display:flex;align-items:center;justify-content:center;color:hsl(var(--green-fg));}
-.sokc .mi{font-size:26px;}
-.sokt{font-size:17px;font-weight:700;}
-.soks{font-size:12px;color:hsl(var(--muted-fg));line-height:1.6;}
-.sftr{font-size:11px;color:hsl(var(--muted-fg));text-align:center;padding:10px 14px 22px;line-height:1.7;}
-.sftr strong{color:hsl(var(--red-fg));}
-
-/* EMPTY */
-.empty{text-align:center;padding:52px 22px;color:hsl(var(--muted-fg));}
-.empty .mio{font-size:38px;display:block;margin:0 auto 9px;opacity:.28;}
-
-/* UTILS */
-.tm{color:hsl(var(--muted-fg));}.fw5{font-weight:500;}.ts{font-size:12px;}.trunc{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.pdot{width:6px;height:6px;border-radius:50%;background:hsl(var(--red));display:inline-block;animation:pp 1.8s infinite;}
-@keyframes pp{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.35;transform:scale(.75);}}
-::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:hsl(var(--border));border-radius:3px;}::-webkit-scrollbar-thumb:hover{background:hsl(var(--muted-fg));}
+/* Utils */
+.muted{color:var(--fg2);}
+.pulse{width:5px;height:5px;border-radius:50%;background:var(--red);display:inline-block;animation:pp 1.8s infinite;}
+@keyframes pp{0%,100%{opacity:1;}50%{opacity:.15;}}
+.empty{text-align:center;padding:48px 20px;color:var(--fg2);}
+.empty .mio{font-size:34px;display:block;margin:0 auto 8px;opacity:.2;}
+::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px;}
 @media print{body *{visibility:hidden;}#pz,#pz *{visibility:visible;}#pz{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}}
 </style>
 </head>
 <body>
 <div id="toasts"></div>
+<div id="pz" style="display:none;"></div>
 
 <!-- LOGIN -->
 <div id="view-login" class="view active">
   <div class="ll">
     <div class="ll-bg"></div>
     <div class="ll-logo">
-      <svg xmlns="http://www.w3.org/2000/svg" width="396" height="75" viewBox="0 0 396 75" fill="none">
-        <path d="M395.529 38.4136L357.014 0C354.83 0.278176 352.71 0.739695 350.66 1.37191L368.475 19.1562C373.809 24.4795 376.455 31.4465 376.455 38.4136C376.455 45.3806 373.803 52.3413 368.468 57.6709L352.229 73.8873C354.368 74.4436 356.577 74.823 358.843 75L395.535 38.4136H395.529ZM371.278 38.4136L339.655 6.87853C338.174 7.9533 336.769 9.12922 335.465 10.4126L344.217 19.1625C349.559 24.4858 352.198 31.4528 352.198 38.4136C352.198 45.3806 349.552 52.3476 344.211 57.6772L336.503 65.384C337.864 66.6168 339.313 67.7485 340.844 68.7727L371.278 38.4199V38.4136ZM329.118 56.2674C328.168 54.6299 327.339 52.9103 326.637 51.1211C333.149 43.7052 332.959 32.4581 326.055 25.2697C326.694 23.3921 327.479 21.5839 328.396 19.8453L347.015 38.4136L329.118 56.2611V56.2674Z" fill="#A9EE8A"/>
-        <path d="M109.367 22.637H103.545C103.241 16.8744 99.2247 14.3655 93.3388 14.3655C87.4529 14.3655 83.6706 16.8455 83.6706 21.5669C83.6706 26.2884 87.5166 27.8791 91.8372 28.6455L97.2981 29.6288C103.63 30.764 109.785 33.7068 109.785 42.0362C109.785 50.3656 102.943 55.1232 93.9975 55.1232C85.0518 55.1232 76.8922 50.4018 76.5877 39.802H82.4098C82.8277 46.9746 87.63 49.9173 93.9975 49.9173C100.365 49.9173 104.02 46.9456 104.02 42.1013C104.02 37.2569 99.848 35.6373 95.3149 34.8058L89.854 33.8297C84.0885 32.7885 77.9051 29.8457 77.9051 21.632C77.9051 13.4183 84.9314 9.15957 93.3317 9.15957C101.732 9.15957 108.999 13.4472 109.36 22.6443M121.706 54.1977H125.368C125.849 54.1977 126.027 54.2556 126.211 54.5665C126.388 54.8702 126.331 55.1811 126.147 55.6727L124.405 60.452C124.192 61.0666 123.802 61.3703 123.023 61.3703C121.826 61.3703 120.381 60.9437 116.776 60.9437H113.596V65.8459H119.361C125.963 65.8459 129.15 63.9443 131.07 57.9431L141.999 23.5625V22.3406H136.594L127.648 50.9585C127.528 51.3273 127.351 51.4502 126.99 51.4502C126.629 51.4502 126.451 51.3273 126.331 50.9585L117.385 22.3406H111.981V23.5625L121.706 54.205V54.1977ZM169.735 32.4415C169.133 24.6616 163.254 21.4079 155.867 21.4079C148.479 21.4079 143.323 24.6543 143.323 30.7857C143.323 36.9171 147.552 39.0284 153.65 40.1924L158.091 41.0529C162.411 41.8844 164.572 42.8315 164.572 45.5863C164.572 48.3411 162.411 50.3945 157.184 50.3945C151.957 50.3945 148.508 48.1893 148.09 43.9595H142.593C143.103 51.5586 149.138 55.116 157.184 55.116C165.23 55.116 169.969 51.5948 169.969 45.2826C169.969 38.9705 164.99 37.0689 159.281 35.9699L154.84 35.1095C150.576 34.278 148.72 33.3597 148.72 30.7279C148.72 28.096 150.824 26.1293 155.867 26.1293C160.91 26.1293 163.793 28.0888 164.211 32.4415H169.735ZM175.097 45.0079C175.097 51.226 178.008 54.1977 184.099 54.1977H189.504V49.2955H188.604C183.802 49.2955 182.237 49.6643 181.103 49.6643C180.806 49.6643 180.622 49.5992 180.445 49.4184C180.268 49.2377 180.204 49.0497 180.204 48.746C180.204 47.5241 180.501 45.9262 180.501 40.4094V27.2356H189.504V22.3334H180.501V13.7581H175.097V45.0079ZM216.794 44.0896C215.923 47.7048 213.373 50.3439 207.551 50.3439C201.729 50.3439 197.437 46.9746 197.075 39.802H222.319V36.7363C222.319 27.8502 217.155 21.4151 207.431 21.4151C197.706 21.4151 191.706 27.8502 191.706 38.2692C191.706 48.6882 197.231 55.1232 207.558 55.1232C217.885 55.1232 221.547 48.934 222.446 44.0896H216.801H216.794ZM197.224 35.2035C198.124 29.195 202.267 26.1944 207.431 26.1944C213.132 26.1944 216.674 29.3179 216.915 35.2035H197.224ZM233.744 54.1977V36.1217C233.744 29.0721 237.646 26.3173 242.151 26.3173C247.251 26.3173 249.652 29.0721 249.652 34.5889V54.1977H255.056V36.1217C255.056 29.0721 258.959 26.3173 263.464 26.3173C268.563 26.3173 270.971 29.0721 270.971 34.5889V54.1977H276.376V34.5889C276.376 27.2356 273.373 21.4151 265.27 21.4151C259.809 21.4151 256.742 23.6854 255.184 27.3585C254.999 27.7851 254.886 28.1538 254.461 28.1538C254.1 28.1538 253.98 27.9731 253.859 27.6622C252.414 23.924 249.298 21.4079 243.95 21.4079C238.603 21.4079 236.145 23.5553 234.643 26.8596C234.523 27.1054 234.402 27.2283 234.162 27.2283C233.864 27.2283 233.744 27.1054 233.744 26.8018V22.3261H228.339V54.1905H233.744V54.1977ZM306.584 32.4415C305.982 24.6616 300.104 21.4079 292.716 21.4079C285.329 21.4079 280.172 24.6543 280.172 30.7857C280.172 36.9171 284.408 39.0284 290.499 40.1924L294.94 41.0529C299.261 41.8844 301.421 42.8315 301.421 45.5863C301.421 48.3411 299.261 50.3945 294.034 50.3945C288.806 50.3945 285.357 48.1893 284.939 43.9595H279.443C279.953 51.5586 285.987 55.116 294.034 55.116C302.08 55.116 306.818 51.5948 306.818 45.2826C306.818 38.9705 301.839 37.0689 296.13 35.9699L291.689 35.1095C287.425 34.278 285.569 33.3597 285.569 30.7279C285.569 28.096 287.673 26.1293 292.709 26.1293C297.745 26.1293 300.635 28.0888 301.053 32.4415H306.577M14.8883 55.116C24.5565 55.116 31.3349 48.1314 31.3349 30.417C31.3349 15.5223 24.2236 9.15234 15.0016 9.15234C5.77967 9.15234 0 15.5874 0 24.1699C0 32.7524 5.82216 38.6958 13.6275 38.6958C19.0885 38.6958 22.545 36.0567 24.344 32.4776C24.6415 31.863 24.854 31.8052 25.1869 31.8052C25.4844 31.8052 25.6685 31.9932 25.6685 32.3547C25.6685 45.2248 21.0434 50.033 14.8954 50.033C8.74741 50.033 6.91294 46.0202 6.4313 42.5568H0.658712C1.26076 48.5002 5.04304 55.1232 14.8883 55.1232M15.0654 14.2425C20.7671 14.2425 24.4928 18.2265 24.4928 23.9891C24.4928 29.7518 20.7742 33.7357 15.0654 33.7357C9.35655 33.7357 5.63801 29.7518 5.63801 23.9891C5.63801 18.2265 9.36363 14.2425 15.0654 14.2425ZM44.247 10.0778V14.98C44.247 16.86 42.7525 18.3856 40.911 18.3856H33.6227V22.3406H43.9496V54.205H49.5309V10.0778H44.247ZM63.9447 10.0778V14.98C63.9447 16.86 62.4502 18.3856 60.6086 18.3856H53.3203V22.3406H63.6472V54.205H69.2285V10.0778H63.9447Z" fill="white"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 396 75" fill="none">
+        <path d="M395.529 38.4136L357.014 0C354.83.278 352.71.74 350.66 1.372L368.475 19.156C373.809 24.48 376.455 31.447 376.455 38.414C376.455 45.381 373.803 52.341 368.468 57.671L352.229 73.887C354.368 74.444 356.577 74.823 358.843 75L395.535 38.414H395.529ZM371.278 38.414L339.655 6.879C338.174 7.953 336.769 9.129 335.465 10.413L344.217 19.163C349.559 24.486 352.198 31.453 352.198 38.414C352.198 45.381 349.552 52.348 344.211 57.677L336.503 65.384C337.864 66.617 339.313 67.749 340.844 68.773L371.278 38.42V38.414ZM329.118 56.267C328.168 54.63 327.339 52.91 326.637 51.121C333.149 43.705 332.959 32.458 326.055 25.27C326.694 23.392 327.479 21.584 328.396 19.845L347.015 38.414L329.118 56.261V56.267Z" fill="#A9EE8A"/>
+        <path d="M109.367 22.637H103.545C103.241 16.874 99.225 14.366 93.339 14.366C87.453 14.366 83.671 16.846 83.671 21.567C83.671 26.288 87.517 27.879 91.837 28.646L97.298 29.629C103.63 30.764 109.785 33.707 109.785 42.036C109.785 50.366 102.943 55.123 94.998 55.123C86.052 55.123 76.892 50.402 76.588 39.802H82.41C82.828 46.975 87.63 49.917 93.998 49.917C100.365 49.917 104.02 46.946 104.02 42.101C104.02 37.257 99.848 35.637 95.315 34.806L89.854 33.83C84.089 32.789 77.905 29.846 77.905 21.632C77.905 13.418 84.931 9.16 93.332 9.16C101.732 9.16 108.999 13.447 109.36 22.644M121.706 54.198H125.368C125.849 54.198 126.027 54.256 126.211 54.567C126.388 54.87 126.331 55.181 126.147 55.673L124.405 60.452C124.192 61.067 123.802 61.37 123.023 61.37C121.826 61.37 120.381 60.944 116.776 60.944H113.596V65.846H119.361C125.963 65.846 129.15 63.944 131.07 57.943L141.999 23.563V22.341H136.594L127.648 50.959C127.528 51.327 127.351 51.45 126.99 51.45C126.629 51.45 126.451 51.327 126.331 50.959L117.385 22.341H111.981V23.563L121.706 54.205V54.198ZM14.888 55.116C24.557 55.116 31.335 48.131 31.335 30.417C31.335 15.522 24.224 9.152 15.002 9.152C5.78 9.152 0 15.587 0 24.17C0 32.752 5.822 38.696 13.628 38.696C19.089 38.696 22.545 36.057 24.344 32.478C24.642 31.863 24.854 31.805 25.187 31.805C25.484 31.805 25.669 31.993 25.669 32.355C25.669 45.225 21.043 50.033 14.895 50.033C8.747 50.033 6.913 46.02 6.431 42.557H0.659C1.261 48.5 5.043 55.123 14.888 55.123M15.065 14.243C20.767 14.243 24.493 18.227 24.493 23.989C24.493 29.752 20.774 33.736 15.065 33.736C9.357 33.736 5.638 29.752 5.638 23.989C5.638 18.227 9.364 14.243 15.065 14.243ZM44.247 10.078V14.98C44.247 16.86 42.753 18.386 40.911 18.386H33.623V22.341H43.95V54.205H49.531V10.078H44.247ZM63.945 10.078V14.98C63.945 16.86 62.45 18.386 60.609 18.386H53.32V22.341H63.647V54.205H69.229V10.078H63.945Z" fill="white"/>
       </svg>
     </div>
   </div>
   <div class="lr">
     <div class="l-badge">
       <div class="l-badge-icon">CL</div>
-      <div>
-        <div class="l-badge-name">CareLink</div>
-        <div class="l-badge-sub">Nursing Home Portal</div>
-      </div>
+      <div><div class="l-badge-name">CareLink</div><div class="l-badge-sub">Nursing Home Portal</div></div>
     </div>
     <div class="l-form">
       <h1>Sign in</h1>
-      <p>Enter your credentials to access the portal</p>
-      <div class="l-field">
-        <label class="l-lbl">Email address</label>
-        <input class="l-input" type="email" id="le" placeholder="you@facility.com" value="admin@greenmeadows.com">
-      </div>
-      <div class="l-field">
-        <label class="l-lbl">Password</label>
-        <input class="l-input" type="password" id="lp" placeholder="••••••••" value="••••••••" onkeydown="if(event.key==='Enter')login()">
-      </div>
-      <button class="l-btn" onclick="login()">
-        <span class="material-icons" style="font-size:16px;">login</span>
-        Sign in
-      </button>
+      <p>Enter your credentials to continue</p>
+      <div class="lf"><label class="ll2">Email address</label><input class="li" type="email" placeholder="you@facility.com" value="admin@greenmeadows.com"></div>
+      <div class="lf"><label class="ll2">Password</label><input class="li" type="password" placeholder="••••••••" value="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="l-btn" onclick="doLogin()">Sign in</button>
     </div>
   </div>
 </div>
 
 <!-- APP -->
 <div id="view-app" class="view">
-  <aside class="sb">
-    <div class="sb-top">
-      <div class="sb-brand">
-        <img src="https://tot.app.dev-helptapp.com/assets/911-logo-CMzjsJv_.svg" alt="911Systems" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-        <div class="sb-brand-fb" style="display:none;">CL</div>
-        <div><div class="sb-name">CareLink</div><div class="sb-sub">Green Meadows</div></div>
-      </div>
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 75" fill="none"><path d="M59.5 38.4L42.5 0C41.2.3 40 .7 38.8 1.1l10.8 10.7C53 16.2 54.6 22.3 54.6 38.4c0 6.9-2 13.9-6.8 19.2L37.7 68.9c1.3.4 2.6.7 4 .9L59.5 38.4ZM44.7 38.4L23.2 6.9c-.9.8-1.7 1.6-2.5 2.4L26 15.2c3.4 5.3 5.1 11.4 5.1 23.2 0 6.9-2 13.9-6.8 19.3l-4.6 4.5c.8.8 1.7 1.6 2.6 2.2L44.7 38.4ZM13.1 56.3c-.6-1.1-1-2.3-1.4-3.5C16 46.2 15.9 37 11.4 31.3c.4-1.2.9-2.4 1.5-3.5l11 10.6L13.1 56.3Z" fill="#A9EE8A"/></svg>
     </div>
-    <nav class="sb-nav">
-      <div class="sb-sec">Operations</div>
-      <button class="ni active" id="nav-e" onclick="showPg('e')"><span class="mio">monitor_heart</span>Active Emergencies</button>
-      <button class="ni" id="nav-r" onclick="showPg('r')"><span class="mio">group</span>Resident Management</button>
-      <button class="ni" id="nav-p" onclick="showPg('p')"><span class="mio">badge</span>Employee Management</button>
+    <div class="sb-icons">
+      <button class="sbi active" id="si-e" data-tip="Active Emergencies" onclick="showPage('e')"><span class="mio">monitor_heart</span></button>
+      <button class="sbi" id="si-r" data-tip="Resident Management" onclick="showPage('r')"><span class="mio">group</span></button>
+      <button class="sbi" id="si-p" data-tip="Employee Management" onclick="showPage('p')"><span class="mio">badge</span></button>
       <div class="sb-sep"></div>
-      <div class="sb-sec">Account</div>
-      <button class="ni" onclick="toast('Settings coming soon')"><span class="mio">settings</span>Settings</button>
-      <button class="ni" onclick="toast('Help center opening…')"><span class="mio">help_outline</span>Help</button>
-    </nav>
+      <button class="sbi" data-tip="Settings" onclick="toast('Settings coming soon')"><span class="mio">settings</span></button>
+      <button class="sbi" data-tip="Help" onclick="toast('Help center')"><span class="mio">help_outline</span></button>
+    </div>
     <div class="sb-foot">
-      <div class="u-row"><div class="u-av">MB</div><div><div class="u-name">Moshe Braun</div><div class="u-role">Administrator</div></div></div>
-      <button class="ni" style="margin-top:2px;" onclick="logout()"><span class="mio">logout</span>Log out</button>
+      <div class="u-dot" data-tip="Moshe Braun — Admin">MB</div>
+      <button class="sbi" data-tip="Log out" onclick="doLogout()" style="margin-top:4px"><span class="mio">logout</span></button>
     </div>
   </aside>
 
   <div class="main">
     <!-- EMERGENCIES -->
-    <div id="pg-e" style="display:flex;flex-direction:column;flex:1;">
+    <div id="pg-e" style="display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;">
       <div class="topbar">
-        <span class="topbar-title">Active Emergencies</span>
-        <div class="topbar-right">
-          <div class="sw"><span class="mio">search</span><input class="si" placeholder="Search emergencies…" oninput="eQ(this.value)"></div>
-          <button class="btn btn-primary" onclick="openCE()"><span class="mi">add</span>Create emergency</button>
+        <div class="topbar-bc"><span class="crumb">CareLink</span><span class="sep"> › </span><span class="page">Active Emergencies</span></div>
+        <div class="topbar-r">
+          <div class="sw"><span class="mio">search</span><input class="si" placeholder="Search emergencies…" oninput="eSearch(this.value)"></div>
+          <button class="btn btn-pri" onclick="openPanel('create-e',null)"><span class="mi">add</span>Create emergency</button>
         </div>
       </div>
-      <div class="pg"><div class="tw"><div class="ts"><table class="t"><thead><tr><th>Resident</th><th>Status</th><th>Emergency Type</th><th>Description</th><th>Room</th><th>Time of Emergency</th><th>Actions</th></tr></thead><tbody id="etb"></tbody></table></div></div></div>
+      <div class="page-area">
+        <div class="tbl-card">
+          <table class="tbl"><thead><tr><th>Resident</th><th>Status</th><th>Emergency Type</th><th>Description</th><th>Room</th><th>Time of Emergency</th></tr></thead>
+          <tbody id="e-tb"></tbody></table>
+        </div>
+      </div>
     </div>
 
     <!-- RESIDENTS -->
-    <div id="pg-r" style="display:none;flex-direction:column;flex:1;">
+    <div id="pg-r" style="display:none;flex-direction:column;flex:1;min-height:0;overflow:hidden;">
       <div class="topbar">
-        <span class="topbar-title">Resident Management</span>
-        <div class="topbar-right">
-          <div class="sw"><span class="mio">search</span><input class="si" placeholder="Search residents…" oninput="rQ(this.value)"></div>
-          <button class="btn btn-primary" onclick="openAddR()"><span class="mi">person_add</span>Add resident</button>
+        <div class="topbar-bc"><span class="crumb">CareLink</span><span class="sep"> › </span><span class="page">Resident Management</span></div>
+        <div class="topbar-r">
+          <div class="sw"><span class="mio">search</span><input class="si" placeholder="Search residents…" oninput="rSearch(this.value)"></div>
+          <button class="btn btn-pri" onclick="openPanel('add-r',null)"><span class="mi">add</span>Add resident</button>
         </div>
       </div>
-      <div class="pg"><div class="tw"><div class="ts"><table class="t"><thead><tr><th>First name</th><th>Last name</th><th>Room</th><th>Date of Birth</th><th>Sex</th><th>Allergies</th><th>Actions</th></tr></thead><tbody id="rtb"></tbody></table></div></div></div>
+      <div class="page-area">
+        <div class="tbl-card">
+          <table class="tbl"><thead><tr><th>First name</th><th>Last name</th><th>Room</th><th>Date of Birth</th><th>Sex</th><th>Allergies</th></tr></thead>
+          <tbody id="r-tb"></tbody></table>
+        </div>
+      </div>
     </div>
 
     <!-- EMPLOYEES -->
-    <div id="pg-p" style="display:none;flex-direction:column;flex:1;">
+    <div id="pg-p" style="display:none;flex-direction:column;flex:1;min-height:0;overflow:hidden;">
       <div class="topbar">
-        <span class="topbar-title">Employee Management</span>
-        <div class="topbar-right">
-          <div class="sw"><span class="mio">search</span><input class="si" placeholder="Search employees…" oninput="pQ(this.value)"></div>
-          <button class="btn btn-primary" onclick="openAddP()"><span class="mi">person_add</span>Add employee</button>
+        <div class="topbar-bc"><span class="crumb">CareLink</span><span class="sep"> › </span><span class="page">Employee Management</span></div>
+        <div class="topbar-r">
+          <div class="sw"><span class="mio">search</span><input class="si" placeholder="Search employees…" oninput="pSearch(this.value)"></div>
+          <button class="btn btn-pri" onclick="openPanel('add-p',null)"><span class="mi">add</span>Add employee</button>
         </div>
       </div>
-      <div class="pg"><div class="tw"><div class="ts"><table class="t"><thead><tr><th>First name</th><th>Last name</th><th>Role</th><th>Department</th><th>Email address</th><th>Phone number</th><th>Actions</th></tr></thead><tbody id="ptb"></tbody></table></div></div></div>
+      <div class="page-area">
+        <div class="tbl-card">
+          <table class="tbl"><thead><tr><th>First name</th><th>Last name</th><th>Role</th><th>Department</th><th>Email address</th><th>Phone number</th></tr></thead>
+          <tbody id="p-tb"></tbody></table>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -430,11 +347,10 @@ table.t{width:100%;border-collapse:collapse;font-size:13px;}
 <!-- SCAN PAGE -->
 <div id="view-scan" class="view">
   <div class="stb">
-    <img src="https://tot.app.dev-helptapp.com/assets/911-logo-CMzjsJv_.svg" alt="911Systems" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-    <div class="stb-fb" style="display:none;">CL</div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 75" fill="none"><path d="M59.5 38.4L42.5 0C41.2.3 40 .7 38.8 1.1l10.8 10.7C53 16.2 54.6 22.3 54.6 38.4c0 6.9-2 13.9-6.8 19.2L37.7 68.9c1.3.4 2.6.7 4 .9L59.5 38.4ZM44.7 38.4L23.2 6.9c-.9.8-1.7 1.6-2.5 2.4L26 15.2c3.4 5.3 5.1 11.4 5.1 23.2 0 6.9-2 13.9-6.8 19.3l-4.6 4.5c.8.8 1.7 1.6 2.6 2.2L44.7 38.4ZM13.1 56.3c-.6-1.1-1-2.3-1.4-3.5C16 46.2 15.9 37 11.4 31.3c.4-1.2.9-2.4 1.5-3.5l11 10.6L13.1 56.3Z" fill="#A9EE8A"/></svg>
     <div><div class="stb-name">CareLink</div><div class="stb-sub">Emergency Response System</div></div>
   </div>
-  <div class="sct">
+  <div class="sbody">
     <div class="salert">
       <div class="sai"><span class="mi">emergency</span></div>
       <div><div class="sat">Emergency Request Form</div><div class="sas">This will immediately alert emergency dispatch. Only use in a real emergency.</div></div>
@@ -442,98 +358,39 @@ table.t{width:100%;border-collapse:collapse;font-size:13px;}
     <div class="scard">
       <div class="sch"><div class="scn" id="sc-name">Loading…</div><div class="scm" id="sc-meta">Green Meadows Care Center</div></div>
       <div class="scb" id="sc-form">
-        <div class="field"><label class="lbl">Emergency type <span class="req">*</span></label><input class="input" id="sc-t" placeholder="e.g. Fall, Chest pain, Difficulty breathing"></div>
-        <div class="field"><label class="lbl">Severity <span class="req">*</span></label><select class="sel" id="sc-s"><option value="">Select severity</option><option value="Low">Low — Stable, non-urgent</option><option value="Medium">Medium — Needs attention soon</option><option value="High">High — Urgent</option><option value="Critical">Critical — Life-threatening</option></select></div>
-        <div class="field"><label class="lbl">Description</label><textarea class="ta" id="sc-d" placeholder="Describe what you observe…"></textarea></div>
-        <div class="field"><label class="lbl">Your name <span class="req">*</span></label><input class="input" id="sc-n" placeholder="Nurse / staff name"></div>
+        <div class="field"><label class="flbl">Emergency type <span class="req">*</span></label><input class="inp" id="sc-t" placeholder="e.g. Fall, Chest pain, Difficulty breathing"></div>
+        <div class="field"><label class="flbl">Severity <span class="req">*</span></label><select class="sel" id="sc-s"><option value="">Select severity</option><option value="Low">Low — Stable, non-urgent</option><option value="Medium">Medium — Needs attention soon</option><option value="High">High — Urgent</option><option value="Critical">Critical — Life-threatening</option></select></div>
+        <div class="field"><label class="flbl">Description</label><textarea class="ta" id="sc-d" placeholder="Describe what you observe…"></textarea></div>
+        <div class="field"><label class="flbl">Your name <span class="req">*</span></label><input class="inp" id="sc-n" placeholder="Nurse / staff name"></div>
         <button class="ssub" onclick="submitScan()"><span class="mi">emergency</span>Submit Emergency Request</button>
       </div>
       <div class="sok" id="sc-ok">
         <div class="sokc"><span class="mi">check</span></div>
         <div class="sokt">Emergency Request Sent</div>
-        <div class="soks">Your request has been received by dispatch. Help is on the way. Stay with the resident and keep this page open.</div>
-        <div style="margin-top:6px;padding:9px 13px;background:hsl(var(--secondary));border-radius:var(--r);font-size:12px;display:flex;align-items:center;gap:7px;"><span class="pdot"></span><span class="tm">Waiting for dispatcher to accept…</span></div>
+        <div class="soks">Your request has been received. Help is on the way. Stay with the resident.</div>
+        <div style="padding:7px 11px;background:var(--s2);border-radius:4px;font-size:12px;display:flex;align-items:center;gap:6px;margin-top:4px;"><span class="pulse"></span><span class="muted">Waiting for dispatcher to accept…</span></div>
       </div>
     </div>
-    <div class="sftr">CareLink Emergency Response System · Green Meadows Care Center<br><strong>If life-threatening — also call 911 immediately.</strong></div>
+    <div class="sftr">CareLink · Green Meadows Care Center<br><strong>If life-threatening — also call 911 immediately.</strong></div>
   </div>
 </div>
 
-<!-- MODAL: Create Emergency -->
-<div class="mo" id="m-ce">
-  <div class="md">
-    <div class="mh"><span class="mt">Create emergency request</span><button class="btn btn-ghost btn-icon" onclick="cm('m-ce')"><span class="mi">close</span></button></div>
-    <div class="mb">
-      <div class="field"><label class="lbl">Resident <span class="req">*</span></label><select class="sel" id="ce-r"></select></div>
-      <div class="field"><label class="lbl">Emergency type <span class="req">*</span></label><input class="input" id="ce-t" placeholder="e.g. Fall, Chest pain, Difficulty breathing"></div>
-      <div class="field"><label class="lbl">Severity</label><select class="sel" id="ce-s"><option value="Low">Low</option><option value="Medium" selected>Medium</option><option value="High">High</option><option value="Critical">Critical</option></select></div>
-      <div class="field"><label class="lbl">Description</label><textarea class="ta" id="ce-d" placeholder="Describe the situation…"></textarea></div>
+<!-- SINGLE PANEL -->
+<div class="pscrim" id="pscrim" onclick="closePanel()"></div>
+<div class="panel" id="main-panel">
+  <div class="ph">
+    <span class="ph-title" id="panel-title">Details</span>
+    <div class="ph-right">
+      <div id="panel-badges" style="display:flex;gap:5px;"></div>
+      <button class="ph-close" onclick="closePanel()"><span class="mi">close</span></button>
     </div>
-    <div class="mf"><button class="btn btn-outline" onclick="cm('m-ce')">Cancel</button><button class="btn btn-primary" onclick="submitCE()"><span class="mi">emergency</span>Submit emergency</button></div>
   </div>
+  <div class="pbody" id="panel-body"></div>
+  <div class="pfooter" id="panel-footer"></div>
 </div>
-
-<!-- MODAL: Add/Edit Resident -->
-<div class="mo" id="m-res">
-  <div class="md md-lg">
-    <div class="mh"><span class="mt" id="mr-title">Add resident</span><button class="btn btn-ghost btn-icon" onclick="cm('m-res')"><span class="mi">close</span></button></div>
-    <div class="mb">
-      <div class="f2"><div class="field"><label class="lbl">First name <span class="req">*</span></label><input class="input" id="rf-fn" placeholder="First name"></div><div class="field"><label class="lbl">Last name <span class="req">*</span></label><input class="input" id="rf-ln" placeholder="Last name"></div></div>
-      <div class="f2"><div class="field"><label class="lbl">Room <span class="req">*</span></label><input class="input" id="rf-rm" placeholder="e.g. 204A"></div><div class="field"><label class="lbl">Date of birth</label><input class="input" type="date" id="rf-db"></div></div>
-      <div class="f2"><div class="field"><label class="lbl">Sex</label><select class="sel" id="rf-sx"><option>Male</option><option>Female</option><option>Other</option></select></div><div class="field"><label class="lbl">Blood type</label><select class="sel" id="rf-bl"><option value="">Unknown</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div></div>
-      <div class="field"><label class="lbl">Allergies</label><input class="input" id="rf-al" placeholder="e.g. Penicillin, Latex — blank if none"></div>
-      <div class="field"><label class="lbl">Emergency contact</label><input class="input" id="rf-ec" placeholder="Name, phone number"></div>
-      <div class="field"><label class="lbl">Medical notes</label><textarea class="ta" id="rf-nt" placeholder="Relevant conditions, history…" style="min-height:60px;"></textarea></div>
-    </div>
-    <div class="mf"><button class="btn btn-outline" onclick="cm('m-res')">Cancel</button><button class="btn btn-primary" id="mr-btn" onclick="saveR()">Add resident</button></div>
-  </div>
-</div>
-
-<!-- MODAL: QR Code -->
-<div class="mo" id="m-qr">
-  <div class="md">
-    <div class="mh"><span class="mt">Resident QR Code</span><button class="btn btn-ghost btn-icon" onclick="cm('m-qr')"><span class="mi">close</span></button></div>
-    <div class="mb" style="text-align:center;">
-      <div class="qrd" id="qr-c"></div>
-      <p class="ts tm" style="margin-bottom:14px;">Scan to initiate an emergency for this resident</p>
-      <div class="qrrows" id="qr-info"></div>
-    </div>
-    <div class="mf"><button class="btn btn-outline" onclick="cm('m-qr')">Close</button><button class="btn btn-primary" onclick="printQR()"><span class="mi">print</span>Print QR Code</button></div>
-  </div>
-</div>
-
-<!-- MODAL: Add/Edit Employee -->
-<div class="mo" id="m-emp">
-  <div class="md">
-    <div class="mh"><span class="mt" id="mp-title">Add employee</span><button class="btn btn-ghost btn-icon" onclick="cm('m-emp')"><span class="mi">close</span></button></div>
-    <div class="mb">
-      <div class="f2"><div class="field"><label class="lbl">First name <span class="req">*</span></label><input class="input" id="pf-fn" placeholder="First name"></div><div class="field"><label class="lbl">Last name <span class="req">*</span></label><input class="input" id="pf-ln" placeholder="Last name"></div></div>
-      <div class="f2"><div class="field"><label class="lbl">Role</label><select class="sel" id="pf-rl"><option>Employee</option><option>Administrator</option></select></div><div class="field"><label class="lbl">Department</label><select class="sel" id="pf-dp"><option>Medical</option><option>Therapy</option><option>Care</option><option>Administration</option></select></div></div>
-      <div class="field"><label class="lbl">Email <span class="req">*</span></label><input class="input" type="email" id="pf-em" placeholder="email@facility.com"></div>
-      <div class="field"><label class="lbl">Phone</label><input class="input" id="pf-ph" placeholder="+1 (555) 000-0000"></div>
-    </div>
-    <div class="mf"><button class="btn btn-outline" onclick="cm('m-emp')">Cancel</button><button class="btn btn-primary" id="mp-btn" onclick="saveP()">Add employee</button></div>
-  </div>
-</div>
-
-<!-- PANEL: Emergency -->
-<div class="ps" id="eps" onclick="closeEP()"></div>
-<div class="pn" id="epn">
-  <div class="ph"><div><div class="pt" id="ep-t">Emergency</div><div id="ep-b" style="margin-top:5px;display:flex;gap:6px;flex-wrap:wrap;"></div></div><button class="btn btn-ghost btn-icon" onclick="closeEP()"><span class="mi">close</span></button></div>
-  <div class="pb" id="ep-body"></div>
-</div>
-
-<!-- PANEL: Resident -->
-<div class="ps" id="rps" onclick="closeRP()"></div>
-<div class="pn" id="rpn">
-  <div class="ph"><div class="pt" id="rp-t">Resident</div><button class="btn btn-ghost btn-icon" onclick="closeRP()"><span class="mi">close</span></button></div>
-  <div class="pb" id="rp-body"></div>
-</div>
-
-<div id="pz" style="display:none;"></div>
 
 <script>
-/* DATA */
+/* ═══ DATA ═══ */
 const RES=[
   {id:'R001',fn:'Jennifer',ln:'Villanueva',rm:'200A',db:'1954-03-12',sx:'Female',bl:'A+',al:'Penicillin',ec:'Claude Bogisich · 660-660-5742',nt:'History of hypertension. On blood thinners.'},
   {id:'R002',fn:'Brian',ln:'Johnson',rm:'200B',db:'1935-07-24',sx:'Male',bl:'O+',al:'None',ec:'Sandra Johnson · 555-234-5678',nt:'Diabetic. Check blood sugar regularly.'},
@@ -542,7 +399,7 @@ const RES=[
   {id:'R005',fn:'Leslie',ln:'Hogan',rm:'200E',db:'1936-09-28',sx:'Female',bl:'A-',al:'None',ec:'Amy Hogan · 555-567-8901',nt:'COPD. Has rescue inhaler nearby.'},
   {id:'R006',fn:'Tammy',ln:'Orr',rm:'200F',db:'1950-02-18',sx:'Female',bl:'O-',al:'Aspirin',ec:'Joel Orr · 555-678-9012',nt:'Pacemaker. No MRI.'},
   {id:'R007',fn:'Brett',ln:'Cooper',rm:'200G',db:'1950-12-05',sx:'Male',bl:'B+',al:'None',ec:'Lisa Cooper · 555-789-0123',nt:'Post-stroke. Limited mobility right side.'},
-  {id:'R008',fn:'Dakota',ln:'Garcia',rm:'200H',db:'1951-04-22',sx:'Male',bl:'A+',al:'Codeine',ec:'Maria Garcia · 555-890-1234',nt:'Anxiety disorder. Calm approach required.'},
+  {id:'R008',fn:'Dakota',ln:'Garcia',rm:'200H',db:'1951-04-22',sx:'Male',bl:'A+',al:'Codeine',ec:'Maria Garcia · 555-890-1234',nt:'Anxiety disorder.'},
   {id:'R009',fn:'Ryan',ln:'Daniel',rm:'200I',db:'1931-08-11',sx:'Female',bl:'O+',al:'None',ec:'Peter Daniel · 555-901-2345',nt:'Very frail.'},
   {id:'R010',fn:'Alicia',ln:'Brown',rm:'200J',db:'1951-05-30',sx:'Female',bl:'AB-',al:'None',ec:'George Brown · 555-012-3456',nt:"Early Parkinson's."},
   {id:'R011',fn:'Juan',ln:'Robinson',rm:'200K',db:'1946-10-07',sx:'Male',bl:'A+',al:'Shellfish',ec:'Carlos Robinson · 555-111-2222',nt:'Hearing impaired.'},
@@ -562,9 +419,9 @@ const EMG=[
   {id:'E003',rid:'R003',tp:'Migraine, Headache',ds:'Severe headache, history of migraines',rm:'200C',ts:new Date(Date.now()-600000),st:'New',sv:'Medium',ch:[]},
   {id:'E004',rid:'R004',tp:'Dizziness, Dehydration',ds:'Patient reported dizziness, potential dehydration',rm:'200D',ts:new Date(Date.now()-900000),st:'Accepted',sv:'Low',ch:[{w:'Dispatcher',m:'CFS accepted. Unit 1002 assigned.',t:new Date(Date.now()-840000)},{w:'Nurse Sarah',m:'Patient is still dizzy, gave water.',t:new Date(Date.now()-720000)}]},
   {id:'E005',rid:'R005',tp:'Asthma, Breathing issue',ds:'Shortness of breath, possible asthma attack',rm:'200E',ts:new Date(Date.now()-1020000),st:'Accepted',sv:'High',ch:[{w:'Dispatcher',m:'Paramedics en route. Keep patient calm.',t:new Date(Date.now()-960000)}]},
-  {id:'E006',rid:'R007',tp:'Stroke symptoms',ds:'New onset of confusion, possible stroke symptoms',rm:'200G',ts:new Date(Date.now()-1800000),st:'Closed',sv:'Critical',ch:[{w:'Dispatcher',m:'CFS closed. Patient transported to hospital.',t:new Date(Date.now()-900000)}]},
-  {id:'E007',rid:'R010',tp:'Chest pain',ds:'Chest pain radiating to left arm, anxiety reported',rm:'200J',ts:new Date(Date.now()-2700000),st:'Closed',sv:'High',ch:[]},
-  {id:'E008',rid:'R012',tp:'Headache, Disoriented',ds:'Severe headache with nausea, patient appears disoriented',rm:'200L',ts:new Date(Date.now()-3600000),st:'Closed',sv:'Medium',ch:[]},
+  {id:'E006',rid:'R007',tp:'Stroke symptoms',ds:'New onset of confusion, possible stroke symptoms',rm:'200G',ts:new Date(Date.now()-1800000),st:'Closed',sv:'Critical',ch:[{w:'Dispatcher',m:'CFS closed. Patient transported.',t:new Date(Date.now()-900000)}]},
+  {id:'E007',rid:'R010',tp:'Chest pain',ds:'Chest pain radiating to left arm',rm:'200J',ts:new Date(Date.now()-2700000),st:'Closed',sv:'High',ch:[]},
+  {id:'E008',rid:'R012',tp:'Headache, Disoriented',ds:'Severe headache with nausea',rm:'200L',ts:new Date(Date.now()-3600000),st:'Closed',sv:'Medium',ch:[]},
 ];
 const EMP=[
   {id:'P001',fn:'Sylvia',ln:'Walker',rl:'Employee',dp:'Therapy',em:'sylvia.walker@greenmeadows.com',ph:'001-444-753-9042'},
@@ -584,249 +441,395 @@ const EMP=[
   {id:'P015',fn:'Janet',ln:'Young',rl:'Employee',dp:'Therapy',em:'j.young@greenmeadows.com',ph:'(948)206-3718'},
 ];
 
-/* STATE */
-let _eq='',_rq='',_pq='',_erid=null,_prid=null,_qrr=null;
+/* ═══ STATE ═══ */
+let _eq='',_rq='',_pq='',_ctx=null,_qrr=null;
 
-/* ROUTING */
+/* ═══ ROUTING ═══ */
 function sv(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');}
-function showPg(p){
-  ['e','r','p'].forEach(n=>{document.getElementById('pg-'+n).style.display=n===p?'flex':'none';document.getElementById('nav-'+n).classList.toggle('active',n===p);});
-  if(p==='e')redE();if(p==='r')redR();if(p==='p')redP();
-}
-function login(){sv('view-app');redE();}
-function logout(){sv('view-login');}
+function showPage(p){['e','r','p'].forEach(n=>{document.getElementById('pg-'+n).style.display=n===p?'flex':'none';document.getElementById('si-'+n).classList.toggle('active',n===p);});if(p==='e')redE();if(p==='r')redR();if(p==='p')redP();}
+function doLogin(){sv('view-app');redE();}
+function doLogout(){sv('view-login');}
 
-/* HELPERS */
+/* ═══ HELPERS ═══ */
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,4);}
 function ago(d){const s=Math.floor((Date.now()-d)/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
 function gr(id){return RES.find(r=>r.id===id);}
-function h(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function toast(msg,type='ok'){const el=document.createElement('div');el.className='toast '+type;el.innerHTML=`<span class="mi tic">${type==='ok'?'check_circle':'error'}</span><span>${h(msg)}</span>`;document.getElementById('toasts').appendChild(el);setTimeout(()=>el.remove(),3200);}
-function om(id){document.getElementById(id).classList.add('open');}
-function cm(id){document.getElementById(id).classList.remove('open');}
-function cads(){document.querySelectorAll('.ddm.open').forEach(m=>m.classList.remove('open'));}
-document.addEventListener('click',cads);
-function tdd(id,e){e.stopPropagation();const m=document.getElementById(id);const w=m.classList.contains('open');cads();if(!w)m.classList.add('open');}
-function sb(sv){const map={Critical:'bcrit',High:'bhigh',Medium:'bmed',Low:'blow'};return`<span class="bdg ${map[sv]||'blow'}">${sv}</span>`;}
+function h(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function toast(msg,type='ok'){const el=document.createElement('div');el.className='toast '+type;el.innerHTML=`<span class="mi tic">${type==='ok'?'check_circle':'error'}</span><span>${h(msg)}</span>`;document.getElementById('toasts').appendChild(el);setTimeout(()=>el.remove(),3000);}
+function svb(s){const m={Critical:'bcrit',High:'bhigh',Medium:'bmed',Low:'blow'};return`<span class="bdg ${m[s]||'blow'}">${h(s)}</span>`;}
 
-/* EMERGENCIES */
-function eQ(q){_eq=q.toLowerCase();redE();}
+/* ═══ CONTEXT MENU ═══ */
+function rmCtx(){if(_ctx){_ctx.remove();_ctx=null;}}
+document.addEventListener('click',rmCtx);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){rmCtx();closePanel();}});
+function showCtx(e,items){
+  e.preventDefault();e.stopPropagation();rmCtx();
+  const m=document.createElement('div');m.className='ctx';
+  items.forEach(it=>{
+    if(it==='-'){const s=document.createElement('div');s.className='ctx-sep';m.appendChild(s);}
+    else{const b=document.createElement('button');b.className='cxi'+(it.danger?' danger':'');b.innerHTML=`<span class="${it.oi?'mio':'mi'}">${it.icon}</span>${h(it.label)}`;b.onclick=ev=>{ev.stopPropagation();rmCtx();it.action();};m.appendChild(b);}
+  });
+  document.body.appendChild(m);_ctx=m;
+  const vw=window.innerWidth,vh=window.innerHeight,mw=m.offsetWidth,mh=m.offsetHeight;
+  m.style.left=(e.clientX+mw>vw?e.clientX-mw:e.clientX)+'px';
+  m.style.top=(e.clientY+mh>vh?e.clientY-mh:e.clientY)+'px';
+}
+
+/* ═══ SINGLE PANEL ENGINE ═══ */
+function openPanel(type, id){
+  const panel=document.getElementById('main-panel');
+  const body=document.getElementById('panel-body');
+  const footer=document.getElementById('panel-footer');
+  const title=document.getElementById('panel-title');
+  const badges=document.getElementById('panel-badges');
+  badges.innerHTML='';
+
+  /* scroll to top */
+  body.scrollTop=0;
+
+  if(type==='view-e'){
+    const e=EMG.find(x=>x.id===id);if(!e)return;
+    const r=gr(e.rid);const nm=r?r.fn+' '+r.ln:'Unknown';
+    const bc=e.st==='New'?'bn':e.st==='Accepted'?'ba':'bc';
+    title.textContent=nm;
+    badges.innerHTML=`<span class="bdg ${bc}">${e.st}</span>${svb(e.sv)}`;
+    const chatHtml=e.ch.length?e.ch.map(c=>`<div class="msg ${c.w==='Dispatcher'||c.w==='System'?'in':'out'}"><div class="mmeta">${h(c.w)} · ${ago(c.t)}</div><div class="mbubble">${h(c.m)}</div></div>`).join(''):'<p style="text-align:center;font-size:12px;color:var(--fg3);padding:18px 0">No messages yet</p>';
+    body.innerHTML=`
+      <div class="psec-group">
+        <div class="psec">Emergency details</div>
+        <div class="kvg">
+          <div class="kv"><div class="kv-k">Emergency type</div><div class="kv-v">${h(e.tp)}</div></div>
+          <div class="kv"><div class="kv-k">Severity</div><div class="kv-v">${svb(e.sv)}</div></div>
+          <div class="kv"><div class="kv-k">Room</div><div class="kv-v">${e.rm}</div></div>
+          <div class="kv"><div class="kv-k">Time of emergency</div><div class="kv-v">${ago(e.ts)}</div></div>
+          <div class="kv full"><div class="kv-k">Description</div><div class="kv-v" style="color:var(--fg2);line-height:1.5">${h(e.ds)}</div></div>
+        </div>
+      </div>
+      ${r?`<div class="p-divider"></div>
+      <div class="psec-group">
+        <div class="psec">Resident information</div>
+        <div class="kvg">
+          <div class="kv"><div class="kv-k">Name</div><div class="kv-v">${r.fn} ${r.ln}</div></div>
+          <div class="kv"><div class="kv-k">Room</div><div class="kv-v">${r.rm}</div></div>
+          <div class="kv"><div class="kv-k">Date of birth</div><div class="kv-v">${r.db||'—'}</div></div>
+          <div class="kv"><div class="kv-k">Blood type</div><div class="kv-v">${r.bl||'—'}</div></div>
+          <div class="kv full"><div class="kv-k">Allergies</div><div class="kv-v" style="color:${r.al&&r.al!=='None'?'#fca5a5':'var(--fg)'}">${r.al||'None'}</div></div>
+          <div class="kv full"><div class="kv-k">Emergency contact</div><div class="kv-v">${r.ec||'—'}</div></div>
+          ${r.nt?`<div class="kv full"><div class="kv-k">Medical notes</div><div class="kv-v" style="color:var(--fg2);line-height:1.5">${h(r.nt)}</div></div>`:''}
+        </div>
+      </div>`:''}
+      <div class="p-divider"></div>
+      <div class="psec-group">
+        <div class="psec" style="display:flex;align-items:center;gap:6px">Dispatcher chat <span class="pulse"></span></div>
+        <div class="chatbox">
+          <div class="chat-msgs" id="cm-${e.id}">${chatHtml}</div>
+          <div class="chat-row"><input class="chat-inp" id="ci-${e.id}" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendChat('${e.id}')"><button class="btn btn-pri" style="height:26px;padding:0 8px;font-size:11px" onclick="sendChat('${e.id}')"><span class="mi">send</span></button></div>
+        </div>
+      </div>`;
+    footer.innerHTML = e.st==='Accepted'
+      ? `<button class="pf-main" onclick="closeE('${e.id}')">Mark as Closed</button><button class="pf-sec" onclick="closePanel()">Close</button>`
+      : `<button class="pf-sec" style="border-top:none" onclick="closePanel()">Close</button>`;
+  }
+
+  else if(type==='view-r'){
+    const r=RES.find(x=>x.id===id);if(!r)return;
+    const hist=EMG.filter(e=>e.rid===id).sort((a,b)=>b.ts-a.ts);
+    const bc=s=>s==='New'?'bn':s==='Accepted'?'ba':'bc';
+    title.textContent=r.fn+' '+r.ln;
+    body.innerHTML=`
+      <div class="psec-group">
+        <div class="psec">Personal information</div>
+        <div class="kvg">
+          <div class="kv"><div class="kv-k">First name</div><div class="kv-v">${r.fn}</div></div>
+          <div class="kv"><div class="kv-k">Last name</div><div class="kv-v">${r.ln}</div></div>
+          <div class="kv"><div class="kv-k">Room</div><div class="kv-v">${r.rm}</div></div>
+          <div class="kv"><div class="kv-k">Date of birth</div><div class="kv-v">${r.db||'—'}</div></div>
+          <div class="kv"><div class="kv-k">Sex</div><div class="kv-v">${r.sx}</div></div>
+          <div class="kv"><div class="kv-k">Blood type</div><div class="kv-v">${r.bl||'—'}</div></div>
+        </div>
+      </div>
+      <div class="p-divider"></div>
+      <div class="psec-group">
+        <div class="psec">Emergency contacts</div>
+        <div class="kvg"><div class="kv full"><div class="kv-k">Emergency contact</div><div class="kv-v">${r.ec||'—'}</div></div></div>
+      </div>
+      <div class="p-divider"></div>
+      <div class="psec-group">
+        <div class="psec">Medical information</div>
+        <div class="kvg">
+          <div class="kv full"><div class="kv-k">Allergies</div><div class="kv-v" style="color:${r.al&&r.al!=='None'?'#fca5a5':'var(--fg)'}">${r.al||'None'}</div></div>
+          <div class="kv full"><div class="kv-k">Medical notes</div><div class="kv-v" style="color:var(--fg2);line-height:1.5">${r.nt||'—'}</div></div>
+        </div>
+      </div>
+      <div class="p-divider"></div>
+      <div class="psec-group">
+        <div class="psec">Emergency history</div>
+        ${hist.length===0?'<p class="muted" style="font-size:13px">No emergencies on record</p>':hist.map(e=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--b1)"><div><div style="font-size:13px;font-weight:500">${h(e.tp)}</div><div class="muted" style="font-size:11px;margin-top:1px">${ago(e.ts)}</div></div><span class="bdg ${bc(e.st)}">${e.st}</span></div>`).join('')}
+      </div>`;
+    footer.innerHTML=`<button class="pf-main" onclick="openPanel('edit-r','${id}')">Edit</button><button class="pf-sec" onclick="closePanel()">Close</button>`;
+  }
+
+  else if(type==='edit-r'){
+    const r=RES.find(x=>x.id===id)||{id:id,fn:'',ln:'',rm:'',db:'',sx:'Male',bl:'',al:'',ec:'',nt:''};
+    const isNew=!RES.find(x=>x.id===id);
+    title.textContent=isNew?'Add resident':r.fn+' '+r.ln;
+    body.innerHTML=`
+      <div class="psec-group">
+        <div class="psec">Personal information</div>
+        <div class="f2">
+          <div class="field"><label class="flbl">First name <span class="req">*</span></label><input class="inp" id="rf-fn" value="${h(r.fn)}" placeholder="First name"></div>
+          <div class="field"><label class="flbl">Last name <span class="req">*</span></label><input class="inp" id="rf-ln" value="${h(r.ln)}" placeholder="Last name"></div>
+        </div>
+        <div class="f2">
+          <div class="field"><label class="flbl">Room <span class="req">*</span></label><input class="inp" id="rf-rm" value="${h(r.rm)}" placeholder="e.g. 204A"></div>
+          <div class="field"><label class="flbl">Date of birth</label><input class="inp" type="date" id="rf-db" value="${r.db||''}"></div>
+        </div>
+        <div class="f2">
+          <div class="field"><label class="flbl">Sex</label><select class="sel" id="rf-sx"><option${r.sx==='Male'?' selected':''}>Male</option><option${r.sx==='Female'?' selected':''}>Female</option><option${r.sx==='Other'?' selected':''}>Other</option></select></div>
+          <div class="field"><label class="flbl">Blood type</label><select class="sel" id="rf-bl"><option value="">Unknown</option>${['A+','A-','B+','B-','AB+','AB-','O+','O-'].map(b=>`<option${r.bl===b?' selected':''}>${b}</option>`).join('')}</select></div>
+        </div>
+      </div>
+      <div class="p-divider"></div>
+      <div class="psec-group">
+        <div class="psec">Emergency contacts</div>
+        <div class="field"><label class="flbl">Emergency contact</label><input class="inp" id="rf-ec" value="${h(r.ec||'')}" placeholder="Name, phone number"></div>
+      </div>
+      <div class="p-divider"></div>
+      <div class="psec-group">
+        <div class="psec">Medical information</div>
+        <div class="field"><label class="flbl">Allergies</label><input class="inp" id="rf-al" value="${h(r.al==='None'?'':r.al||'')}" placeholder="e.g. Penicillin — leave blank if none"></div>
+        <div class="field"><label class="flbl">Medical notes</label><textarea class="ta" id="rf-nt" placeholder="Relevant conditions, history…">${h(r.nt||'')}</textarea></div>
+      </div>`;
+    footer.innerHTML=`<button class="pf-main" onclick="saveRes('${id}',${isNew})">Save</button><button class="pf-sec" onclick="closePanel()">Cancel</button>`;
+  }
+
+  else if(type==='add-r'){
+    const id='R'+uid();
+    openPanel('edit-r',id);return;
+  }
+
+  else if(type==='qr-r'){
+    const r=RES.find(x=>x.id===id);if(!r)return;_qrr=r;
+    title.textContent='QR Code — '+r.fn+' '+r.ln;
+    const url=window.location.href.split('?')[0]+'?scan=1&rid='+r.id;
+    body.innerHTML=`<div class="qr-panel-wrap">
+      <div class="qr-white-box" id="qr-canvas-p"></div>
+      <p style="font-size:11px;color:var(--fg2);text-align:center">Scan to initiate an emergency for this resident</p>
+      <div class="qr-rows">${[['Resident ID',r.id],['Name',r.fn+' '+r.ln],['Room',r.rm],['Allergies',r.al||'None'],['Emergency contact',r.ec||'—']].map(([k,v])=>`<div class="qr-row"><span class="qr-k">${k}</span><span class="qr-v">${h(v)}</span></div>`).join('')}</div>
+    </div>`;
+    footer.innerHTML=`<button class="pf-main" onclick="doPrintQR()">Print QR Code</button><button class="pf-sec" onclick="closePanel()">Close</button>`;
+    // Generate QR after DOM is ready
+    setTimeout(()=>{
+      const qc=document.getElementById('qr-canvas-p');
+      if(qc){new QRCode(qc,{text:url,width:180,height:180,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});}
+    },50);
+  }
+
+  else if(type==='create-e'){
+    title.textContent='Create emergency';
+    body.innerHTML=`
+      <div class="psec-group">
+        <div class="psec">Emergency details</div>
+        <div class="field"><label class="flbl">Resident <span class="req">*</span></label><select class="sel" id="ce-res"><option value="">Select resident…</option>${RES.map(r=>`<option value="${r.id}">${r.fn} ${r.ln} — Room ${r.rm}</option>`).join('')}</select></div>
+        <div class="field"><label class="flbl">Emergency type <span class="req">*</span></label><input class="inp" id="ce-type" placeholder="e.g. Fall, Chest pain, Difficulty breathing"></div>
+        <div class="field"><label class="flbl">Severity</label><select class="sel" id="ce-sev"><option value="Low">Low</option><option value="Medium" selected>Medium</option><option value="High">High</option><option value="Critical">Critical</option></select></div>
+        <div class="field"><label class="flbl">Description</label><textarea class="ta" id="ce-desc" placeholder="Describe the situation…"></textarea></div>
+      </div>`;
+    footer.innerHTML=`<button class="pf-main" onclick="submitCreateE()">Submit emergency</button><button class="pf-sec" onclick="closePanel()">Cancel</button>`;
+    if(id){setTimeout(()=>{const s=document.getElementById('ce-res');if(s)s.value=id;},0);}
+  }
+
+  else if(type==='add-p'){
+    title.textContent='Add employee';
+    body.innerHTML=`
+      <div class="psec-group">
+        <div class="psec">Employee details</div>
+        <div class="f2">
+          <div class="field"><label class="flbl">First name <span class="req">*</span></label><input class="inp" id="pf-fn" placeholder="First name"></div>
+          <div class="field"><label class="flbl">Last name <span class="req">*</span></label><input class="inp" id="pf-ln" placeholder="Last name"></div>
+        </div>
+        <div class="f2">
+          <div class="field"><label class="flbl">Role</label><select class="sel" id="pf-rl"><option>Employee</option><option>Administrator</option></select></div>
+          <div class="field"><label class="flbl">Department</label><select class="sel" id="pf-dp"><option>Medical</option><option>Therapy</option><option>Care</option><option>Administration</option></select></div>
+        </div>
+        <div class="field"><label class="flbl">Email <span class="req">*</span></label><input class="inp" type="email" id="pf-em" placeholder="email@facility.com"></div>
+        <div class="field"><label class="flbl">Phone</label><input class="inp" id="pf-ph" placeholder="+1 (555) 000-0000"></div>
+      </div>`;
+    footer.innerHTML=`<button class="pf-main" onclick="saveEmp()">Add employee</button><button class="pf-sec" onclick="closePanel()">Cancel</button>`;
+  }
+
+  else if(type==='edit-p'){
+    const e=EMP.find(x=>x.id===id);if(!e)return;
+    title.textContent=e.fn+' '+e.ln;
+    body.innerHTML=`
+      <div class="psec-group">
+        <div class="psec">Employee details</div>
+        <div class="f2">
+          <div class="field"><label class="flbl">First name <span class="req">*</span></label><input class="inp" id="pf-fn" value="${h(e.fn)}"></div>
+          <div class="field"><label class="flbl">Last name <span class="req">*</span></label><input class="inp" id="pf-ln" value="${h(e.ln)}"></div>
+        </div>
+        <div class="f2">
+          <div class="field"><label class="flbl">Role</label><select class="sel" id="pf-rl"><option${e.rl==='Employee'?' selected':''}>Employee</option><option${e.rl==='Administrator'?' selected':''}>Administrator</option></select></div>
+          <div class="field"><label class="flbl">Department</label><select class="sel" id="pf-dp"><option${e.dp==='Medical'?' selected':''}>Medical</option><option${e.dp==='Therapy'?' selected':''}>Therapy</option><option${e.dp==='Care'?' selected':''}>Care</option><option${e.dp==='Administration'?' selected':''}>Administration</option></select></div>
+        </div>
+        <div class="field"><label class="flbl">Email <span class="req">*</span></label><input class="inp" type="email" id="pf-em" value="${h(e.em)}"></div>
+        <div class="field"><label class="flbl">Phone</label><input class="inp" id="pf-ph" value="${h(e.ph)}"></div>
+      </div>`;
+    footer.innerHTML=`<button class="pf-main" onclick="saveEmpEdit('${id}')">Save changes</button><button class="pf-sec" onclick="closePanel()">Cancel</button>`;
+  }
+
+  document.getElementById('pscrim').classList.add('open');
+  document.getElementById('main-panel').classList.add('open');
+}
+
+function closePanel(){document.getElementById('pscrim').classList.remove('open');document.getElementById('main-panel').classList.remove('open');}
+
+/* ═══ EMERGENCIES ═══ */
+function eSearch(q){_eq=q.toLowerCase();redE();}
 function redE(){
   let list=[...EMG].sort((a,b)=>b.ts-a.ts);
   if(_eq)list=list.filter(e=>{const r=gr(e.rid);return(r&&(r.fn+' '+r.ln).toLowerCase().includes(_eq))||e.tp.toLowerCase().includes(_eq)||e.ds.toLowerCase().includes(_eq);});
-  const tb=document.getElementById('etb');
-  if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty"><span class="mio">monitor_heart</span><p>No emergencies found</p></div></td></tr>';return;}
+  const tb=document.getElementById('e-tb');
+  if(!list.length){tb.innerHTML='<tr><td colspan="6"><div class="empty"><span class="mio">monitor_heart</span><p>No emergencies found</p></div></td></tr>';return;}
   tb.innerHTML=list.map(e=>{
     const r=gr(e.rid);const nm=r?r.fn+' '+r.ln:'Unknown';
     const rc=e.st==='New'?'rn':e.st==='Accepted'?'ra':'rc';
     const bc=e.st==='New'?'bn':e.st==='Accepted'?'ba':'bc';
-    return`<tr class="${rc} cp" onclick="openEP('${e.id}')">
-      <td class="fw5">${h(nm)}</td>
+    return`<tr class="${rc}" onclick="openPanel('view-e','${e.id}')" oncontextmenu="eCtx(event,'${e.id}')">
+      <td style="font-weight:500">${h(nm)}</td>
       <td><span class="bdg ${bc}">${e.st}</span></td>
       <td>${h(e.tp)}</td>
-      <td class="tm trunc" style="max-width:240px;">${h(e.ds)}</td>
+      <td class="m">${h(e.ds)}</td>
       <td>${e.rm}</td>
-      <td class="tm">${ago(e.ts)}</td>
-      <td onclick="event.stopPropagation()"><div class="ddw">
-        <button class="btn btn-ghost btn-icon btn-sm" onclick="tdd('ed-${e.id}',event)"><span class="mi">more_horiz</span></button>
-        <div class="ddm" id="ed-${e.id}">
-          <button class="ddi" onclick="openEP('${e.id}')"><span class="mio">visibility</span>View</button>
-          ${e.st==='Accepted'?`<button class="ddi" onclick="closedE('${e.id}')"><span class="mio">check_circle</span>Mark closed</button>`:''}
-          <div class="dds"></div>
-          <button class="ddi danger" onclick="delE('${e.id}')"><span class="mio">delete</span>Delete</button>
-        </div>
-      </div></td>
+      <td class="m">${ago(e.ts)}</td>
     </tr>`;
   }).join('');
 }
-
-function openCE(){
-  document.getElementById('ce-r').innerHTML='<option value="">Select resident</option>'+RES.map(r=>`<option value="${r.id}">${r.fn} ${r.ln} — Room ${r.rm}</option>`).join('');
-  document.getElementById('ce-t').value='';document.getElementById('ce-d').value='';document.getElementById('ce-s').value='Medium';
-  om('m-ce');
-}
-function submitCE(){
-  const rid=document.getElementById('ce-r').value;
-  const tp=document.getElementById('ce-t').value.trim();
-  if(!rid){toast('Please select a resident','err');return;}
-  if(!tp){toast('Please enter emergency type','err');return;}
-  const r=gr(rid);
-  const e={id:'E'+uid(),rid,tp,ds:document.getElementById('ce-d').value.trim()||tp,rm:r?r.rm:'—',ts:new Date(),st:'Accepted',sv:document.getElementById('ce-s').value,ch:[{w:'System',m:'Emergency submitted — EMS contacted automatically.',t:new Date()}]};
-  EMG.unshift(e);cm('m-ce');redE();toast('Emergency created — EMS contacted');
-}
-function closedE(id){const e=EMG.find(x=>x.id===id);if(!e)return;e.st='Closed';e.ch.push({w:'System',m:'Emergency closed.',t:new Date()});redE();toast('Marked as closed');closeEP();}
-function delE(id){const i=EMG.findIndex(x=>x.id===id);if(i>-1)EMG.splice(i,1);redE();toast('Emergency deleted');}
-
-function openEP(id){
+function eCtx(ev,id){
   const e=EMG.find(x=>x.id===id);if(!e)return;
-  const r=gr(e.rid);const nm=r?r.fn+' '+r.ln:'Unknown';
-  const bc=e.st==='New'?'bn':e.st==='Accepted'?'ba':'bc';
-  document.getElementById('ep-t').textContent=nm+' — Emergency';
-  document.getElementById('ep-b').innerHTML=`<span class="bdg ${bc}">${e.st}</span>${sb(e.sv)}<span class="tm ts">${e.id}</span>`;
-  const chat=e.ch.length?e.ch.map(c=>`<div class="msg ${c.w==='Dispatcher'||c.w==='System'?'in':'out'}"><div class="mmeta">${h(c.w)} · ${ago(c.t)}</div><div class="mbubble">${h(c.m)}</div></div>`).join(''):'<p class="tm ts" style="text-align:center;padding:18px 0;">No messages yet</p>';
-  document.getElementById('ep-body').innerHTML=`
-    <div class="ds"><div class="dsl"><span class="mio">info</span>Emergency Information</div>
-      <div class="dg">
-        <div><div class="dk">Type</div><div class="dv">${h(e.tp)}</div></div>
-        <div><div class="dk">Severity</div><div class="dv">${sb(e.sv)}</div></div>
-        <div><div class="dk">Room</div><div class="dv">${e.rm}</div></div>
-        <div><div class="dk">Time</div><div class="dv">${ago(e.ts)}</div></div>
-        <div class="dfw"><div class="dk">Description</div><div class="dv" style="font-weight:400;line-height:1.5;">${h(e.ds)}</div></div>
-      </div>
-    </div>
-    ${r?`<div class="ddiv"></div><div class="ds"><div class="dsl"><span class="mio">person</span>Resident</div>
-      <div class="dg">
-        <div><div class="dk">Name</div><div class="dv">${r.fn} ${r.ln}</div></div>
-        <div><div class="dk">Date of Birth</div><div class="dv">${r.db||'—'}</div></div>
-        <div><div class="dk">Blood Type</div><div class="dv">${r.bl||'—'}</div></div>
-        <div><div class="dk">Allergies</div><div class="dv" style="color:${r.al&&r.al!=='None'?'hsl(var(--red-fg))':'inherit'}">${r.al||'None'}</div></div>
-        <div class="dfw"><div class="dk">Emergency Contact</div><div class="dv">${r.ec||'—'}</div></div>
-        ${r.nt?`<div class="dfw"><div class="dk">Medical Notes</div><div class="dv" style="font-weight:400;font-size:12px;color:hsl(var(--muted-fg))">${h(r.nt)}</div></div>`:''}
-      </div>
-    </div>`:''}
-    <div class="ddiv"></div>
-    <div class="ds"><div class="dsl"><span class="mio">chat</span>Dispatcher Chat <span class="pdot" style="margin-left:4px;"></span></div>
-      <div class="cb">
-        <div class="cm" id="cm-${e.id}">${chat}</div>
-        <div class="cir"><input class="cinp" id="ci-${e.id}" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sndChat('${e.id}')"><button class="btn btn-primary btn-sm" onclick="sndChat('${e.id}')"><span class="mi" style="font-size:14px;">send</span></button></div>
-      </div>
-    </div>
-    <div style="margin-top:14px;display:flex;gap:7px;flex-wrap:wrap;">
-      ${e.st==='Accepted'?`<button class="btn btn-outline" onclick="closedE('${e.id}')"><span class="mio">check_circle</span>Mark as Closed</button>`:''}
-    </div>`;
-  document.getElementById('eps').classList.add('open');document.getElementById('epn').classList.add('open');
+  showCtx(ev,[
+    {icon:'visibility',oi:true,label:'View',action:()=>openPanel('view-e',id)},
+    {icon:'add',oi:false,label:'Add emergency',action:()=>openPanel('create-e',null)},
+    ...(e.st!=='Closed'?[{icon:'check_circle',oi:true,label:'Mark as closed',action:()=>closeE(id)}]:[]),
+    '-',
+    {icon:'delete',oi:true,label:'Delete',danger:true,action:()=>delE(id)},
+  ]);
 }
-function closeEP(){document.getElementById('eps').classList.remove('open');document.getElementById('epn').classList.remove('open');}
-function sndChat(eid){
+function closeE(id){const e=EMG.find(x=>x.id===id);if(!e)return;e.st='Closed';e.ch.push({w:'System',m:'Emergency closed.',t:new Date()});redE();toast('Marked as closed');closePanel();}
+function delE(id){const i=EMG.findIndex(x=>x.id===id);if(i>-1)EMG.splice(i,1);redE();toast('Emergency deleted');}
+function sendChat(eid){
   const e=EMG.find(x=>x.id===eid);const inp=document.getElementById('ci-'+eid);
-  if(!e||!inp.value.trim())return;
+  if(!e||!inp||!inp.value.trim())return;
   e.ch.push({w:'Nurse',m:inp.value.trim(),t:new Date()});inp.value='';
   const msgs=document.getElementById('cm-'+eid);
   if(msgs){msgs.innerHTML=e.ch.map(c=>`<div class="msg ${c.w==='Dispatcher'||c.w==='System'?'in':'out'}"><div class="mmeta">${h(c.w)} · ${ago(c.t)}</div><div class="mbubble">${h(c.m)}</div></div>`).join('');msgs.scrollTop=msgs.scrollHeight;}
 }
+function submitCreateE(){
+  const rid=document.getElementById('ce-res')?.value;const tp=document.getElementById('ce-type')?.value.trim();
+  if(!rid){toast('Please select a resident','err');return;}if(!tp){toast('Please enter emergency type','err');return;}
+  const r=gr(rid);
+  EMG.unshift({id:'E'+uid(),rid,tp,ds:document.getElementById('ce-desc')?.value.trim()||tp,rm:r?r.rm:'—',ts:new Date(),st:'Accepted',sv:document.getElementById('ce-sev')?.value||'Medium',ch:[{w:'System',m:'Emergency submitted — EMS contacted automatically.',t:new Date()}]});
+  closePanel();redE();toast('Emergency created — EMS contacted');
+}
 
-/* RESIDENTS */
-function rQ(q){_rq=q.toLowerCase();redR();}
+/* ═══ RESIDENTS ═══ */
+function rSearch(q){_rq=q.toLowerCase();redR();}
 function redR(){
   let list=RES.filter(r=>!_rq||(r.fn+' '+r.ln+r.rm).toLowerCase().includes(_rq));
-  const tb=document.getElementById('rtb');
-  if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty"><span class="mio">group</span><p>No residents found</p></div></td></tr>';return;}
-  tb.innerHTML=list.map(r=>`<tr class="cp" onclick="openRP('${r.id}')">
-    <td class="fw5">${r.fn}</td><td>${r.ln}</td><td>${r.rm}</td><td class="tm">${r.db||'—'}</td><td>${r.sx}</td>
-    <td style="color:${r.al&&r.al!=='None'?'hsl(var(--red-fg))':'hsl(var(--muted-fg))'};">${r.al||'None'}</td>
-    <td onclick="event.stopPropagation()"><div class="ddw">
-      <button class="btn btn-ghost btn-icon btn-sm" onclick="tdd('rd-${r.id}',event)"><span class="mi">more_horiz</span></button>
-      <div class="ddm" id="rd-${r.id}">
-        <button class="ddi" onclick="openRP('${r.id}')"><span class="mio">visibility</span>View</button>
-        <button class="ddi" onclick="newEForR('${r.id}')"><span class="mi">emergency</span>New emergency</button>
-        <button class="ddi" onclick="editR('${r.id}')"><span class="mio">edit</span>Edit</button>
-        <button class="ddi" onclick="showQR('${r.id}')"><span class="mio">qr_code_2</span>QR Code</button>
-        <div class="dds"></div>
-        <button class="ddi danger" onclick="delR('${r.id}')"><span class="mio">delete</span>Delete</button>
-      </div>
-    </div></td>
+  const tb=document.getElementById('r-tb');
+  if(!list.length){tb.innerHTML='<tr><td colspan="6"><div class="empty"><span class="mio">group</span><p>No residents found</p></div></td></tr>';return;}
+  tb.innerHTML=list.map(r=>`<tr onclick="openPanel('view-r','${r.id}')" oncontextmenu="rCtx(event,'${r.id}')">
+    <td style="font-weight:500">${r.fn}</td><td>${r.ln}</td><td>${r.rm}</td>
+    <td class="m">${r.db||'—'}</td><td>${r.sx}</td>
+    <td style="color:${r.al&&r.al!=='None'?'#fca5a5':'var(--fg2)'}">${r.al||'None'}</td>
   </tr>`).join('');
 }
-function openAddR(){_erid=null;document.getElementById('mr-title').textContent='Add resident';document.getElementById('mr-btn').textContent='Add resident';['rf-fn','rf-ln','rf-rm','rf-al','rf-ec','rf-nt'].forEach(i=>document.getElementById(i).value='');document.getElementById('rf-db').value='';document.getElementById('rf-sx').value='Male';document.getElementById('rf-bl').value='';om('m-res');}
-function editR(id){const r=RES.find(x=>x.id===id);if(!r)return;_erid=id;document.getElementById('mr-title').textContent='Edit resident';document.getElementById('mr-btn').textContent='Save changes';document.getElementById('rf-fn').value=r.fn;document.getElementById('rf-ln').value=r.ln;document.getElementById('rf-rm').value=r.rm;document.getElementById('rf-db').value=r.db||'';document.getElementById('rf-sx').value=r.sx;document.getElementById('rf-bl').value=r.bl||'';document.getElementById('rf-al').value=r.al==='None'?'':r.al||'';document.getElementById('rf-ec').value=r.ec||'';document.getElementById('rf-nt').value=r.nt||'';om('m-res');}
-function saveR(){const fn=document.getElementById('rf-fn').value.trim();const ln=document.getElementById('rf-ln').value.trim();const rm=document.getElementById('rf-rm').value.trim();if(!fn||!ln||!rm){toast('Fill required fields','err');return;}const d={fn,ln,rm,db:document.getElementById('rf-db').value,sx:document.getElementById('rf-sx').value,bl:document.getElementById('rf-bl').value,al:document.getElementById('rf-al').value.trim()||'None',ec:document.getElementById('rf-ec').value.trim(),nt:document.getElementById('rf-nt').value.trim()};if(_erid){const i=RES.findIndex(r=>r.id===_erid);if(i>-1)Object.assign(RES[i],d);toast('Resident updated');}else{RES.push({id:'R'+uid(),...d});toast('Resident added');}cm('m-res');redR();}
+function rCtx(ev,id){
+  showCtx(ev,[
+    {icon:'visibility',oi:true,label:'View',action:()=>openPanel('view-r',id)},
+    {icon:'add',oi:false,label:'Add resident',action:()=>openPanel('add-r',null)},
+    {icon:'edit',oi:true,label:'Edit',action:()=>openPanel('edit-r',id)},
+    {icon:'emergency',oi:false,label:'New emergency',action:()=>openPanel('create-e',id)},
+    {icon:'qr_code_2',oi:true,label:'QR Code',action:()=>openPanel('qr-r',id)},
+    '-',
+    {icon:'delete',oi:true,label:'Delete',danger:true,action:()=>delR(id)},
+  ]);
+}
+function saveRes(id,isNew){
+  const fn=document.getElementById('rf-fn')?.value.trim();const ln=document.getElementById('rf-ln')?.value.trim();const rm=document.getElementById('rf-rm')?.value.trim();
+  if(!fn||!ln||!rm){toast('Fill required fields','err');return;}
+  if(isNew){
+    RES.unshift({id,fn,ln,rm,db:document.getElementById('rf-db')?.value||'',sx:document.getElementById('rf-sx')?.value||'Male',bl:document.getElementById('rf-bl')?.value||'',al:document.getElementById('rf-al')?.value.trim()||'None',ec:document.getElementById('rf-ec')?.value.trim()||'',nt:document.getElementById('rf-nt')?.value.trim()||''});
+    toast('Resident added');
+  } else {
+    const r=RES.find(x=>x.id===id);if(!r)return;
+    r.fn=fn;r.ln=ln;r.rm=rm;r.db=document.getElementById('rf-db')?.value||'';r.sx=document.getElementById('rf-sx')?.value||r.sx;r.bl=document.getElementById('rf-bl')?.value||'';
+    try{r.al=document.getElementById('rf-al')?.value.trim()||'None';}catch(e){}
+    try{r.ec=document.getElementById('rf-ec')?.value.trim()||'';}catch(e){}
+    try{r.nt=document.getElementById('rf-nt')?.value.trim()||'';}catch(e){}
+    toast('Resident saved');
+  }
+  closePanel();redR();
+}
 function delR(id){const i=RES.findIndex(r=>r.id===id);if(i>-1)RES.splice(i,1);redR();toast('Resident deleted');}
-function newEForR(id){openCE();setTimeout(()=>{document.getElementById('ce-r').value=id;},0);showPg('e');}
 
-function openRP(id){
-  const r=RES.find(x=>x.id===id);if(!r)return;
-  document.getElementById('rp-t').textContent=r.fn+' '+r.ln;
-  const hist=EMG.filter(e=>e.rid===id).sort((a,b)=>b.ts-a.ts);
-  const bc=s=>s==='New'?'bn':s==='Accepted'?'ba':'bc';
-  document.getElementById('rp-body').innerHTML=`
-    <div class="ds"><div class="dsl"><span class="mio">person</span>Personal Information</div>
-      <div class="dg">
-        <div><div class="dk">Full Name</div><div class="dv">${r.fn} ${r.ln}</div></div>
-        <div><div class="dk">Room</div><div class="dv">${r.rm}</div></div>
-        <div><div class="dk">Date of Birth</div><div class="dv">${r.db||'—'}</div></div>
-        <div><div class="dk">Sex</div><div class="dv">${r.sx}</div></div>
-        <div><div class="dk">Blood Type</div><div class="dv">${r.bl||'—'}</div></div>
-        <div><div class="dk">Allergies</div><div class="dv" style="color:${r.al&&r.al!=='None'?'hsl(var(--red-fg))':'inherit'}">${r.al||'None'}</div></div>
-        <div class="dfw"><div class="dk">Emergency Contact</div><div class="dv">${r.ec||'—'}</div></div>
-        ${r.nt?`<div class="dfw"><div class="dk">Medical Notes</div><div class="dv" style="font-weight:400;font-size:12px;color:hsl(var(--muted-fg))">${h(r.nt)}</div></div>`:''}
-      </div>
-    </div>
-    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;">
-      <button class="btn btn-primary btn-sm" onclick="newEForR('${id}');closeRP()"><span class="mi">emergency</span>New Emergency</button>
-      <button class="btn btn-outline btn-sm" onclick="editR('${id}');closeRP()"><span class="mio">edit</span>Edit</button>
-      <button class="btn btn-outline btn-sm" onclick="showQR('${id}');closeRP()"><span class="mio">qr_code_2</span>QR Code</button>
-    </div>
-    <div class="ddiv"></div>
-    <div class="ds"><div class="dsl"><span class="mio">history</span>Emergency History</div>
-      ${hist.length===0?'<p class="tm ts">No emergencies on record</p>':
-        hist.map(e=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:hsl(var(--secondary));border-radius:var(--r);margin-bottom:5px;"><div><div class="fw5 ts">${h(e.tp)}</div><div class="tm" style="font-size:11px;margin-top:1px;">${ago(e.ts)}</div></div><span class="bdg ${bc(e.st)}">${e.st}</span></div>`).join('')}
-    </div>`;
-  document.getElementById('rps').classList.add('open');document.getElementById('rpn').classList.add('open');
-}
-function closeRP(){document.getElementById('rps').classList.remove('open');document.getElementById('rpn').classList.remove('open');}
-
-/* QR */
-function showQR(id){
-  const r=RES.find(x=>x.id===id);if(!r)return;_qrr=r;
-  const qc=document.getElementById('qr-c');qc.innerHTML='';
-  const url=window.location.href.split('?')[0]+'?scan=1&rid='+r.id;
-  new QRCode(qc,{text:url,width:176,height:176,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
-  document.getElementById('qr-info').innerHTML=[['Resident ID',r.id],['Name',r.fn+' '+r.ln],['Room',r.rm],['Allergies',r.al||'None'],['Emergency Contact',r.ec||'—']].map(([k,v])=>`<div class="qrr"><span class="qrk">${k}</span><span class="qrv">${h(v)}</span></div>`).join('');
-  om('m-qr');
-}
-function printQR(){
+/* ═══ QR PRINT ═══ */
+function doPrintQR(){
   const r=_qrr;if(!r)return;
   const url=window.location.href.split('?')[0]+'?scan=1&rid='+r.id;
   const pz=document.getElementById('pz');pz.style.display='flex';
-  pz.innerHTML=`<div style="font-family:Inter,sans-serif;background:#fff;color:#000;padding:22px;border-radius:10px;width:272px;text-align:center;border:2px solid #dc2626;">
-    <img src="https://tot.app.dev-helptapp.com/assets/911-logo-CMzjsJv_.svg" style="height:22px;margin-bottom:11px;" onerror="this.style.display='none'">
-    <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#dc2626;margin-bottom:3px;">⚠ EMERGENCY USE ONLY</div>
-    <div style="font-size:18px;font-weight:700;margin-bottom:2px;">${r.fn} ${r.ln}</div>
-    <div style="font-size:12px;color:#555;margin-bottom:13px;">Room ${r.rm} · Green Meadows Care Center</div>
-    <div id="pqr" style="background:#fff;display:inline-block;padding:7px;border:1px solid #eee;border-radius:5px;margin-bottom:12px;"></div>
-    <div style="font-size:11px;color:#444;line-height:1.6;border-top:1px solid #eee;padding-top:9px;">Scan to immediately notify emergency dispatch for this resident.<br><strong style="color:#dc2626;">If life-threatening — also call 911.</strong><br><span style="color:#aaa;font-size:10px;">ID: ${r.id}</span></div>
-  </div>`;
-  setTimeout(()=>{new QRCode(document.getElementById('pqr'),{text:url,width:148,height:148,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.H});setTimeout(()=>{window.print();pz.style.display='none';},300);},50);
+  pz.innerHTML=`<div style="font-family:Inter,sans-serif;background:#fff;color:#000;padding:20px;border-radius:8px;width:256px;text-align:center;border:2px solid #ef4444;"><div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:3px;">⚠ EMERGENCY USE ONLY</div><div style="font-size:17px;font-weight:700;margin-bottom:1px">${r.fn} ${r.ln}</div><div style="font-size:11px;color:#555;margin-bottom:11px">Room ${r.rm} · Green Meadows</div><div id="pqr" style="background:#fff;display:inline-block;padding:6px;border:1px solid #eee;border-radius:3px;margin-bottom:9px"></div><div style="font-size:10px;color:#444;line-height:1.6;border-top:1px solid #eee;padding-top:7px">Scan to immediately notify emergency dispatch.<br><strong style="color:#ef4444">Also call 911 if life-threatening.</strong><br><span style="color:#aaa;font-size:9px">ID: ${r.id}</span></div></div>`;
+  setTimeout(()=>{new QRCode(document.getElementById('pqr'),{text:url,width:140,height:140,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.H});setTimeout(()=>{window.print();pz.style.display='none';},300);},50);
 }
 
-/* EMPLOYEES */
-function pQ(q){_pq=q.toLowerCase();redP();}
+/* ═══ EMPLOYEES ═══ */
+function pSearch(q){_pq=q.toLowerCase();redP();}
 function redP(){
   let list=EMP.filter(e=>!_pq||(e.fn+' '+e.ln+e.em+e.dp).toLowerCase().includes(_pq));
-  const tb=document.getElementById('ptb');
-  if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty"><span class="mio">badge</span><p>No employees found</p></div></td></tr>';return;}
-  tb.innerHTML=list.map(e=>`<tr>
-    <td class="fw5">${e.fn}</td><td>${e.ln}</td>
-    <td><span class="bdg ${e.rl==='Administrator'?'badmin':'bemp'}">${e.rl}</span></td>
-    <td>${e.dp}</td><td class="tm">${e.em}</td><td class="tm">${e.ph}</td>
-    <td><div class="ddw">
-      <button class="btn btn-ghost btn-icon btn-sm" onclick="tdd('pd-${e.id}',event)"><span class="mi">more_horiz</span></button>
-      <div class="ddm" id="pd-${e.id}">
-        <button class="ddi" onclick="editP('${e.id}')"><span class="mio">edit</span>Edit</button>
-        <button class="ddi" onclick="togRole('${e.id}')"><span class="mio">swap_horiz</span>Toggle role</button>
-        <div class="dds"></div>
-        <button class="ddi danger" onclick="delP('${e.id}')"><span class="mio">delete</span>Delete</button>
-      </div>
-    </div></td>
+  const tb=document.getElementById('p-tb');
+  if(!list.length){tb.innerHTML='<tr><td colspan="6"><div class="empty"><span class="mio">badge</span><p>No employees found</p></div></td></tr>';return;}
+  tb.innerHTML=list.map(e=>`<tr onclick="openPanel('edit-p','${e.id}')" oncontextmenu="pCtx(event,'${e.id}')">
+    <td style="font-weight:500">${e.fn}</td><td>${e.ln}</td>
+    <td><span class="bdg ${e.rl==='Administrator'?'badm':'bemp'}">${e.rl}</span></td>
+    <td>${e.dp}</td><td class="m">${e.em}</td><td class="m">${e.ph}</td>
   </tr>`).join('');
 }
-function openAddP(){_prid=null;document.getElementById('mp-title').textContent='Add employee';document.getElementById('mp-btn').textContent='Add employee';['pf-fn','pf-ln','pf-em','pf-ph'].forEach(i=>document.getElementById(i).value='');om('m-emp');}
-function editP(id){const e=EMP.find(x=>x.id===id);if(!e)return;_prid=id;document.getElementById('mp-title').textContent='Edit employee';document.getElementById('mp-btn').textContent='Save changes';document.getElementById('pf-fn').value=e.fn;document.getElementById('pf-ln').value=e.ln;document.getElementById('pf-rl').value=e.rl;document.getElementById('pf-dp').value=e.dp;document.getElementById('pf-em').value=e.em;document.getElementById('pf-ph').value=e.ph;om('m-emp');}
-function saveP(){const fn=document.getElementById('pf-fn').value.trim();const ln=document.getElementById('pf-ln').value.trim();const em=document.getElementById('pf-em').value.trim();if(!fn||!ln||!em){toast('Fill required fields','err');return;}const d={fn,ln,rl:document.getElementById('pf-rl').value,dp:document.getElementById('pf-dp').value,em,ph:document.getElementById('pf-ph').value.trim()};if(_prid){const i=EMP.findIndex(e=>e.id===_prid);if(i>-1)Object.assign(EMP[i],d);toast('Employee updated');}else{EMP.push({id:'P'+uid(),...d});toast('Employee added');}cm('m-emp');redP();}
+function pCtx(ev,id){
+  showCtx(ev,[
+    {icon:'edit',oi:true,label:'Edit',action:()=>openPanel('edit-p',id)},
+    {icon:'add',oi:false,label:'Add employee',action:()=>openPanel('add-p',null)},
+    {icon:'swap_horiz',oi:true,label:'Toggle role',action:()=>toggleRole(id)},
+    '-',
+    {icon:'delete',oi:true,label:'Delete',danger:true,action:()=>delP(id)},
+  ]);
+}
+function saveEmp(){
+  const fn=document.getElementById('pf-fn')?.value.trim();const ln=document.getElementById('pf-ln')?.value.trim();const em=document.getElementById('pf-em')?.value.trim();
+  if(!fn||!ln||!em){toast('Fill required fields','err');return;}
+  EMP.unshift({id:'P'+uid(),fn,ln,rl:document.getElementById('pf-rl')?.value||'Employee',dp:document.getElementById('pf-dp')?.value||'Medical',em,ph:document.getElementById('pf-ph')?.value.trim()||''});
+  closePanel();redP();toast('Employee added');
+}
+function saveEmpEdit(id){
+  const e=EMP.find(x=>x.id===id);if(!e)return;
+  const fn=document.getElementById('pf-fn')?.value.trim();const ln=document.getElementById('pf-ln')?.value.trim();const em=document.getElementById('pf-em')?.value.trim();
+  if(!fn||!ln||!em){toast('Fill required fields','err');return;}
+  e.fn=fn;e.ln=ln;e.rl=document.getElementById('pf-rl')?.value||e.rl;e.dp=document.getElementById('pf-dp')?.value||e.dp;e.em=em;e.ph=document.getElementById('pf-ph')?.value.trim()||e.ph;
+  closePanel();redP();toast('Employee saved');
+}
+function toggleRole(id){const e=EMP.find(x=>x.id===id);if(!e)return;e.rl=e.rl==='Administrator'?'Employee':'Administrator';redP();toast('Role updated to '+e.rl);}
 function delP(id){const i=EMP.findIndex(e=>e.id===id);if(i>-1)EMP.splice(i,1);redP();toast('Employee deleted');}
-function togRole(id){const e=EMP.find(x=>x.id===id);if(!e)return;e.rl=e.rl==='Administrator'?'Employee':'Administrator';redP();toast('Role updated to '+e.rl);}
 
-/* SCAN */
+/* ═══ SCAN PAGE ═══ */
 function initScan(){const p=new URLSearchParams(window.location.search);const rid=p.get('rid');const r=RES.find(x=>x.id===rid);document.getElementById('sc-name').textContent=r?r.fn+' '+r.ln:'Unknown Resident';document.getElementById('sc-meta').textContent=r?'Room '+r.rm+' · Green Meadows Care Center':'Green Meadows Care Center';}
 function submitScan(){
   const tp=document.getElementById('sc-t').value.trim();const sv=document.getElementById('sc-s').value;const nu=document.getElementById('sc-n').value.trim();
   if(!tp){toast('Please enter emergency type','err');return;}if(!sv){toast('Please select severity','err');return;}if(!nu){toast('Please enter your name','err');return;}
   const p=new URLSearchParams(window.location.search);const rid=p.get('rid');const r=RES.find(x=>x.id===rid);
-  EMG.unshift({id:'E'+uid(),rid:rid||'UNKNOWN',tp,ds:document.getElementById('sc-d').value.trim()||tp,rm:r?r.rm:'—',ts:new Date(),st:'Accepted',sv,ch:[{w:'System',m:'Emergency submitted via QR scan by '+nu+'. EMS contacted automatically.',t:new Date()}]});
+  EMG.unshift({id:'E'+uid(),rid:rid||'UNKNOWN',tp,ds:document.getElementById('sc-d').value.trim()||tp,rm:r?r.rm:'—',ts:new Date(),st:'Accepted',sv,ch:[{w:'System',m:'Submitted via QR scan by '+nu+'. EMS contacted automatically.',t:new Date()}]});
   document.getElementById('sc-form').style.display='none';document.getElementById('sc-ok').style.display='flex';
 }
 
-/* INIT */
+/* ═══ INIT ═══ */
 (function(){const p=new URLSearchParams(window.location.search);if(p.get('scan')==='1'){sv('view-scan');initScan();}else{sv('view-login');}})();
 </script>
 </body>
