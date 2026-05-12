@@ -3,88 +3,102 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>HavenCare EMS — Nursing Home Emergency System</title>
+<title>CareLink — Nursing Home Emergency Portal</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  html, body { font-family: 'Inter', system-ui, sans-serif; background: #0a0a0a; color: #fff; }
+  :root {
+    --bg-0: #0f1115;       /* page background — lifted from pure black */
+    --bg-1: #161922;       /* surfaces */
+    --bg-2: #1c2030;       /* elevated surfaces */
+    --bg-3: #232838;       /* hovered / interactive */
+    --bg-4: #2c3245;       /* borders+ */
+    --border: #2a3042;
+    --border-strong: #353c52;
+    --text-0: #f3f4f8;
+    --text-1: #c8ccda;
+    --text-2: #8b91a5;
+    --text-3: #5b6178;
+    --primary: #f43f5e;
+    --primary-hover: #e11d48;
+    --primary-soft: rgba(244, 63, 94, 0.12);
+  }
+  html, body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg-0); color: var(--text-0); }
   * { -webkit-tap-highlight-color: transparent; }
-  /* hide scrollbar but keep scroll */
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  /* Severity color tokens */
-  .sev-low { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
-  .sev-medium { background: rgba(234,179,8,0.12); color: #facc15; border: 1px solid rgba(234,179,8,0.3); }
-  .sev-high { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.35); }
-  /* primary red used in mock */
-  :root {
-    --bg-0: #0a0a0a;
-    --bg-1: #111111;
-    --bg-2: #161616;
-    --bg-3: #1c1c1c;
-    --border: #262626;
-    --primary: #ef3b5c;
-    --primary-hover: #d8334f;
-  }
+ 
+  /* Status dot colors */
+  .dot-red    { background: #f43f5e; }
+  .dot-orange { background: #fb923c; }
+  .dot-yellow { background: #facc15; }
+  .dot-green  { background: #34d399; }
+  .dot-blue   { background: #60a5fa; }
+  .dot-gray   { background: #94a3b8; }
+ 
+  /* Severity */
+  .sev-low    { background: rgba(52,211,153,0.12); color: #6ee7b7; border: 1px solid rgba(52,211,153,0.3); }
+  .sev-medium { background: rgba(250,204,21,0.12); color: #fde047; border: 1px solid rgba(250,204,21,0.3); }
+  .sev-high   { background: rgba(244,63,94,0.15); color: #fda4af; border: 1px solid rgba(244,63,94,0.4); }
+ 
   .btn-primary { background: var(--primary); color: white; }
   .btn-primary:hover { background: var(--primary-hover); }
   .text-primary { color: var(--primary); }
   .bg-primary { background: var(--primary); }
+  .bg-primary-soft { background: var(--primary-soft); }
   .border-primary { border-color: var(--primary); }
-  /* pulsing dot */
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.2); }
-  }
+ 
+  /* Pulse */
+  @keyframes pulse-dot { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.25); } }
   .pulse-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
-  /* fade-in for chat messages */
-  @keyframes msgIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+ 
+  /* Slide in */
+  @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+  @keyframes slideInBackdrop { from { opacity: 0; } to { opacity: 1; } }
+  .slide-in { animation: slideIn 0.28s cubic-bezier(0.32, 0.72, 0, 1); }
+  .backdrop-in { animation: slideInBackdrop 0.2s ease-out; }
+ 
+  /* Message fade */
+  @keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   .msg-in { animation: msgIn 0.25s ease-out; }
-  /* typing dots */
-  @keyframes typing {
-    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
-    30% { opacity: 1; transform: translateY(-3px); }
+ 
+  /* Inputs */
+  input[type="checkbox"], input[type="radio"] { accent-color: var(--primary); }
+  select, input, textarea { color-scheme: dark; }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--border-strong); }
+ 
+  /* Context menu */
+  .ctx-menu {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 38px -10px rgba(0,0,0,0.6), 0 10px 20px -15px rgba(0,0,0,0.5);
   }
-  .typing-dot { animation: typing 1.2s infinite; }
-  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-  /* checkbox */
-  input[type="checkbox"], input[type="radio"] {
-    accent-color: var(--primary);
+ 
+  /* Custom checkbox for table column setting */
+  .check-box {
+    width: 18px; height: 18px; border-radius: 5px;
+    border: 1.5px solid var(--border-strong);
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--bg-1);
+    cursor: pointer;
   }
-  select, input, textarea {
-    color-scheme: dark;
-  }
-  /* hide on mobile when on desktop view & vice versa */
-  .scroll-shadow {
-    background:
-      linear-gradient(#0a0a0a 30%, rgba(10,10,10,0)) center top,
-      linear-gradient(rgba(10,10,10,0), #0a0a0a 70%) center bottom,
-      radial-gradient(farthest-side at 50% 0, rgba(0,0,0,0.4), rgba(0,0,0,0)) center top,
-      radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,0.4), rgba(0,0,0,0)) center bottom;
-    background-repeat: no-repeat;
-    background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
-    background-attachment: local, local, scroll, scroll;
-  }
+  .check-box.on { background: var(--primary); border-color: var(--primary); }
 </style>
 </head>
 <body>
 <div id="root"></div>
-
+ 
 <script type="text/babel" data-presets="react">
 const { useState, useEffect, useRef, useMemo, useCallback } = React;
-
+ 
 /* ========================================================================
-   ICONS — inline SVG to match the uploaded design language
+   ICONS
    ======================================================================== */
 const Icon = {
   Search: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
@@ -107,29 +121,34 @@ const Icon = {
   Download: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>,
   Print: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>,
   Layout: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg>,
+  Columns: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" x2="9" y1="3" y2="21"/><line x1="15" x2="15" y1="3" y2="21"/></svg>,
+  Filter: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
   Check: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><polyline points="20 6 9 17 4 12"/></svg>,
-  ChevronDown: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><polyline points="6 9 12 15 18 9"/></svg>,
-  Settings: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>,
+  More: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>,
+  ChevronLeft: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><polyline points="15 18 9 12 15 6"/></svg>,
+  ChevronRight: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><polyline points="9 18 15 12 9 6"/></svg>,
+  Eye: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>,
+  Heart: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>,
 };
-
+ 
 /* ========================================================================
-   MOCK DATA SEED
+   MOCK DATA
    ======================================================================== */
 const SEED_EMPLOYEES = [
-  { id: 'E001', name: 'Sarah Mitchell',  role: 'Head Nurse',       phone: '(845) 555-0101', email: 'sarah.mitchell@havencare.com',  shift: 'Day' },
-  { id: 'E002', name: 'James Rodriguez',  role: 'Registered Nurse', phone: '(845) 555-0102', email: 'james.rodriguez@havencare.com', shift: 'Day' },
-  { id: 'E003', name: 'Emily Chen',       role: 'LPN',              phone: '(845) 555-0103', email: 'emily.chen@havencare.com',      shift: 'Day' },
-  { id: 'E004', name: 'Michael Thompson', role: 'CNA',              phone: '(845) 555-0104', email: 'michael.thompson@havencare.com', shift: 'Night' },
-  { id: 'E005', name: 'Ashley Williams',  role: 'Registered Nurse', phone: '(845) 555-0105', email: 'ashley.williams@havencare.com', shift: 'Night' },
-  { id: 'E006', name: 'David Park',       role: 'LPN',              phone: '(845) 555-0106', email: 'david.park@havencare.com',      shift: 'Evening' },
-  { id: 'E007', name: 'Jessica Brown',    role: 'CNA',              phone: '(845) 555-0107', email: 'jessica.brown@havencare.com',   shift: 'Evening' },
-  { id: 'E008', name: 'Daniel Cohen',     role: 'Registered Nurse', phone: '(845) 555-0108', email: 'daniel.cohen@havencare.com',    shift: 'Day' },
-  { id: 'E009', name: 'Maria Gonzalez',   role: 'LPN',              phone: '(845) 555-0109', email: 'maria.gonzalez@havencare.com',  shift: 'Night' },
-  { id: 'E010', name: 'Robert Singh',     role: 'CNA',              phone: '(845) 555-0110', email: 'robert.singh@havencare.com',    shift: 'Day' },
-  { id: 'E011', name: 'Linda Foster',     role: 'Head Nurse',       phone: '(845) 555-0111', email: 'linda.foster@havencare.com',    shift: 'Evening' },
-  { id: 'E012', name: 'Kevin O\u2019Brien', role: 'Registered Nurse', phone: '(845) 555-0112', email: 'kevin.obrien@havencare.com',  shift: 'Day' },
+  { id: 'E001', name: 'Sarah Mitchell',  role: 'Head Nurse',       phone: '(845) 555-0101', email: 'sarah.mitchell@carelink.com',  shift: 'Day' },
+  { id: 'E002', name: 'James Rodriguez',  role: 'Registered Nurse', phone: '(845) 555-0102', email: 'james.rodriguez@carelink.com', shift: 'Day' },
+  { id: 'E003', name: 'Emily Chen',       role: 'LPN',              phone: '(845) 555-0103', email: 'emily.chen@carelink.com',      shift: 'Day' },
+  { id: 'E004', name: 'Michael Thompson', role: 'CNA',              phone: '(845) 555-0104', email: 'michael.thompson@carelink.com', shift: 'Night' },
+  { id: 'E005', name: 'Ashley Williams',  role: 'Registered Nurse', phone: '(845) 555-0105', email: 'ashley.williams@carelink.com', shift: 'Night' },
+  { id: 'E006', name: 'David Park',       role: 'LPN',              phone: '(845) 555-0106', email: 'david.park@carelink.com',      shift: 'Evening' },
+  { id: 'E007', name: 'Jessica Brown',    role: 'CNA',              phone: '(845) 555-0107', email: 'jessica.brown@carelink.com',   shift: 'Evening' },
+  { id: 'E008', name: 'Daniel Cohen',     role: 'Registered Nurse', phone: '(845) 555-0108', email: 'daniel.cohen@carelink.com',    shift: 'Day' },
+  { id: 'E009', name: 'Maria Gonzalez',   role: 'LPN',              phone: '(845) 555-0109', email: 'maria.gonzalez@carelink.com',  shift: 'Night' },
+  { id: 'E010', name: 'Robert Singh',     role: 'CNA',              phone: '(845) 555-0110', email: 'robert.singh@carelink.com',    shift: 'Day' },
+  { id: 'E011', name: 'Linda Foster',     role: 'Head Nurse',       phone: '(845) 555-0111', email: 'linda.foster@carelink.com',    shift: 'Evening' },
+  { id: 'E012', name: 'Kevin O\u2019Brien', role: 'Registered Nurse', phone: '(845) 555-0112', email: 'kevin.obrien@carelink.com',  shift: 'Day' },
 ];
-
+ 
 const SEED_RESIDENTS = [
   { id: 'R001', name: 'Margaret Williams',   room: '101', age: 84, dob: '1941-03-12', gender: 'Female', conditions: 'Hypertension, Type 2 Diabetes', emergencyContact: 'John Williams (Son)',   contactPhone: '(845) 555-0201' },
   { id: 'R002', name: 'Robert Johnson',      room: '102', age: 79, dob: '1946-07-22', gender: 'Male',   conditions: 'COPD, Arthritis',                emergencyContact: 'Mary Johnson (Daughter)', contactPhone: '(845) 555-0202' },
@@ -144,125 +163,83 @@ const SEED_RESIDENTS = [
   { id: 'R011', name: 'Barbara Thomas',      room: '303', age: 78, dob: '1947-06-23', gender: 'Female', conditions: 'Arthritis, Depression',            emergencyContact: 'David Thomas (Son)',    contactPhone: '(845) 555-0211' },
   { id: 'R012', name: 'Edward Jackson',      room: '304', age: 83, dob: '1942-01-09', gender: 'Male',   conditions: 'COPD, Atrial fibrillation',        emergencyContact: 'Carol Jackson (Wife)',  contactPhone: '(845) 555-0212' },
 ];
-
-const SEED_CFS = [
-  // a couple of historical/completed CFS so the active CFS page isn't empty
-  {
-    id: 'CFS000005',
-    refNumber: '260500005',
-    residentId: 'R005',
-    employeeName: 'Sarah Mitchell',
-    employeeManual: false,
-    emergencyType: 'Fall',
-    severity: 'medium',
-    description: 'Resident slipped getting out of bed. Conscious, complaining of hip pain.',
-    status: 'active',
-    createdAt: Date.now() - 1000 * 60 * 12, // 12 min ago
-    source: 'system',
-    location: '500 Haven Way, Spring Valley, NY 10977',
-    callerNumber: '(845) 555-0000',
-    messages: [
-      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 12 },
-      { from: 'caller', text: 'Fall — medium severity. Resident slipped getting out of bed. Conscious, complaining of hip pain.', ts: Date.now() - 1000 * 60 * 11 },
-      { from: 'caller', type: 'location', address: '500 Haven Way, Spring Valley, NY 10977 — Room 201', ts: Date.now() - 1000 * 60 * 11 },
-      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 10 },
-    ],
-  },
-  {
-    id: 'CFS000004',
-    refNumber: '260500004',
-    residentId: 'R002',
-    employeeName: 'James Rodriguez',
-    employeeManual: false,
-    emergencyType: 'Difficulty breathing',
-    severity: 'high',
-    description: 'Resident with COPD experiencing acute shortness of breath. O2 sat 88%.',
-    status: 'active',
-    createdAt: Date.now() - 1000 * 60 * 3, // 3 min ago
-    source: 'qr',
-    location: '500 Haven Way, Spring Valley, NY 10977',
-    callerNumber: '(845) 555-0000',
-    messages: [
-      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 3 },
-      { from: 'caller', text: 'Difficulty breathing — high severity. Resident with COPD experiencing acute shortness of breath. O2 sat 88%.', ts: Date.now() - 1000 * 60 * 3 + 5000 },
-      { from: 'caller', type: 'location', address: '500 Haven Way, Spring Valley, NY 10977 — Room 102', ts: Date.now() - 1000 * 60 * 3 + 6000 },
-      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 2 },
-    ],
-  },
-  {
-    id: 'CFS000003',
-    refNumber: '260500003',
-    residentId: 'R007',
-    employeeName: 'Emily Chen',
-    employeeManual: false,
-    emergencyType: 'Chest pain',
-    severity: 'high',
-    description: 'Acute chest pain radiating to left arm. History of cardiac issues.',
-    status: 'closed',
-    createdAt: Date.now() - 1000 * 60 * 60 * 26, // yesterday
-    source: 'system',
-    location: '500 Haven Way, Spring Valley, NY 10977',
-    callerNumber: '(845) 555-0000',
-    messages: [
-      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 60 * 26 },
-      { from: 'caller', text: 'Chest pain — high severity. Acute chest pain radiating to left arm. History of cardiac issues.', ts: Date.now() - 1000 * 60 * 60 * 26 + 5000 },
-      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 60 * 26 + 30000 },
-      { from: 'caller', text: 'EMS arrived 8 minutes after dispatch. Resident transported to Good Samaritan Hospital.', ts: Date.now() - 1000 * 60 * 60 * 25 },
-    ],
-  },
-  {
-    id: 'CFS000002',
-    refNumber: '260500002',
-    residentId: 'R010',
-    employeeName: 'Michael Thompson',
-    employeeManual: false,
-    emergencyType: 'Diabetic emergency',
-    severity: 'medium',
-    description: 'Blood sugar 42 mg/dL. Resident confused, sweating.',
-    status: 'closed',
-    createdAt: Date.now() - 1000 * 60 * 60 * 52,
-    source: 'system',
-    location: '500 Haven Way, Spring Valley, NY 10977',
-    callerNumber: '(845) 555-0000',
-    messages: [
-      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 60 * 52 },
-      { from: 'caller', text: 'Diabetic emergency — medium severity. Blood sugar 42 mg/dL. Resident confused, sweating.', ts: Date.now() - 1000 * 60 * 60 * 52 + 5000 },
-      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 60 * 52 + 20000 },
-    ],
-  },
-  {
-    id: 'CFS000001',
-    refNumber: '260500001',
-    residentId: 'R001',
-    employeeName: 'Ashley Williams',
-    employeeManual: false,
-    emergencyType: 'Allergic reaction',
-    severity: 'low',
-    description: 'Mild allergic reaction to new medication. Hives, no breathing issues.',
-    status: 'closed',
-    createdAt: Date.now() - 1000 * 60 * 60 * 78,
-    source: 'qr',
-    location: '500 Haven Way, Spring Valley, NY 10977',
-    callerNumber: '(845) 555-0000',
-    messages: [
-      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 60 * 78 },
-      { from: 'caller', text: 'Allergic reaction — low severity. Mild allergic reaction to new medication. Hives, no breathing issues.', ts: Date.now() - 1000 * 60 * 60 * 78 + 5000 },
-      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 60 * 78 + 20000 },
-    ],
-  },
-];
-
+ 
 const NURSING_HOME = {
   name: 'HavenCare Senior Living',
   address: '500 Haven Way, Spring Valley, NY 10977',
   callerNumber: '(845) 555-0000',
 };
-
+ 
+const SEED_CFS = [
+  {
+    id: 'CFS000005', refNumber: '260500005', residentId: 'R005', employeeName: 'Sarah Mitchell', employeeManual: false,
+    emergencyType: 'Fall', severity: 'medium',
+    description: 'Resident slipped getting out of bed. Conscious, complaining of hip pain.',
+    status: 'active', createdAt: Date.now() - 1000 * 60 * 12, source: 'system',
+    location: NURSING_HOME.address, callerNumber: NURSING_HOME.callerNumber,
+    messages: [
+      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 12 },
+      { from: 'caller', text: 'Fall \u2014 medium severity. Resident slipped getting out of bed. Conscious, complaining of hip pain.', ts: Date.now() - 1000 * 60 * 11 },
+      { from: 'caller', type: 'location', address: NURSING_HOME.address + ' \u2014 Room 201', ts: Date.now() - 1000 * 60 * 11 },
+      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 10 },
+    ],
+  },
+  {
+    id: 'CFS000004', refNumber: '260500004', residentId: 'R002', employeeName: 'James Rodriguez', employeeManual: false,
+    emergencyType: 'Difficulty breathing', severity: 'high',
+    description: 'Resident with COPD experiencing acute shortness of breath. O2 sat 88%.',
+    status: 'active', createdAt: Date.now() - 1000 * 60 * 3, source: 'qr',
+    location: NURSING_HOME.address, callerNumber: NURSING_HOME.callerNumber,
+    messages: [
+      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 3 },
+      { from: 'caller', text: 'Difficulty breathing \u2014 high severity. Resident with COPD experiencing acute shortness of breath. O2 sat 88%.', ts: Date.now() - 1000 * 60 * 3 + 5000 },
+      { from: 'caller', type: 'location', address: NURSING_HOME.address + ' \u2014 Room 102', ts: Date.now() - 1000 * 60 * 3 + 6000 },
+      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 2 },
+    ],
+  },
+  {
+    id: 'CFS000003', refNumber: '260500003', residentId: 'R007', employeeName: 'Emily Chen', employeeManual: false,
+    emergencyType: 'Chest pain', severity: 'high',
+    description: 'Acute chest pain radiating to left arm. History of cardiac issues.',
+    status: 'closed', createdAt: Date.now() - 1000 * 60 * 60 * 26, source: 'system',
+    location: NURSING_HOME.address, callerNumber: NURSING_HOME.callerNumber,
+    messages: [
+      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 60 * 26 },
+      { from: 'caller', text: 'Chest pain \u2014 high severity. Acute chest pain radiating to left arm. History of cardiac issues.', ts: Date.now() - 1000 * 60 * 60 * 26 + 5000 },
+      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 60 * 26 + 30000 },
+      { from: 'caller', text: 'EMS arrived 8 minutes after dispatch. Resident transported to Good Samaritan Hospital.', ts: Date.now() - 1000 * 60 * 60 * 25 },
+    ],
+  },
+  {
+    id: 'CFS000002', refNumber: '260500002', residentId: 'R010', employeeName: 'Michael Thompson', employeeManual: false,
+    emergencyType: 'Diabetic emergency', severity: 'medium',
+    description: 'Blood sugar 42 mg/dL. Resident confused, sweating.',
+    status: 'closed', createdAt: Date.now() - 1000 * 60 * 60 * 52, source: 'system',
+    location: NURSING_HOME.address, callerNumber: NURSING_HOME.callerNumber,
+    messages: [
+      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 60 * 52 },
+      { from: 'caller', text: 'Diabetic emergency \u2014 medium severity. Blood sugar 42 mg/dL.', ts: Date.now() - 1000 * 60 * 60 * 52 + 5000 },
+      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 60 * 52 + 20000 },
+    ],
+  },
+  {
+    id: 'CFS000001', refNumber: '260500001', residentId: 'R001', employeeName: 'Ashley Williams', employeeManual: false,
+    emergencyType: 'Allergic reaction', severity: 'low',
+    description: 'Mild allergic reaction to new medication. Hives, no breathing issues.',
+    status: 'closed', createdAt: Date.now() - 1000 * 60 * 60 * 78, source: 'qr',
+    location: NURSING_HOME.address, callerNumber: NURSING_HOME.callerNumber,
+    messages: [
+      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 60 * 78 },
+      { from: 'caller', text: 'Allergic reaction \u2014 low severity. Mild allergic reaction to new medication.', ts: Date.now() - 1000 * 60 * 60 * 78 + 5000 },
+      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 60 * 78 + 20000 },
+    ],
+  },
+];
+ 
 /* ========================================================================
    PERSISTENCE
    ======================================================================== */
-const STORAGE_KEY = 'havencare-ems-v1';
-
+const STORAGE_KEY = 'carelink-v1';
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -270,11 +247,10 @@ function loadState() {
     return JSON.parse(raw);
   } catch { return null; }
 }
-
 function saveState(state) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
 }
-
+ 
 /* ========================================================================
    HELPERS
    ======================================================================== */
@@ -289,7 +265,6 @@ function timeAgo(ts) {
   const d = Math.floor(hr/24);
   return `${d}d ago`;
 }
-
 function formatTime(ts) {
   const d = new Date(ts);
   let h = d.getHours();
@@ -298,281 +273,345 @@ function formatTime(ts) {
   h = h % 12 || 12;
   return `${String(h).padStart(2,'0')}:${m} ${ampm}`;
 }
-
 function formatDate(ts) {
   const d = new Date(ts);
   return `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}/${d.getFullYear()}`;
 }
-
-function nextCfsId(cfsList) {
-  let max = 0;
-  cfsList.forEach(c => {
-    const n = parseInt(c.id.replace('CFS',''), 10);
-    if (n > max) max = n;
-  });
-  return 'CFS' + String(max+1).padStart(6, '0');
-}
-function nextRefNumber(cfsList) {
-  let max = 260500000;
-  cfsList.forEach(c => {
-    const n = parseInt(c.refNumber, 10);
-    if (n > max) max = n;
-  });
-  return String(max+1);
-}
-
 function severityLabel(s) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 }
-
+ 
 /* ========================================================================
-   ROOT APP — routes between Desktop dashboard and Mobile QR flow
+   APP ROOT
    ======================================================================== */
 function App() {
-  // Persistent state
   const initial = loadState();
   const [employees, setEmployees] = useState(initial?.employees || SEED_EMPLOYEES);
   const [residents, setResidents] = useState(initial?.residents || SEED_RESIDENTS);
   const [cfsList, setCfsList]     = useState(initial?.cfsList   || SEED_CFS);
-
-  // Save state on change
+ 
   useEffect(() => {
     saveState({ employees, residents, cfsList });
   }, [employees, residents, cfsList]);
-
-  // URL-based routing: ?resident=R001 => mobile QR flow; otherwise desktop dashboard
+ 
   const [routeParams, setRouteParams] = useState(() => new URLSearchParams(window.location.search));
   useEffect(() => {
     const handler = () => setRouteParams(new URLSearchParams(window.location.search));
     window.addEventListener('popstate', handler);
     return () => window.removeEventListener('popstate', handler);
   }, []);
-
+ 
   const residentParam = routeParams.get('resident');
   const cfsParam = routeParams.get('cfs');
-
-  // Tick every 15s to refresh timestamps and trigger auto dispatcher messages
+ 
   const [tick, setTick] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => setTick(t => t+1), 15000);
+    const id = setInterval(() => setTick(t => t+1), 8000);
     return () => clearInterval(id);
   }, []);
-
-  // CFS helpers exposed via context-like prop drilling
-  const addCfs = useCallback((cfs) => {
-    setCfsList(prev => [cfs, ...prev]);
-  }, []);
-  const updateCfs = useCallback((id, updater) => {
-    setCfsList(prev => prev.map(c => c.id === id ? updater(c) : c));
-  }, []);
-
-  // If URL has resident param => render mobile QR/emergency flow
+ 
+  const addCfs = useCallback((cfs) => setCfsList(prev => [cfs, ...prev]), []);
+  const updateCfs = useCallback((id, updater) => setCfsList(prev => prev.map(c => c.id === id ? updater(c) : c)), []);
+ 
   if (residentParam) {
     const resident = residents.find(r => r.id === residentParam);
-    return (
-      <MobileQRFlow
-        resident={resident}
-        residentParam={residentParam}
-        employees={employees}
-        nursingHome={NURSING_HOME}
-        cfsList={cfsList}
-        addCfs={addCfs}
-        updateCfs={updateCfs}
-        cfsParam={cfsParam}
-        tick={tick}
-      />
-    );
-  }
-
-  // Otherwise: desktop dashboard
-  return (
-    <DesktopDashboard
-      employees={employees} setEmployees={setEmployees}
-      residents={residents} setResidents={setResidents}
+    return <MobileQRFlow
+      resident={resident} residentParam={residentParam}
+      employees={employees} nursingHome={NURSING_HOME}
       cfsList={cfsList} addCfs={addCfs} updateCfs={updateCfs}
-      nursingHome={NURSING_HOME}
-      tick={tick}
-    />
-  );
+      cfsParam={cfsParam} tick={tick}
+    />;
+  }
+ 
+  return <DesktopDashboard
+    employees={employees} setEmployees={setEmployees}
+    residents={residents} setResidents={setResidents}
+    cfsList={cfsList} addCfs={addCfs} updateCfs={updateCfs}
+    nursingHome={NURSING_HOME} tick={tick}
+  />;
 }
-
+ 
 /* ========================================================================
    DESKTOP DASHBOARD
    ======================================================================== */
 function DesktopDashboard({ employees, setEmployees, residents, setResidents, cfsList, addCfs, updateCfs, nursingHome, tick }) {
-  const [page, setPage] = useState('cfs'); // cfs | residents | employees
-  const [emergencyOpen, setEmergencyOpen] = useState(false);
-  const [openCfsId, setOpenCfsId] = useState(null);
-  const [qrResidentId, setQrResidentId] = useState(null);
-
-  const openCfs = cfsList.find(c => c.id === openCfsId);
-
-  // Simulated dispatcher auto-replies: any active CFS gets a follow-up after a while
+  const [page, setPage] = useState('cfs');
+  const [panel, setPanel] = useState(null); // { type, ...data }
+ 
+  // Auto-replies for any active CFS (whether panel is open or not)
   useEffect(() => {
     cfsList.forEach(cfs => {
       if (cfs.status !== 'active') return;
       const lastMsg = cfs.messages[cfs.messages.length - 1];
       if (!lastMsg) return;
-      // If last message is from caller and >20s old, dispatcher replies (once)
-      if (lastMsg.from === 'caller' && Date.now() - lastMsg.ts > 20000 && !cfs._autoReplied) {
+      if (lastMsg.from === 'caller' && Date.now() - lastMsg.ts > 18000 && !cfs._autoReplied) {
         const replies = [
           'Copy that. Please keep the resident still and monitor their breathing.',
           'Understood. EMS is en route, approximate arrival 6 minutes.',
-          'Thank you for the update. Is the resident currently conscious and responsive?',
+          'Thank you. Is the resident currently conscious and responsive?',
           'Acknowledged. Please unlock the main entrance for EMS personnel.',
           'Got it. Have someone meet EMS at the front door if possible.',
+          'Understood. Continue to monitor vitals and call back if there are any changes.',
         ];
         const reply = replies[Math.floor(Math.random() * replies.length)];
         updateCfs(cfs.id, c => ({
-          ...c,
-          _autoReplied: true,
+          ...c, _autoReplied: true,
           messages: [...c.messages, { from: 'dispatcher', text: reply, ts: Date.now() }],
         }));
       }
     });
   }, [tick, cfsList, updateCfs]);
-
+ 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white flex">
+    <div className="min-h-screen flex" style={{ background: 'var(--bg-0)' }}>
       {/* Sidebar */}
-      <aside className="w-64 bg-[#0f0f0f] border-r border-[#1f1f1f] flex flex-col">
-        <div className="p-5 border-b border-[#1f1f1f]">
+      <aside className="w-60 flex flex-col flex-shrink-0" style={{ background: 'var(--bg-1)', borderRight: '1px solid var(--border)' }}>
+        <div className="p-5" style={{ borderBottom: '1px solid var(--border)' }}>
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
-              <Icon.Siren className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: 'var(--primary)' }}>
+              <Icon.Heart className="w-5 h-5 text-white"/>
             </div>
             <div>
-              <div className="font-semibold text-[15px] tracking-tight">HavenCare</div>
-              <div className="text-[11px] text-gray-500">EMS Portal</div>
+              <div className="font-bold text-[16px] tracking-tight">CareLink</div>
+              <div className="text-[11px]" style={{ color: 'var(--text-3)' }}>Emergency Portal</div>
             </div>
           </div>
         </div>
-
+ 
         <nav className="flex-1 p-3 space-y-0.5">
-          <SidebarLink active={page==='cfs'} onClick={()=>setPage('cfs')} icon={<Icon.Siren className="w-4 h-4"/>} label="Active CFS" badge={cfsList.filter(c=>c.status==='active').length} />
-          <SidebarLink active={page==='residents'} onClick={()=>setPage('residents')} icon={<Icon.Bed className="w-4 h-4"/>} label="Residents" />
-          <SidebarLink active={page==='employees'} onClick={()=>setPage('employees')} icon={<Icon.Users className="w-4 h-4"/>} label="Employees" />
+          <SidebarLink active={page==='cfs'} onClick={()=>setPage('cfs')} icon={<Icon.Siren className="w-4 h-4"/>} label="Active CFS" badge={cfsList.filter(c=>c.status==='active').length}/>
+          <SidebarLink active={page==='residents'} onClick={()=>setPage('residents')} icon={<Icon.Bed className="w-4 h-4"/>} label="Residents"/>
+          <SidebarLink active={page==='employees'} onClick={()=>setPage('employees')} icon={<Icon.Users className="w-4 h-4"/>} label="Employees"/>
         </nav>
-
-        <div className="p-3 border-t border-[#1f1f1f]">
-          <div className="px-3 py-2.5 rounded-lg bg-[#161616] border border-[#1f1f1f]">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-primary flex items-center justify-center text-xs font-semibold">SM</div>
-              <div className="min-w-0">
-                <div className="text-[13px] font-medium truncate">Sarah Mitchell</div>
-                <div className="text-[11px] text-gray-500 truncate">Administrator</div>
-              </div>
+ 
+        <div className="p-3" style={{ borderTop: '1px solid var(--border)' }}>
+          <div className="px-3 py-2.5 rounded-lg flex items-center gap-2.5" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold" style={{ background: 'linear-gradient(135deg, #f43f5e, #fb7185)' }}>SM</div>
+            <div className="min-w-0">
+              <div className="text-[13px] font-medium truncate">Sarah Mitchell</div>
+              <div className="text-[11px] truncate" style={{ color: 'var(--text-3)' }}>Administrator</div>
             </div>
           </div>
         </div>
       </aside>
-
+ 
       {/* Main */}
       <main className="flex-1 flex flex-col min-w-0">
-        {/* Top bar */}
-        <header className="h-16 border-b border-[#1f1f1f] flex items-center justify-between px-7 bg-[#0a0a0a]/80 backdrop-blur sticky top-0 z-30">
+        <header className="h-16 flex items-center justify-between px-7 sticky top-0 z-30" style={{ background: 'var(--bg-0)', borderBottom: '1px solid var(--border)' }}>
           <div>
             <h1 className="text-[18px] font-semibold tracking-tight">
               {page==='cfs' && 'Active Calls for Service'}
               {page==='residents' && 'Residents'}
               {page==='employees' && 'Employees'}
             </h1>
-            <div className="text-[12px] text-gray-500 mt-0.5">{nursingHome.name} · {nursingHome.address}</div>
+            <div className="text-[12px] mt-0.5" style={{ color: 'var(--text-3)' }}>{nursingHome.name} \u00b7 {nursingHome.address}</div>
           </div>
-          <button
-            onClick={()=>setEmergencyOpen(true)}
-            className="btn-primary px-4 py-2.5 rounded-lg font-semibold text-[13px] flex items-center gap-2 shadow-lg shadow-primary/20 transition"
-          >
-            <Icon.Siren className="w-4 h-4"/>
-            Contact Emergency Services
+          <button onClick={()=>setPanel({ type: 'emergency' })}
+            className="btn-primary px-4 py-2.5 rounded-lg font-semibold text-[13px] flex items-center gap-2 shadow-lg shadow-rose-500/20 transition">
+            <Icon.Siren className="w-4 h-4"/>Contact Emergency Services
           </button>
         </header>
-
-        {/* Page content */}
+ 
         <div className="flex-1 overflow-auto">
           {page === 'cfs' && (
-            <ActiveCFSPage
-              cfsList={cfsList}
-              residents={residents}
-              onOpenCfs={setOpenCfsId}
+            <ActiveCFSPage cfsList={cfsList} residents={residents}
+              onView={(cfs) => setPanel({ type: 'cfs-view', id: cfs.id })}
               onCloseCfs={(id) => updateCfs(id, c => ({...c, status:'closed'}))}
             />
           )}
           {page === 'residents' && (
-            <ResidentsPage
-              residents={residents} setResidents={setResidents}
-              onShowQR={setQrResidentId}
+            <ResidentsPage residents={residents} setResidents={setResidents}
+              onView={(r) => setPanel({ type: 'resident-view', id: r.id })}
+              onEdit={(r) => setPanel({ type: 'resident-edit', id: r.id })}
+              onAdd={() => setPanel({ type: 'resident-edit', id: null })}
+              onShowQR={(r) => setPanel({ type: 'resident-qr', id: r.id })}
             />
           )}
           {page === 'employees' && (
-            <EmployeesPage employees={employees} setEmployees={setEmployees}/>
+            <EmployeesPage employees={employees} setEmployees={setEmployees}
+              onView={(e) => setPanel({ type: 'employee-view', id: e.id })}
+              onEdit={(e) => setPanel({ type: 'employee-edit', id: e.id })}
+              onAdd={() => setPanel({ type: 'employee-edit', id: null })}
+            />
           )}
         </div>
       </main>
-
-      {/* Modals */}
-      {emergencyOpen && (
-        <EmergencyFormModal
-          mode="desktop"
-          residents={residents}
-          employees={employees}
-          nursingHome={nursingHome}
-          onClose={()=>setEmergencyOpen(false)}
-          onSubmit={(cfs) => {
-            addCfs(cfs);
-            setEmergencyOpen(false);
-            setOpenCfsId(cfs.id);
-          }}
-        />
-      )}
-      {openCfs && (
-        <CfsDetailModal
-          cfs={openCfs}
-          resident={residents.find(r=>r.id===openCfs.residentId)}
-          onClose={()=>setOpenCfsId(null)}
-          onSendMessage={(text) => {
-            updateCfs(openCfs.id, c => ({
-              ...c, _autoReplied: false,
-              messages: [...c.messages, { from:'caller', text, ts: Date.now() }]
-            }));
-          }}
-          onCloseCfs={() => {
-            updateCfs(openCfs.id, c => ({...c, status:'closed'}));
-            setOpenCfsId(null);
-          }}
-        />
-      )}
-      {qrResidentId && (
-        <QRModal
-          resident={residents.find(r=>r.id===qrResidentId)}
-          nursingHome={nursingHome}
-          onClose={()=>setQrResidentId(null)}
-        />
+ 
+      {/* SLIDE-OUT PANELS */}
+      {panel && (
+        <SlidePanel onClose={() => setPanel(null)} widthClass={panel.type === 'cfs-view' ? 'w-[640px]' : 'w-[480px]'}>
+          {panel.type === 'emergency' && (
+            <EmergencyForm
+              residents={residents} employees={employees} nursingHome={nursingHome}
+              onCancel={() => setPanel(null)}
+              onSubmit={(cfs) => {
+                addCfs(cfs);
+                setPanel({ type: 'cfs-view', id: cfs.id });
+              }}
+            />
+          )}
+          {panel.type === 'cfs-view' && (
+            (() => {
+              const cfs = cfsList.find(c => c.id === panel.id);
+              const resident = cfs ? residents.find(r => r.id === cfs.residentId) : null;
+              if (!cfs) return null;
+              return (
+                <CfsViewPanel cfs={cfs} resident={resident}
+                  onClose={() => setPanel(null)}
+                  onSend={(text) => updateCfs(cfs.id, c => ({...c, _autoReplied: false, messages: [...c.messages, { from:'caller', text, ts: Date.now() }]}))}
+                  onCloseCfs={() => { updateCfs(cfs.id, c => ({...c, status:'closed'})); setPanel(null); }}
+                />
+              );
+            })()
+          )}
+          {panel.type === 'resident-view' && (
+            <ResidentViewPanel
+              resident={residents.find(r => r.id === panel.id)}
+              onClose={() => setPanel(null)}
+              onEdit={() => setPanel({ type: 'resident-edit', id: panel.id })}
+              onShowQR={() => setPanel({ type: 'resident-qr', id: panel.id })}
+              onDelete={() => {
+                if (confirm('Delete this resident?')) {
+                  setResidents(prev => prev.filter(r => r.id !== panel.id));
+                  setPanel(null);
+                }
+              }}
+            />
+          )}
+          {panel.type === 'resident-edit' && (
+            <ResidentEditPanel
+              initial={panel.id ? residents.find(r => r.id === panel.id) : null}
+              onClose={() => setPanel(null)}
+              onSave={(r) => {
+                if (panel.id) {
+                  setResidents(prev => prev.map(x => x.id === panel.id ? { ...x, ...r } : x));
+                  setPanel({ type: 'resident-view', id: panel.id });
+                } else {
+                  const id = 'R' + String(Math.max(0, ...residents.map(x => parseInt(x.id.replace('R',''), 10))) + 1).padStart(3, '0');
+                  setResidents(prev => [...prev, { ...r, id }]);
+                  setPanel(null);
+                }
+              }}
+            />
+          )}
+          {panel.type === 'resident-qr' && (
+            <ResidentQRPanel
+              resident={residents.find(r => r.id === panel.id)}
+              nursingHome={nursingHome}
+              onClose={() => setPanel(null)}
+            />
+          )}
+          {panel.type === 'employee-view' && (
+            <EmployeeViewPanel
+              employee={employees.find(e => e.id === panel.id)}
+              onClose={() => setPanel(null)}
+              onEdit={() => setPanel({ type: 'employee-edit', id: panel.id })}
+              onDelete={() => {
+                if (confirm('Delete this employee?')) {
+                  setEmployees(prev => prev.filter(e => e.id !== panel.id));
+                  setPanel(null);
+                }
+              }}
+            />
+          )}
+          {panel.type === 'employee-edit' && (
+            <EmployeeEditPanel
+              initial={panel.id ? employees.find(e => e.id === panel.id) : null}
+              onClose={() => setPanel(null)}
+              onSave={(e) => {
+                if (panel.id) {
+                  setEmployees(prev => prev.map(x => x.id === panel.id ? { ...x, ...e } : x));
+                  setPanel({ type: 'employee-view', id: panel.id });
+                } else {
+                  const id = 'E' + String(Math.max(0, ...employees.map(x => parseInt(x.id.replace('E',''), 10))) + 1).padStart(3, '0');
+                  setEmployees(prev => [...prev, { ...e, id }]);
+                  setPanel(null);
+                }
+              }}
+            />
+          )}
+        </SlidePanel>
       )}
     </div>
   );
 }
-
+ 
 function SidebarLink({ active, onClick, icon, label, badge }) {
   return (
     <button onClick={onClick}
-      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] transition ${active ? 'bg-[#1c1c1c] text-white' : 'text-gray-400 hover:bg-[#161616] hover:text-white'}`}>
-      <span className={active ? 'text-primary' : ''}>{icon}</span>
+      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] transition"
+      style={{
+        background: active ? 'var(--bg-3)' : 'transparent',
+        color: active ? 'var(--text-0)' : 'var(--text-2)',
+      }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'var(--bg-2)'; e.currentTarget.style.color = 'var(--text-0)'; } }}
+      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-2)'; } }}>
+      <span style={{ color: active ? 'var(--primary)' : 'inherit' }}>{icon}</span>
       <span className="flex-1 text-left font-medium">{label}</span>
       {badge > 0 && (
-        <span className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-primary text-white">{badge}</span>
+        <span className="px-1.5 py-0.5 text-[10px] font-semibold rounded text-white" style={{ background: 'var(--primary)' }}>{badge}</span>
       )}
     </button>
   );
 }
-
+ 
+/* ========================================================================
+   SLIDE PANEL — used for all overlays (no popups anywhere)
+   ======================================================================== */
+function SlidePanel({ children, onClose, widthClass = 'w-[480px]' }) {
+  // ESC key to close
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+ 
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end backdrop-in" style={{ background: 'rgba(0,0,0,0.5)' }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()}
+        className={`${widthClass} max-w-full h-full flex flex-col slide-in shadow-2xl`}
+        style={{ background: 'var(--bg-1)', borderLeft: '1px solid var(--border)' }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+ 
+function PanelHeader({ title, subtitle, onClose, actions }) {
+  return (
+    <div className="px-6 py-4 flex items-center justify-between flex-shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+      <div className="min-w-0">
+        <h2 className="text-[15px] font-semibold tracking-tight truncate">{title}</h2>
+        {subtitle && <div className="text-[12px] mt-0.5 truncate" style={{ color: 'var(--text-3)' }}>{subtitle}</div>}
+      </div>
+      <div className="flex items-center gap-1">
+        {actions}
+        <button onClick={onClose} className="p-1.5 rounded-md transition"
+          style={{ color: 'var(--text-2)' }}
+          onMouseEnter={e=>{e.currentTarget.style.background='var(--bg-3)'; e.currentTarget.style.color='var(--text-0)';}}
+          onMouseLeave={e=>{e.currentTarget.style.background='transparent'; e.currentTarget.style.color='var(--text-2)';}}>
+          <Icon.X className="w-4 h-4"/>
+        </button>
+      </div>
+    </div>
+  );
+}
+ 
+function PanelFooter({ children }) {
+  return (
+    <div className="px-6 py-4 flex items-center gap-2 flex-shrink-0" style={{ borderTop: '1px solid var(--border)', background: 'var(--bg-1)' }}>
+      {children}
+    </div>
+  );
+}
+ 
 /* ========================================================================
    ACTIVE CFS PAGE
    ======================================================================== */
-function ActiveCFSPage({ cfsList, residents, onOpenCfs, onCloseCfs }) {
-  const [filter, setFilter] = useState('active'); // active | all | closed
+function ActiveCFSPage({ cfsList, residents, onView, onCloseCfs }) {
+  const [filter, setFilter] = useState('active');
   const [search, setSearch] = useState('');
-
+ 
   const filtered = cfsList
     .filter(c => filter === 'all' ? true : c.status === filter)
     .filter(c => {
@@ -584,656 +623,721 @@ function ActiveCFSPage({ cfsList, residents, onOpenCfs, onCloseCfs }) {
         || (r && r.name.toLowerCase().includes(q))
         || (r && r.room.includes(q));
     });
-
+ 
   const stats = {
     active: cfsList.filter(c=>c.status==='active').length,
     total: cfsList.length,
-    closed: cfsList.filter(c=>c.status==='closed').length,
+    closedToday: cfsList.filter(c=>c.status==='closed' && Date.now()-c.createdAt < 86400000).length,
   };
-
+ 
+  const cols = [
+    { id: 'ref',      header: 'Ref #',     width: '110px' },
+    { id: 'resident', header: 'Resident',  width: '1.3fr' },
+    { id: 'room',     header: 'Room',      width: '80px'  },
+    { id: 'emerg',    header: 'Emergency', width: '1.5fr' },
+    { id: 'severity', header: 'Severity',  width: '110px' },
+    { id: 'reporter', header: 'Reported By', width: '1fr' },
+    { id: 'source',   header: 'Source',    width: '110px' },
+    { id: 'time',     header: 'Time',      width: '120px' },
+    { id: 'status',   header: 'Status',    width: '100px' },
+  ];
+ 
+  const renderCell = (c, colId) => {
+    const r = residents.find(x => x.id === c.residentId);
+    switch (colId) {
+      case 'ref': return <span className="font-mono text-[12px]" style={{ color: 'var(--text-1)' }}>{c.refNumber}</span>;
+      case 'resident': return <span className="text-[13px] font-medium">{r ? r.name : 'Unknown'}</span>;
+      case 'room': return <span className="text-[13px]">{r ? r.room : '\u2014'}</span>;
+      case 'emerg': return <span className="text-[13px] truncate">{c.emergencyType}</span>;
+      case 'severity': return (
+        <div className="flex items-center gap-1.5">
+          <span className={`w-1.5 h-1.5 rounded-full ${c.severity==='high' ? 'dot-red' : c.severity==='medium' ? 'dot-yellow' : 'dot-green'}`}/>
+          <span className="text-[13px] capitalize">{c.severity}</span>
+        </div>
+      );
+      case 'reporter': return (
+        <div className="min-w-0">
+          <div className="text-[13px] truncate">{c.employeeName}</div>
+          {c.employeeManual && <div className="text-[10px]" style={{ color: 'var(--text-3)' }}>manual entry</div>}
+        </div>
+      );
+      case 'source': return (
+        <div className="flex items-center gap-1.5 text-[12px]" style={{ color: 'var(--text-1)' }}>
+          {c.source === 'qr' ? <Icon.QR className="w-3.5 h-3.5"/> : <Icon.Layout className="w-3.5 h-3.5"/>}
+          <span>{c.source === 'qr' ? 'QR Scan' : 'System'}</span>
+        </div>
+      );
+      case 'time': return (
+        <div>
+          <div className="text-[12px]" style={{ color: 'var(--text-1)' }}>{timeAgo(c.createdAt)}</div>
+          <div className="text-[10px]" style={{ color: 'var(--text-3)' }}>{formatTime(c.createdAt)}</div>
+        </div>
+      );
+      case 'status': return c.status === 'active' ? (
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary">
+          <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot"/>Active
+        </span>
+      ) : <span className="text-[11px] uppercase tracking-wider" style={{ color: 'var(--text-3)' }}>Closed</span>;
+      default: return null;
+    }
+  };
+ 
   return (
     <div className="p-7">
-      {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <StatCard label="Active CFS" value={stats.active} icon={<Icon.Siren className="w-4 h-4"/>} accent />
-        <StatCard label="Total Calls" value={stats.total} icon={<Icon.Phone className="w-4 h-4"/>} />
-        <StatCard label="Closed Today" value={cfsList.filter(c=>c.status==='closed' && Date.now()-c.createdAt < 86400000).length} icon={<Icon.Check className="w-4 h-4"/>} />
+        <StatCard label="Active CFS" value={stats.active} icon={<Icon.Siren className="w-4 h-4"/>} accent/>
+        <StatCard label="Total Calls" value={stats.total} icon={<Icon.Phone className="w-4 h-4"/>}/>
+        <StatCard label="Closed Today" value={stats.closedToday} icon={<Icon.Check className="w-4 h-4"/>}/>
       </div>
-
-      {/* Controls */}
+ 
       <div className="flex items-center justify-between mb-4 gap-3">
-        <div className="flex bg-[#111] border border-[#1f1f1f] rounded-lg p-0.5">
+        <div className="flex p-0.5 rounded-lg" style={{ background: 'var(--bg-1)', border: '1px solid var(--border)' }}>
           {['active','all','closed'].map(f => (
             <button key={f} onClick={()=>setFilter(f)}
-              className={`px-3.5 py-1.5 text-[12px] font-medium rounded-md capitalize transition ${filter===f ? 'bg-[#222] text-white' : 'text-gray-400 hover:text-white'}`}>
+              className="px-3.5 py-1.5 text-[12px] font-medium rounded-md capitalize transition"
+              style={{
+                background: filter === f ? 'var(--bg-3)' : 'transparent',
+                color: filter === f ? 'var(--text-0)' : 'var(--text-2)',
+              }}>
               {f}
             </button>
           ))}
         </div>
         <div className="relative flex-1 max-w-sm">
-          <Icon.Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"/>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search by ref, resident, room…"
-            className="w-full bg-[#111] border border-[#1f1f1f] rounded-lg pl-9 pr-3 py-2 text-[13px] focus:outline-none focus:border-[#333]"/>
+          <Icon.Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)' }}/>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search by ref, resident, room\u2026"
+            className="w-full rounded-lg pl-9 pr-3 py-2 text-[13px]"
+            style={{ background: 'var(--bg-1)', border: '1px solid var(--border)' }}/>
         </div>
       </div>
-
-      {/* Table */}
-      <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-xl overflow-hidden">
-        <div className="grid grid-cols-[110px_1fr_1fr_120px_140px_120px_100px] gap-4 px-5 py-3 border-b border-[#1f1f1f] text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
-          <div>Ref #</div>
-          <div>Resident</div>
-          <div>Emergency</div>
-          <div>Severity</div>
-          <div>Time</div>
-          <div>Source</div>
-          <div>Status</div>
-        </div>
-        {filtered.length === 0 ? (
-          <div className="py-16 text-center text-gray-500 text-sm">
-            No calls match the current filter.
-          </div>
-        ) : filtered.map(c => {
-          const r = residents.find(x => x.id === c.residentId);
-          return (
-            <div key={c.id}
-              onClick={()=>onOpenCfs(c.id)}
-              className="grid grid-cols-[110px_1fr_1fr_120px_140px_120px_100px] gap-4 px-5 py-4 border-b border-[#1a1a1a] hover:bg-[#141414] cursor-pointer transition items-center last:border-0">
-              <div className="text-[12px] font-mono text-gray-300">{c.refNumber}</div>
-              <div className="min-w-0">
-                <div className="text-[13px] font-medium truncate">{r ? r.name : 'Unknown'}</div>
-                <div className="text-[11px] text-gray-500">Room {r ? r.room : '—'}</div>
-              </div>
-              <div className="min-w-0">
-                <div className="text-[13px] truncate">{c.emergencyType}</div>
-                <div className="text-[11px] text-gray-500 truncate">By {c.employeeName}{c.employeeManual ? ' (manual)' : ''}</div>
-              </div>
-              <div>
-                <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase sev-${c.severity}`}>
-                  {severityLabel(c.severity)}
-                </span>
-              </div>
-              <div className="text-[12px] text-gray-400">
-                {timeAgo(c.createdAt)}
-                <div className="text-[10px] text-gray-600">{formatTime(c.createdAt)}</div>
-              </div>
-              <div className="flex items-center gap-1.5 text-[12px] text-gray-400">
-                {c.source === 'qr' ? <Icon.QR className="w-3.5 h-3.5"/> : <Icon.Layout className="w-3.5 h-3.5"/>}
-                <span className="capitalize">{c.source === 'qr' ? 'QR Scan' : 'System'}</span>
-              </div>
-              <div>
-                {c.status === 'active' ? (
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-primary">
-                    <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot"/>
-                    Active
-                  </span>
-                ) : (
-                  <span className="text-[11px] text-gray-500">Closed</span>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+ 
+      <Table
+        columns={cols}
+        rows={filtered}
+        getRowKey={c => c.id}
+        renderCell={renderCell}
+        onRowClick={onView}
+        rowActions={(c) => [
+          { label: 'View details', onClick: () => onView(c) },
+          ...(c.status === 'active' ? [{ label: 'Close call', onClick: () => onCloseCfs(c.id), danger: true }] : []),
+        ]}
+        emptyText="No calls match the current filter."
+      />
     </div>
   );
 }
-
+ 
 function StatCard({ label, value, icon, accent }) {
   return (
-    <div className={`p-4 rounded-xl border ${accent ? 'bg-gradient-to-br from-[#1a0c10] to-[#0f0f0f] border-[#3a1a23]' : 'bg-[#0f0f0f] border-[#1f1f1f]'}`}>
+    <div className="p-4 rounded-xl" style={{
+      background: accent
+        ? 'linear-gradient(135deg, rgba(244,63,94,0.08), var(--bg-1))'
+        : 'var(--bg-1)',
+      border: '1px solid ' + (accent ? 'rgba(244,63,94,0.3)' : 'var(--border)'),
+    }}>
       <div className="flex items-center justify-between">
-        <div className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold">{label}</div>
-        <div className={accent ? 'text-primary' : 'text-gray-500'}>{icon}</div>
+        <div className="text-[11px] uppercase tracking-wider font-semibold" style={{ color: 'var(--text-3)' }}>{label}</div>
+        <div style={{ color: accent ? 'var(--primary)' : 'var(--text-3)' }}>{icon}</div>
       </div>
       <div className="text-3xl font-semibold mt-2 tracking-tight">{value}</div>
     </div>
   );
 }
-
+ 
+/* ========================================================================
+   TABLE COMPONENT (matches uploaded design)
+   Header: Search | Customize columns | Filter | (Add button area)
+   Rows: left-click -> onRowClick, ⋮ icon -> action menu, right-click -> action menu
+   ======================================================================== */
+function Table({ columns, rows, getRowKey, renderCell, onRowClick, rowActions, emptyText, search, setSearch, addButton, defaultPageSize = 10 }) {
+  const [visibleCols, setVisibleCols] = useState(() => columns.map(c => c.id));
+  const [columnsOpen, setColumnsOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [ctxMenu, setCtxMenu] = useState(null); // { x, y, row }
+  const [page, setPage] = useState(1);
+  const pageSize = defaultPageSize;
+ 
+  useEffect(() => { setPage(1); }, [rows.length]);
+ 
+  // Close context menu on click anywhere
+  useEffect(() => {
+    const onClick = () => setCtxMenu(null);
+    if (ctxMenu) {
+      window.addEventListener('click', onClick);
+      window.addEventListener('scroll', onClick, true);
+      return () => {
+        window.removeEventListener('click', onClick);
+        window.removeEventListener('scroll', onClick, true);
+      };
+    }
+  }, [ctxMenu]);
+ 
+  const cols = columns.filter(c => visibleCols.includes(c.id));
+  const gridTemplate = cols.map(c => c.width).join(' ') + ' 48px'; // last col = action icon
+ 
+  const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+  const pagedRows = rows.slice((page-1)*pageSize, page*pageSize);
+ 
+  return (
+    <div>
+      {/* Toolbar (only show controls — Search/Customize/Filter/Add) */}
+      {(search !== undefined || addButton) && (
+        <div className="flex items-center gap-2 mb-4">
+          {search !== undefined && (
+            <div className="relative flex-1 max-w-sm">
+              <Icon.Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)' }}/>
+              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search"
+                className="w-full rounded-lg pl-9 pr-3 py-2 text-[13px]"
+                style={{ background: 'var(--bg-1)', border: '1px solid var(--border)' }}/>
+            </div>
+          )}
+          <div className="relative">
+            <button onClick={(e) => { e.stopPropagation(); setColumnsOpen(o => !o); setFilterOpen(false); }}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-[12px] font-medium transition"
+              style={{ background: 'var(--bg-1)', border: '1px solid var(--border)', color: 'var(--text-1)' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-2)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-1)'}>
+              <Icon.Columns className="w-4 h-4"/>Customize columns
+            </button>
+            {columnsOpen && (
+              <div className="absolute top-full mt-1 left-0 ctx-menu rounded-lg py-2 z-40 w-56" onClick={e => e.stopPropagation()}>
+                <div className="px-3 py-1.5 text-[10px] uppercase tracking-wider font-semibold" style={{ color: 'var(--text-3)' }}>Columns</div>
+                {columns.map(c => {
+                  const on = visibleCols.includes(c.id);
+                  return (
+                    <button key={c.id}
+                      onClick={() => setVisibleCols(v => on ? v.filter(x => x !== c.id) : [...v, c.id])}
+                      className="w-full flex items-center gap-2.5 px-3 py-1.5 text-[13px] text-left transition"
+                      style={{ color: 'var(--text-1)' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-3)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                      <span className={`check-box ${on ? 'on' : ''}`}>
+                        {on && <Icon.Check className="w-3 h-3 text-white"/>}
+                      </span>
+                      {c.header}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          <button onClick={(e) => { e.stopPropagation(); setFilterOpen(o => !o); setColumnsOpen(false); }}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-[12px] font-medium transition"
+            style={{ background: 'var(--bg-1)', border: '1px solid var(--border)', color: 'var(--text-1)' }}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-2)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-1)'}>
+            <Icon.Filter className="w-4 h-4"/>Filter
+          </button>
+          <div className="flex-1"/>
+          {addButton}
+        </div>
+      )}
+ 
+      {/* Table */}
+      <div className="rounded-xl overflow-hidden" style={{ background: 'var(--bg-1)', border: '1px solid var(--border)' }}>
+        {/* Header */}
+        <div className="grid gap-4 px-5 py-3.5" style={{
+          gridTemplateColumns: gridTemplate,
+          borderBottom: '1px solid var(--border)',
+        }}>
+          {cols.map(c => (
+            <div key={c.id} className="text-[12px] font-semibold" style={{ color: 'var(--text-2)' }}>{c.header}</div>
+          ))}
+          <div></div>
+        </div>
+ 
+        {/* Rows */}
+        {pagedRows.length === 0 ? (
+          <div className="py-16 text-center text-[13px]" style={{ color: 'var(--text-3)' }}>{emptyText || 'No data.'}</div>
+        ) : pagedRows.map(row => (
+          <div key={getRowKey(row)}
+            onClick={() => onRowClick && onRowClick(row)}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              setCtxMenu({ x: e.clientX, y: e.clientY, row });
+            }}
+            className="grid gap-4 px-5 py-4 cursor-pointer transition items-center"
+            style={{ borderBottom: '1px solid rgba(42,48,66,0.5)', gridTemplateColumns: gridTemplate }}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-2)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+            {cols.map(c => (
+              <div key={c.id} className="min-w-0 truncate">{renderCell(row, c.id)}</div>
+            ))}
+            <div className="flex justify-end">
+              <button onClick={(e) => {
+                  e.stopPropagation();
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  setCtxMenu({ x: rect.right, y: rect.bottom + 4, row, alignRight: true });
+                }}
+                className="p-1.5 rounded-md transition"
+                style={{ color: 'var(--text-2)' }}
+                onMouseEnter={e=>{e.currentTarget.style.background='var(--bg-3)'; e.currentTarget.style.color='var(--text-0)';}}
+                onMouseLeave={e=>{e.currentTarget.style.background='transparent'; e.currentTarget.style.color='var(--text-2)';}}>
+                <Icon.More className="w-4 h-4"/>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+ 
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-1 mt-5">
+          <button onClick={()=>setPage(p=>Math.max(1, p-1))} disabled={page===1}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-md text-[12px] transition"
+            style={{ color: 'var(--text-2)', opacity: page === 1 ? 0.4 : 1 }}
+            onMouseEnter={e=>{ if (page !== 1) e.currentTarget.style.background = 'var(--bg-2)'; }}
+            onMouseLeave={e=>{ e.currentTarget.style.background = 'transparent'; }}>
+            Previous
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+            <button key={p} onClick={()=>setPage(p)}
+              className="min-w-[32px] px-2 py-1.5 rounded-md text-[12px] font-medium transition"
+              style={{
+                background: p === page ? 'var(--bg-3)' : 'transparent',
+                color: p === page ? 'var(--text-0)' : 'var(--text-2)',
+                border: p === page ? '1px solid var(--border)' : '1px solid transparent',
+              }}>
+              {p}
+            </button>
+          ))}
+          <button onClick={()=>setPage(p=>Math.min(totalPages, p+1))} disabled={page===totalPages}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-md text-[12px] transition"
+            style={{ color: 'var(--text-2)', opacity: page === totalPages ? 0.4 : 1 }}>
+            Next <Icon.ChevronRight className="w-3 h-3"/>
+          </button>
+        </div>
+      )}
+ 
+      {/* Context menu */}
+      {ctxMenu && (
+        <div className="fixed ctx-menu rounded-lg py-1 z-50 min-w-[180px]"
+          style={{
+            left: ctxMenu.alignRight ? ctxMenu.x - 180 : ctxMenu.x,
+            top: ctxMenu.y,
+          }}
+          onClick={e => e.stopPropagation()}>
+          {rowActions(ctxMenu.row).map((a, i) => (
+            <button key={i}
+              onClick={() => { a.onClick(); setCtxMenu(null); }}
+              className="w-full text-left px-3 py-2 text-[13px] transition"
+              style={{ color: a.danger ? '#fda4af' : 'var(--text-1)' }}
+              onMouseEnter={e => e.currentTarget.style.background = a.danger ? 'rgba(244,63,94,0.1)' : 'var(--bg-3)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+              {a.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+ 
 /* ========================================================================
    RESIDENTS PAGE
    ======================================================================== */
-function ResidentsPage({ residents, setResidents, onShowQR }) {
-  const [editing, setEditing] = useState(null); // resident object or 'new'
+function ResidentsPage({ residents, setResidents, onView, onEdit, onAdd, onShowQR }) {
   const [search, setSearch] = useState('');
-
+ 
   const filtered = residents.filter(r => {
     if (!search) return true;
     const q = search.toLowerCase();
     return r.name.toLowerCase().includes(q) || r.room.includes(q) || r.id.toLowerCase().includes(q);
   });
-
-  const onSave = (r) => {
-    if (editing === 'new') {
-      const id = 'R' + String(Math.max(0, ...residents.map(x => parseInt(x.id.replace('R',''), 10))) + 1).padStart(3, '0');
-      setResidents(prev => [...prev, { ...r, id }]);
-    } else {
-      setResidents(prev => prev.map(x => x.id === editing.id ? { ...x, ...r } : x));
+ 
+  const cols = [
+    { id: 'id',     header: 'ID',     width: '80px' },
+    { id: 'name',   header: 'Name',   width: '1.3fr' },
+    { id: 'room',   header: 'Room',   width: '80px' },
+    { id: 'age',    header: 'Age',    width: '70px' },
+    { id: 'gender', header: 'Gender', width: '100px' },
+    { id: 'conds',  header: 'Conditions',         width: '1.5fr' },
+    { id: 'ec',     header: 'Emergency Contact',  width: '1.3fr' },
+  ];
+  const renderCell = (r, id) => {
+    switch (id) {
+      case 'id':     return <span className="font-mono text-[12px]" style={{ color: 'var(--text-2)' }}>{r.id}</span>;
+      case 'name':   return <span className="text-[13px] font-medium">{r.name}</span>;
+      case 'room':   return <span className="text-[13px]">{r.room}</span>;
+      case 'age':    return <span className="text-[13px]" style={{ color: 'var(--text-1)' }}>{r.age}</span>;
+      case 'gender': return <span className="text-[13px]" style={{ color: 'var(--text-1)' }}>{r.gender}</span>;
+      case 'conds':  return <span className="text-[12px] truncate" style={{ color: 'var(--text-1)' }}>{r.conditions}</span>;
+      case 'ec':     return (
+        <div className="min-w-0">
+          <div className="text-[12px] truncate">{r.emergencyContact}</div>
+          <div className="text-[11px]" style={{ color: 'var(--text-3)' }}>{r.contactPhone}</div>
+        </div>
+      );
     }
-    setEditing(null);
   };
-
-  const onDelete = (id) => {
-    if (confirm('Delete this resident?')) {
-      setResidents(prev => prev.filter(r => r.id !== id));
-    }
-  };
-
+ 
   return (
     <div className="p-7">
-      <div className="flex items-center justify-between mb-4 gap-3">
-        <div className="relative flex-1 max-w-sm">
-          <Icon.Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"/>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search residents…"
-            className="w-full bg-[#111] border border-[#1f1f1f] rounded-lg pl-9 pr-3 py-2 text-[13px] focus:outline-none focus:border-[#333]"/>
-        </div>
-        <button onClick={()=>setEditing('new')}
-          className="btn-primary px-4 py-2 rounded-lg font-semibold text-[13px] flex items-center gap-2">
-          <Icon.Plus className="w-4 h-4"/>Add Resident
-        </button>
-      </div>
-
-      <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-xl overflow-hidden">
-        <div className="grid grid-cols-[80px_1fr_80px_60px_1fr_1fr_140px] gap-4 px-5 py-3 border-b border-[#1f1f1f] text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
-          <div>ID</div>
-          <div>Name</div>
-          <div>Room</div>
-          <div>Age</div>
-          <div>Conditions</div>
-          <div>Emergency Contact</div>
-          <div className="text-right">Actions</div>
-        </div>
-        {filtered.map(r => (
-          <div key={r.id} className="grid grid-cols-[80px_1fr_80px_60px_1fr_1fr_140px] gap-4 px-5 py-3.5 border-b border-[#1a1a1a] last:border-0 items-center hover:bg-[#141414] transition">
-            <div className="text-[12px] font-mono text-gray-400">{r.id}</div>
-            <div className="text-[13px] font-medium">{r.name}</div>
-            <div className="text-[13px]">{r.room}</div>
-            <div className="text-[13px] text-gray-400">{r.age}</div>
-            <div className="text-[12px] text-gray-400 truncate">{r.conditions}</div>
-            <div className="min-w-0">
-              <div className="text-[12px] truncate">{r.emergencyContact}</div>
-              <div className="text-[11px] text-gray-500">{r.contactPhone}</div>
-            </div>
-            <div className="flex items-center justify-end gap-1">
-              <IconBtn onClick={()=>onShowQR(r.id)} title="Show QR Code"><Icon.QR className="w-4 h-4"/></IconBtn>
-              <IconBtn onClick={()=>setEditing(r)} title="Edit"><Icon.Edit className="w-4 h-4"/></IconBtn>
-              <IconBtn onClick={()=>onDelete(r.id)} title="Delete" danger><Icon.Trash className="w-4 h-4"/></IconBtn>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {editing && (
-        <ResidentFormModal
-          initial={editing === 'new' ? null : editing}
-          onClose={()=>setEditing(null)}
-          onSave={onSave}
-        />
-      )}
+      <Table
+        columns={cols}
+        rows={filtered}
+        getRowKey={r => r.id}
+        renderCell={renderCell}
+        onRowClick={onView}
+        rowActions={(r) => [
+          { label: 'View details', onClick: () => onView(r) },
+          { label: 'Show QR code', onClick: () => onShowQR(r) },
+          { label: 'Edit resident', onClick: () => onEdit(r) },
+          { label: 'Delete resident', onClick: () => {
+              if (confirm('Delete this resident?')) {
+                setResidents(prev => prev.filter(x => x.id !== r.id));
+              }
+            }, danger: true },
+        ]}
+        emptyText="No residents found."
+        search={search} setSearch={setSearch}
+        addButton={
+          <button onClick={onAdd}
+            className="btn-primary px-4 py-2 rounded-lg font-semibold text-[13px] flex items-center gap-2">
+            <Icon.Plus className="w-4 h-4"/>Add Resident
+          </button>
+        }
+      />
     </div>
   );
 }
-
-function IconBtn({ children, onClick, title, danger }) {
-  return (
-    <button onClick={(e)=>{e.stopPropagation(); onClick();}} title={title}
-      className={`p-1.5 rounded-md transition ${danger ? 'text-gray-500 hover:text-red-400 hover:bg-red-500/10' : 'text-gray-500 hover:text-white hover:bg-[#1c1c1c]'}`}>
-      {children}
-    </button>
-  );
-}
-
+ 
 /* ========================================================================
    EMPLOYEES PAGE
    ======================================================================== */
-function EmployeesPage({ employees, setEmployees }) {
-  const [editing, setEditing] = useState(null);
+function EmployeesPage({ employees, setEmployees, onView, onEdit, onAdd }) {
   const [search, setSearch] = useState('');
-
   const filtered = employees.filter(e => {
     if (!search) return true;
     const q = search.toLowerCase();
     return e.name.toLowerCase().includes(q) || e.role.toLowerCase().includes(q) || e.email.toLowerCase().includes(q);
   });
-
-  const onSave = (e) => {
-    if (editing === 'new') {
-      const id = 'E' + String(Math.max(0, ...employees.map(x => parseInt(x.id.replace('E',''), 10))) + 1).padStart(3, '0');
-      setEmployees(prev => [...prev, { ...e, id }]);
-    } else {
-      setEmployees(prev => prev.map(x => x.id === editing.id ? { ...x, ...e } : x));
+ 
+  const cols = [
+    { id: 'id',    header: 'ID',    width: '80px' },
+    { id: 'name',  header: 'Name',  width: '1.2fr' },
+    { id: 'role',  header: 'Role',  width: '1fr' },
+    { id: 'phone', header: 'Phone', width: '1fr' },
+    { id: 'email', header: 'Email', width: '1.3fr' },
+    { id: 'shift', header: 'Shift', width: '100px' },
+  ];
+  const renderCell = (e, id) => {
+    switch (id) {
+      case 'id':    return <span className="font-mono text-[12px]" style={{ color: 'var(--text-2)' }}>{e.id}</span>;
+      case 'name':  return <span className="text-[13px] font-medium">{e.name}</span>;
+      case 'role':  return <span className="text-[12px]" style={{ color: 'var(--text-1)' }}>{e.role}</span>;
+      case 'phone': return <span className="text-[12px]" style={{ color: 'var(--text-1)' }}>{e.phone}</span>;
+      case 'email': return <span className="text-[12px] truncate" style={{ color: 'var(--text-1)' }}>{e.email}</span>;
+      case 'shift': return (
+        <span className="inline-flex items-center gap-1.5 text-[12px]">
+          <span className={`w-1.5 h-1.5 rounded-full ${e.shift==='Day' ? 'dot-yellow' : e.shift==='Night' ? 'dot-blue' : 'dot-orange'}`}/>
+          {e.shift}
+        </span>
+      );
     }
-    setEditing(null);
   };
-  const onDelete = (id) => {
-    if (confirm('Delete this employee?')) setEmployees(prev => prev.filter(e => e.id !== id));
-  };
-
+ 
   return (
     <div className="p-7">
-      <div className="flex items-center justify-between mb-4 gap-3">
-        <div className="relative flex-1 max-w-sm">
-          <Icon.Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"/>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search employees…"
-            className="w-full bg-[#111] border border-[#1f1f1f] rounded-lg pl-9 pr-3 py-2 text-[13px] focus:outline-none focus:border-[#333]"/>
-        </div>
-        <button onClick={()=>setEditing('new')}
-          className="btn-primary px-4 py-2 rounded-lg font-semibold text-[13px] flex items-center gap-2">
-          <Icon.Plus className="w-4 h-4"/>Add Employee
-        </button>
-      </div>
-
-      <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-xl overflow-hidden">
-        <div className="grid grid-cols-[80px_1fr_1fr_1fr_1fr_100px_100px] gap-4 px-5 py-3 border-b border-[#1f1f1f] text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
-          <div>ID</div>
-          <div>Name</div>
-          <div>Role</div>
-          <div>Phone</div>
-          <div>Email</div>
-          <div>Shift</div>
-          <div className="text-right">Actions</div>
-        </div>
-        {filtered.map(e => (
-          <div key={e.id} className="grid grid-cols-[80px_1fr_1fr_1fr_1fr_100px_100px] gap-4 px-5 py-3.5 border-b border-[#1a1a1a] last:border-0 items-center hover:bg-[#141414] transition">
-            <div className="text-[12px] font-mono text-gray-400">{e.id}</div>
-            <div className="text-[13px] font-medium">{e.name}</div>
-            <div className="text-[12px] text-gray-400">{e.role}</div>
-            <div className="text-[12px] text-gray-400">{e.phone}</div>
-            <div className="text-[12px] text-gray-400 truncate">{e.email}</div>
-            <div className="text-[12px]">
-              <span className="px-2 py-0.5 rounded-full bg-[#1c1c1c] text-gray-300 text-[10px] font-medium">{e.shift}</span>
-            </div>
-            <div className="flex items-center justify-end gap-1">
-              <IconBtn onClick={()=>setEditing(e)} title="Edit"><Icon.Edit className="w-4 h-4"/></IconBtn>
-              <IconBtn onClick={()=>onDelete(e.id)} title="Delete" danger><Icon.Trash className="w-4 h-4"/></IconBtn>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {editing && (
-        <EmployeeFormModal
-          initial={editing === 'new' ? null : editing}
-          onClose={()=>setEditing(null)}
-          onSave={onSave}
-        />
-      )}
-    </div>
-  );
-}
-
-/* ========================================================================
-   MODALS — generic shell
-   ======================================================================== */
-function ModalShell({ title, onClose, children, maxWidth = '32rem', footer }) {
-  return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in" onClick={onClose}>
-      <div onClick={e=>e.stopPropagation()}
-        className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl"
-        style={{ maxWidth }}>
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#1f1f1f] flex-shrink-0">
-          <h2 className="text-[15px] font-semibold tracking-tight">{title}</h2>
-          <button onClick={onClose} className="p-1.5 rounded-md text-gray-500 hover:text-white hover:bg-[#1c1c1c]">
-            <Icon.X className="w-4 h-4"/>
+      <Table
+        columns={cols}
+        rows={filtered}
+        getRowKey={e => e.id}
+        renderCell={renderCell}
+        onRowClick={onView}
+        rowActions={(e) => [
+          { label: 'View details', onClick: () => onView(e) },
+          { label: 'Edit employee', onClick: () => onEdit(e) },
+          { label: 'Delete employee', onClick: () => {
+              if (confirm('Delete this employee?')) {
+                setEmployees(prev => prev.filter(x => x.id !== e.id));
+              }
+            }, danger: true },
+        ]}
+        emptyText="No employees found."
+        search={search} setSearch={setSearch}
+        addButton={
+          <button onClick={onAdd}
+            className="btn-primary px-4 py-2 rounded-lg font-semibold text-[13px] flex items-center gap-2">
+            <Icon.Plus className="w-4 h-4"/>Add Employee
           </button>
-        </div>
-        <div className="overflow-y-auto flex-1">{children}</div>
-        {footer && <div className="px-6 py-4 border-t border-[#1f1f1f] flex-shrink-0">{footer}</div>}
-      </div>
+        }
+      />
     </div>
   );
 }
-
+ 
+/* ========================================================================
+   FIELDS / INPUTS — used in side panels
+   ======================================================================== */
+const inputCls = "w-full rounded-lg px-3 py-2.5 text-[13px] transition";
+const inputStyle = { background: 'var(--bg-2)', border: '1px solid var(--border)' };
+ 
 function Field({ label, children }) {
   return (
     <div>
-      <label className="block text-[11px] uppercase tracking-wider text-gray-500 font-semibold mb-1.5">{label}</label>
+      <label className="block text-[11px] uppercase tracking-wider font-semibold mb-1.5" style={{ color: 'var(--text-3)' }}>{label}</label>
       {children}
     </div>
   );
 }
-const inputCls = "w-full bg-[#161616] border border-[#262626] rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-[#3a3a3a] transition";
-
-/* ========================================================================
-   RESIDENT FORM MODAL
-   ======================================================================== */
-function ResidentFormModal({ initial, onClose, onSave }) {
-  const [r, setR] = useState(initial || { name: '', room: '', age: '', dob: '', gender: 'Female', conditions: '', emergencyContact: '', contactPhone: '' });
-  const valid = r.name && r.room;
+ 
+function DetailRow({ label, value }) {
   return (
-    <ModalShell title={initial ? 'Edit Resident' : 'Add Resident'} onClose={onClose} maxWidth="38rem"
-      footer={
-        <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 rounded-lg text-[13px] text-gray-400 hover:text-white hover:bg-[#1c1c1c]">Cancel</button>
-          <button disabled={!valid} onClick={()=>onSave(r)} className="btn-primary px-5 py-2 rounded-lg font-semibold text-[13px] disabled:opacity-40 disabled:cursor-not-allowed">
-            {initial ? 'Save Changes' : 'Add Resident'}
-          </button>
-        </div>
-      }>
-      <div className="p-6 grid grid-cols-2 gap-4">
-        <Field label="Full Name">
-          <input className={inputCls} value={r.name} onChange={e=>setR({...r, name: e.target.value})}/>
-        </Field>
-        <Field label="Room Number">
-          <input className={inputCls} value={r.room} onChange={e=>setR({...r, room: e.target.value})}/>
-        </Field>
-        <Field label="Age">
-          <input type="number" className={inputCls} value={r.age} onChange={e=>setR({...r, age: e.target.value})}/>
-        </Field>
-        <Field label="Date of Birth">
-          <input type="date" className={inputCls} value={r.dob} onChange={e=>setR({...r, dob: e.target.value})}/>
-        </Field>
-        <Field label="Gender">
-          <select className={inputCls} value={r.gender} onChange={e=>setR({...r, gender: e.target.value})}>
-            <option>Female</option><option>Male</option><option>Other</option>
-          </select>
-        </Field>
-        <div></div>
-        <div className="col-span-2">
-          <Field label="Medical Conditions">
-            <textarea rows={2} className={inputCls} value={r.conditions} onChange={e=>setR({...r, conditions: e.target.value})}/>
-          </Field>
-        </div>
-        <Field label="Emergency Contact Name">
-          <input className={inputCls} value={r.emergencyContact} onChange={e=>setR({...r, emergencyContact: e.target.value})}/>
-        </Field>
-        <Field label="Contact Phone">
-          <input className={inputCls} value={r.contactPhone} onChange={e=>setR({...r, contactPhone: e.target.value})}/>
-        </Field>
-      </div>
-    </ModalShell>
+    <div className="flex items-start gap-3">
+      <div className="text-[11px] uppercase tracking-wider font-medium w-[120px] flex-shrink-0 pt-0.5" style={{ color: 'var(--text-3)' }}>{label}</div>
+      <div className="text-[13px] flex-1 min-w-0 break-words" style={{ color: 'var(--text-0)' }}>{value}</div>
+    </div>
   );
 }
-
+ 
 /* ========================================================================
-   EMPLOYEE FORM MODAL
+   EMERGENCY FORM PANEL
    ======================================================================== */
-function EmployeeFormModal({ initial, onClose, onSave }) {
-  const [e, setE] = useState(initial || { name: '', role: 'Registered Nurse', phone: '', email: '', shift: 'Day' });
-  const valid = e.name && e.role;
-  return (
-    <ModalShell title={initial ? 'Edit Employee' : 'Add Employee'} onClose={onClose} maxWidth="34rem"
-      footer={
-        <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 rounded-lg text-[13px] text-gray-400 hover:text-white hover:bg-[#1c1c1c]">Cancel</button>
-          <button disabled={!valid} onClick={()=>onSave(e)} className="btn-primary px-5 py-2 rounded-lg font-semibold text-[13px] disabled:opacity-40 disabled:cursor-not-allowed">
-            {initial ? 'Save Changes' : 'Add Employee'}
-          </button>
-        </div>
-      }>
-      <div className="p-6 grid grid-cols-2 gap-4">
-        <div className="col-span-2">
-          <Field label="Full Name"><input className={inputCls} value={e.name} onChange={ev=>setE({...e, name: ev.target.value})}/></Field>
-        </div>
-        <Field label="Role">
-          <select className={inputCls} value={e.role} onChange={ev=>setE({...e, role: ev.target.value})}>
-            <option>Head Nurse</option><option>Registered Nurse</option><option>LPN</option><option>CNA</option><option>Administrator</option>
-          </select>
-        </Field>
-        <Field label="Shift">
-          <select className={inputCls} value={e.shift} onChange={ev=>setE({...e, shift: ev.target.value})}>
-            <option>Day</option><option>Evening</option><option>Night</option>
-          </select>
-        </Field>
-        <Field label="Phone"><input className={inputCls} value={e.phone} onChange={ev=>setE({...e, phone: ev.target.value})}/></Field>
-        <Field label="Email"><input type="email" className={inputCls} value={e.email} onChange={ev=>setE({...e, email: ev.target.value})}/></Field>
-      </div>
-    </ModalShell>
-  );
-}
-
-/* ========================================================================
-   EMERGENCY FORM MODAL (desktop) & inline variant used in mobile
-   ======================================================================== */
-function EmergencyFormModal({ mode, residents, employees, nursingHome, onClose, onSubmit, lockedResidentId, isQR }) {
+function EmergencyForm({ residents, employees, nursingHome, onCancel, onSubmit, lockedResidentId, isQR }) {
   const [residentId, setResidentId] = useState(lockedResidentId || '');
   const [emergencyType, setEmergencyType] = useState('');
   const [severity, setSeverity] = useState('medium');
   const [description, setDescription] = useState('');
-  const [employeeMode, setEmployeeMode] = useState('select'); // 'select' or 'manual'
+  const [employeeMode, setEmployeeMode] = useState('select');
   const [employeeName, setEmployeeName] = useState('');
   const [manualName, setManualName] = useState('');
-
+ 
   const finalEmployeeName = employeeMode === 'manual' ? manualName : employeeName;
   const valid = residentId && emergencyType && severity && finalEmployeeName;
-
+ 
   const submit = () => {
     if (!valid) return;
     const resident = residents.find(r => r.id === residentId);
     const now = Date.now();
-    const cfsListLocal = []; // not needed for IDs across instances; using simple gen
     const id = 'CFS' + String(Math.floor(Math.random()*900000)+100000).padStart(6,'0');
     const refNumber = String(260500000 + Math.floor(Math.random()*99999) + 1);
-    const newCfs = {
-      id,
-      refNumber,
-      residentId,
+    onSubmit({
+      id, refNumber, residentId,
       employeeName: finalEmployeeName,
       employeeManual: employeeMode === 'manual',
-      emergencyType,
-      severity,
-      description,
-      status: 'active',
-      createdAt: now,
+      emergencyType, severity, description,
+      status: 'active', createdAt: now,
       source: isQR ? 'qr' : 'system',
       location: nursingHome.address,
       callerNumber: nursingHome.callerNumber,
       messages: [
         { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: now },
-        { from: 'caller', text: `${emergencyType} — ${severity} severity. ${description || ''}`.trim(), ts: now + 2000 },
-        { from: 'caller', type: 'location', address: `${nursingHome.address} — Room ${resident?.room || '—'}`, ts: now + 3000 },
+        { from: 'caller', text: `${emergencyType} \u2014 ${severity} severity. ${description || ''}`.trim(), ts: now + 2000 },
+        { from: 'caller', type: 'location', address: `${nursingHome.address} \u2014 Room ${resident?.room || '\u2014'}`, ts: now + 3000 },
       ],
-    };
-    onSubmit(newCfs);
+    });
   };
-
+ 
   return (
-    <ModalShell title="Contact Emergency Services" onClose={onClose} maxWidth="36rem"
-      footer={
-        <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 rounded-lg text-[13px] text-gray-400 hover:text-white hover:bg-[#1c1c1c]">Cancel</button>
-          <button disabled={!valid} onClick={submit} className="btn-primary px-5 py-2 rounded-lg font-semibold text-[13px] disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2">
-            <Icon.Siren className="w-4 h-4"/>Submit & Open Chat
-          </button>
-        </div>
-      }>
-      <div className="p-6 space-y-4">
-        <div className="px-4 py-3 rounded-lg bg-primary/10 border border-primary/30 flex items-start gap-3">
+    <>
+      <PanelHeader title="Contact Emergency Services" subtitle="Initiate a live call for service to EMS dispatch" onClose={onCancel}/>
+      <div className="flex-1 overflow-y-auto p-6 space-y-5">
+        <div className="px-4 py-3 rounded-lg flex items-start gap-3" style={{ background: 'var(--primary-soft)', border: '1px solid rgba(244,63,94,0.3)' }}>
           <Icon.Siren className="w-4 h-4 text-primary mt-0.5 flex-shrink-0"/>
-          <div className="text-[12px] text-gray-300">
-            This will initiate a live call for service to EMS dispatch. Complete all fields and review before submitting.
+          <div className="text-[12px]" style={{ color: 'var(--text-1)' }}>
+            This will start a 911 dispatch chat session. Complete all fields and review before submitting.
           </div>
         </div>
-
+ 
         <Field label="Resident">
           {lockedResidentId ? (
-            <div className="bg-[#161616] border border-[#262626] rounded-lg px-3 py-2.5 text-[13px] flex items-center justify-between">
-              <span>{residents.find(r=>r.id===lockedResidentId)?.name} — Room {residents.find(r=>r.id===lockedResidentId)?.room}</span>
-              <span className="text-[10px] text-gray-500 uppercase tracking-wider">Auto-filled from QR</span>
+            <div className="rounded-lg px-3 py-2.5 text-[13px] flex items-center justify-between" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
+              <span>{residents.find(r=>r.id===lockedResidentId)?.name} \u2014 Room {residents.find(r=>r.id===lockedResidentId)?.room}</span>
+              <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-3)' }}>From QR</span>
             </div>
           ) : (
-            <select className={inputCls} value={residentId} onChange={e=>setResidentId(e.target.value)}>
-              <option value="">Select resident…</option>
-              {residents.map(r => <option key={r.id} value={r.id}>{r.name} — Room {r.room}</option>)}
+            <select className={inputCls} style={inputStyle} value={residentId} onChange={e=>setResidentId(e.target.value)}>
+              <option value="">Select resident\u2026</option>
+              {residents.map(r => <option key={r.id} value={r.id}>{r.name} \u2014 Room {r.room}</option>)}
             </select>
           )}
         </Field>
-
+ 
         <Field label="Emergency Type">
-          <input className={inputCls} placeholder="e.g. Fall, Chest pain, Difficulty breathing" value={emergencyType} onChange={e=>setEmergencyType(e.target.value)}/>
+          <input className={inputCls} style={inputStyle} placeholder="e.g. Fall, Chest pain, Difficulty breathing" value={emergencyType} onChange={e=>setEmergencyType(e.target.value)}/>
         </Field>
-
+ 
         <Field label="Severity Level">
           <div className="grid grid-cols-3 gap-2">
             {['low','medium','high'].map(s => (
               <button key={s} type="button" onClick={()=>setSeverity(s)}
-                className={`py-2.5 rounded-lg text-[12px] font-semibold uppercase tracking-wider transition border ${
-                  severity===s
-                    ? (s==='low' ? 'sev-low' : s==='medium' ? 'sev-medium' : 'sev-high')
-                    : 'bg-[#161616] border-[#262626] text-gray-500 hover:text-white'
-                }`}>
+                className={`py-2.5 rounded-lg text-[12px] font-semibold uppercase tracking-wider transition ${severity===s ? `sev-${s}` : ''}`}
+                style={severity===s ? {} : { background: 'var(--bg-2)', border: '1px solid var(--border)', color: 'var(--text-3)' }}>
                 {s}
               </button>
             ))}
           </div>
         </Field>
-
+ 
         <Field label="Description (optional)">
-          <textarea rows={3} className={inputCls} placeholder="Symptoms, what happened, current state…" value={description} onChange={e=>setDescription(e.target.value)}/>
+          <textarea rows={3} className={inputCls} style={inputStyle} placeholder="Symptoms, what happened, current state\u2026" value={description} onChange={e=>setDescription(e.target.value)}/>
         </Field>
-
+ 
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-[11px] uppercase tracking-wider text-gray-500 font-semibold">Reporting Employee</label>
+            <label className="block text-[11px] uppercase tracking-wider font-semibold" style={{ color: 'var(--text-3)' }}>Reporting Employee</label>
             {isQR && (
-              <div className="flex bg-[#161616] border border-[#262626] rounded-md p-0.5">
-                <button type="button" onClick={()=>setEmployeeMode('select')} className={`px-2.5 py-1 text-[11px] rounded ${employeeMode==='select' ? 'bg-[#2a2a2a] text-white' : 'text-gray-500'}`}>From list</button>
-                <button type="button" onClick={()=>setEmployeeMode('manual')} className={`px-2.5 py-1 text-[11px] rounded ${employeeMode==='manual' ? 'bg-[#2a2a2a] text-white' : 'text-gray-500'}`}>Enter manually</button>
+              <div className="flex p-0.5 rounded-md" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
+                <button type="button" onClick={()=>setEmployeeMode('select')}
+                  className="px-2.5 py-1 text-[11px] rounded transition"
+                  style={{ background: employeeMode==='select' ? 'var(--bg-3)' : 'transparent', color: employeeMode==='select' ? 'var(--text-0)' : 'var(--text-3)' }}>From list</button>
+                <button type="button" onClick={()=>setEmployeeMode('manual')}
+                  className="px-2.5 py-1 text-[11px] rounded transition"
+                  style={{ background: employeeMode==='manual' ? 'var(--bg-3)' : 'transparent', color: employeeMode==='manual' ? 'var(--text-0)' : 'var(--text-3)' }}>Enter manually</button>
               </div>
             )}
           </div>
           {employeeMode === 'select' ? (
-            <select className={inputCls} value={employeeName} onChange={e=>setEmployeeName(e.target.value)}>
-              <option value="">Select employee…</option>
-              {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name} — {emp.role}</option>)}
+            <select className={inputCls} style={inputStyle} value={employeeName} onChange={e=>setEmployeeName(e.target.value)}>
+              <option value="">Select employee\u2026</option>
+              {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name} \u2014 {emp.role}</option>)}
             </select>
           ) : (
-            <input className={inputCls} placeholder="Type your name" value={manualName} onChange={e=>setManualName(e.target.value)}/>
+            <input className={inputCls} style={inputStyle} placeholder="Type your name" value={manualName} onChange={e=>setManualName(e.target.value)}/>
           )}
         </div>
       </div>
-    </ModalShell>
+      <PanelFooter>
+        <button onClick={onCancel} className="px-4 py-2 rounded-lg text-[13px] transition" style={{ color: 'var(--text-2)' }}>Cancel</button>
+        <div className="flex-1"/>
+        <button disabled={!valid} onClick={submit} className="btn-primary px-5 py-2 rounded-lg font-semibold text-[13px] disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2">
+          <Icon.Siren className="w-4 h-4"/>Submit & Open Chat
+        </button>
+      </PanelFooter>
+    </>
   );
 }
-
+ 
 /* ========================================================================
-   CFS DETAIL MODAL (desktop) — chat + caller details
+   CFS VIEW PANEL (chat + details)
    ======================================================================== */
-function CfsDetailModal({ cfs, resident, onClose, onSendMessage, onCloseCfs }) {
-  const [tab, setTab] = useState('chat'); // chat | details
+function CfsViewPanel({ cfs, resident, onClose, onSend, onCloseCfs }) {
+  const [tab, setTab] = useState('chat');
   const [input, setInput] = useState('');
   const scrollRef = useRef(null);
-
+ 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [cfs.messages.length, tab]);
-
+ 
   const send = () => {
     if (!input.trim()) return;
-    onSendMessage(input.trim());
+    onSend(input.trim());
     setInput('');
   };
-
+ 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div onClick={e=>e.stopPropagation()} className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl w-full max-w-4xl h-[85vh] flex overflow-hidden shadow-2xl">
-        {/* Left: chat */}
-        <div className="flex-1 flex flex-col border-r border-[#1f1f1f]">
-          <div className="px-5 py-4 border-b border-[#1f1f1f] flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-[15px] font-semibold tracking-tight">Chat with Dispatcher</h3>
-                {cfs.status === 'active' && (
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-primary">
-                    <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot"/>LIVE
-                  </span>
-                )}
-              </div>
-              <div className="text-[11px] text-gray-500 mt-0.5">Ref #{cfs.refNumber} · {cfs.emergencyType}</div>
-            </div>
-            <button onClick={onClose} className="p-1.5 rounded-md text-gray-500 hover:text-white hover:bg-[#1c1c1c]"><Icon.X className="w-4 h-4"/></button>
-          </div>
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-4 space-y-3 no-scrollbar">
+    <>
+      <PanelHeader
+        title="Call for Service"
+        subtitle={`Ref #${cfs.refNumber} \u00b7 ${cfs.emergencyType}`}
+        onClose={onClose}
+      />
+      <div className="px-6 pt-3 flex gap-1" style={{ borderBottom: '1px solid var(--border)' }}>
+        {['chat','details'].map(t => (
+          <button key={t} onClick={()=>setTab(t)}
+            className="px-3 py-2 text-[12px] font-medium capitalize transition relative"
+            style={{ color: tab === t ? 'var(--text-0)' : 'var(--text-3)' }}>
+            {t}
+            {tab === t && <span className="absolute bottom-0 left-2 right-2 h-0.5 rounded-full" style={{ background: 'var(--primary)' }}/>}
+          </button>
+        ))}
+        <div className="flex-1"/>
+        {cfs.status === 'active' && (
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md self-center" style={{ color: 'var(--primary)', background: 'var(--primary-soft)' }}>
+            <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot"/>Live
+          </span>
+        )}
+      </div>
+ 
+      {tab === 'chat' && (
+        <>
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-5 space-y-3 no-scrollbar">
             {cfs.messages.map((m, i) => <ChatBubble key={i} msg={m}/>)}
           </div>
           {cfs.status === 'active' ? (
-            <div className="px-4 py-3 border-t border-[#1f1f1f] flex items-center gap-2">
+            <div className="px-4 py-3 flex items-center gap-2" style={{ borderTop: '1px solid var(--border)' }}>
               <button className="p-2 rounded-full bg-primary text-white"><Icon.Plus className="w-4 h-4"/></button>
               <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&send()}
-                placeholder="Message…"
-                className="flex-1 bg-[#161616] border border-[#262626] rounded-full px-4 py-2 text-[13px] focus:outline-none focus:border-[#3a3a3a]"/>
-              <button className="p-2 text-gray-500 hover:text-white"><Icon.Mic className="w-4 h-4"/></button>
-              <button onClick={send} className="p-2 text-primary hover:text-white"><Icon.Send className="w-4 h-4"/></button>
+                placeholder="Message\u2026"
+                className="flex-1 rounded-full px-4 py-2 text-[13px]"
+                style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}/>
+              <button className="p-2" style={{ color: 'var(--text-3)' }}><Icon.Mic className="w-4 h-4"/></button>
+              <button onClick={send} className="p-2 text-primary"><Icon.Send className="w-4 h-4"/></button>
             </div>
           ) : (
-            <div className="px-4 py-3 border-t border-[#1f1f1f] text-center text-[12px] text-gray-500">
+            <div className="px-4 py-3 text-center text-[12px]" style={{ borderTop: '1px solid var(--border)', color: 'var(--text-3)' }}>
               This call has been closed.
             </div>
           )}
-        </div>
-
-        {/* Right: details */}
-        <div className="w-[340px] flex flex-col">
-          <div className="px-5 py-4 border-b border-[#1f1f1f]">
-            <h3 className="text-[15px] font-semibold tracking-tight">Caller Details</h3>
-          </div>
-          <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 no-scrollbar text-[13px]">
-            <DetailRow label="Call Reference" value={`${cfs.refNumber} (${cfs.id})`}/>
-            <DetailRow label="Status" value={
-              cfs.status === 'active' ? (
-                <span className="inline-flex items-center gap-1.5 text-primary font-medium">
-                  <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot"/>Active
-                </span>
-              ) : <span className="text-gray-500">Closed</span>
-            }/>
+        </>
+      )}
+ 
+      {tab === 'details' && (
+        <div className="flex-1 overflow-y-auto p-6 space-y-5">
+          <Section title="Call Information">
+            <DetailRow label="Reference" value={`${cfs.refNumber} (${cfs.id})`}/>
+            <DetailRow label="Status" value={cfs.status === 'active' ? (
+              <span className="inline-flex items-center gap-1.5 text-primary font-medium">
+                <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot"/>Active
+              </span>
+            ) : <span style={{ color: 'var(--text-3)' }}>Closed</span>}/>
             <DetailRow label="Severity" value={
               <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase sev-${cfs.severity}`}>{severityLabel(cfs.severity)}</span>
             }/>
             <DetailRow label="Source" value={cfs.source === 'qr' ? 'QR Scan' : 'System'}/>
             <DetailRow label="Location" value={cfs.location}/>
             <DetailRow label="Caller Number" value={cfs.callerNumber}/>
-            <DetailRow label="Caller Requested" value={`${formatDate(cfs.createdAt)}, ${formatTime(cfs.createdAt)}`}/>
-            <div className="border-t border-[#1f1f1f] pt-4">
-              <div className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold mb-2">Resident</div>
-              {resident ? (
-                <div className="space-y-2">
-                  <DetailRow label="Name" value={resident.name}/>
-                  <DetailRow label="Room" value={resident.room}/>
-                  <DetailRow label="Age" value={resident.age}/>
-                  <DetailRow label="Conditions" value={resident.conditions}/>
-                  <DetailRow label="Emergency Contact" value={`${resident.emergencyContact} · ${resident.contactPhone}`}/>
-                </div>
-              ) : <div className="text-gray-500 text-[12px]">Resident data unavailable</div>}
-            </div>
-            <div className="border-t border-[#1f1f1f] pt-4 space-y-2">
-              <div className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold mb-2">Reporter</div>
-              <DetailRow label="Employee" value={`${cfs.employeeName}${cfs.employeeManual ? ' (manual entry)' : ''}`}/>
-              <DetailRow label="Description" value={cfs.description || '—'}/>
-            </div>
-          </div>
-          {cfs.status === 'active' && (
-            <div className="p-4 border-t border-[#1f1f1f]">
-              <button onClick={onCloseCfs} className="w-full py-2.5 rounded-lg text-[13px] font-semibold bg-[#1c1c1c] text-gray-300 hover:bg-[#262626] hover:text-white transition">
-                Close Call
-              </button>
-            </div>
+            <DetailRow label="Requested At" value={`${formatDate(cfs.createdAt)}, ${formatTime(cfs.createdAt)}`}/>
+          </Section>
+ 
+          {resident && (
+            <Section title="Resident">
+              <DetailRow label="Name" value={resident.name}/>
+              <DetailRow label="Room" value={resident.room}/>
+              <DetailRow label="Age" value={resident.age}/>
+              <DetailRow label="Gender" value={resident.gender}/>
+              <DetailRow label="Conditions" value={resident.conditions}/>
+              <DetailRow label="Emergency Contact" value={`${resident.emergencyContact} \u00b7 ${resident.contactPhone}`}/>
+            </Section>
           )}
+ 
+          <Section title="Reporter">
+            <DetailRow label="Employee" value={`${cfs.employeeName}${cfs.employeeManual ? ' (manual entry)' : ''}`}/>
+            <DetailRow label="Description" value={cfs.description || '\u2014'}/>
+          </Section>
         </div>
-      </div>
-    </div>
+      )}
+ 
+      {cfs.status === 'active' && (
+        <PanelFooter>
+          <div className="flex-1"/>
+          <button onClick={onCloseCfs} className="px-5 py-2 rounded-lg text-[13px] font-semibold transition"
+            style={{ background: 'var(--bg-3)', color: 'var(--text-1)' }}>
+            Close Call
+          </button>
+        </PanelFooter>
+      )}
+    </>
   );
 }
-
-function DetailRow({ label, value }) {
+ 
+function Section({ title, children }) {
   return (
-    <div className="flex items-start gap-3">
-      <div className="text-[11px] uppercase tracking-wider text-gray-500 font-medium w-[100px] flex-shrink-0 pt-0.5">{label}</div>
-      <div className="text-[13px] text-gray-200 flex-1 min-w-0 break-words">{value}</div>
+    <div>
+      <h3 className="text-[11px] uppercase tracking-wider font-semibold mb-3" style={{ color: 'var(--text-3)' }}>{title}</h3>
+      <div className="space-y-2.5">{children}</div>
     </div>
   );
 }
-
-/* ========================================================================
-   CHAT BUBBLE — used in both desktop & mobile
-   ======================================================================== */
+ 
 function ChatBubble({ msg }) {
   if (msg.type === 'location') {
     return (
       <div className="flex justify-end msg-in">
         <div className="max-w-[80%]">
-          <div className="bg-primary text-white rounded-2xl rounded-br-md overflow-hidden">
+          <div className="rounded-2xl rounded-br-md overflow-hidden text-white" style={{ background: 'var(--primary)' }}>
             <div className="flex items-center gap-2 px-3.5 py-2.5">
               <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
                 <Icon.MapPin className="w-4 h-4"/>
@@ -1244,7 +1348,7 @@ function ChatBubble({ msg }) {
               </div>
             </div>
           </div>
-          <div className="text-[10px] text-gray-500 mt-1 text-right">{formatTime(msg.ts)}</div>
+          <div className="text-[10px] mt-1 text-right" style={{ color: 'var(--text-3)' }}>{formatTime(msg.ts)}</div>
         </div>
       </div>
     );
@@ -1253,158 +1357,392 @@ function ChatBubble({ msg }) {
   return (
     <div className={`flex ${isCaller ? 'justify-end' : 'justify-start'} msg-in`}>
       <div className="max-w-[80%]">
-        <div className={`px-3.5 py-2.5 text-[13px] leading-snug ${
-          isCaller
-            ? 'bg-primary text-white rounded-2xl rounded-br-md'
-            : 'bg-[#1c1c1c] text-gray-100 rounded-2xl rounded-bl-md'
-        }`}>
+        <div className={`px-3.5 py-2.5 text-[13px] leading-snug ${isCaller ? 'rounded-2xl rounded-br-md text-white' : 'rounded-2xl rounded-bl-md'}`}
+          style={isCaller ? { background: 'var(--primary)' } : { background: 'var(--bg-3)', color: 'var(--text-0)' }}>
           {msg.text}
         </div>
-        <div className={`text-[10px] text-gray-500 mt-1 ${isCaller ? 'text-right' : ''}`}>{formatTime(msg.ts)}</div>
+        <div className={`text-[10px] mt-1 ${isCaller ? 'text-right' : ''}`} style={{ color: 'var(--text-3)' }}>{formatTime(msg.ts)}</div>
       </div>
     </div>
   );
 }
-
+ 
 /* ========================================================================
-   QR CODE MODAL — generated dynamically from window.location
+   RESIDENT VIEW PANEL
    ======================================================================== */
-function QRModal({ resident, nursingHome, onClose }) {
-  const canvasRef = useRef(null);
+function ResidentViewPanel({ resident, onClose, onEdit, onShowQR, onDelete }) {
+  if (!resident) return null;
+  return (
+    <>
+      <PanelHeader title={resident.name} subtitle={`Resident \u00b7 Room ${resident.room}`} onClose={onClose}/>
+      <div className="flex-1 overflow-y-auto p-6 space-y-5">
+        <div className="flex items-center gap-3 pb-4" style={{ borderBottom: '1px solid var(--border)' }}>
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-lg font-semibold" style={{ background: 'linear-gradient(135deg, rgba(244,63,94,0.2), rgba(244,63,94,0.05))', color: 'var(--primary)', border: '1px solid rgba(244,63,94,0.3)' }}>
+            {resident.name.split(' ').map(n => n[0]).slice(0,2).join('')}
+          </div>
+          <div className="flex-1">
+            <div className="text-[16px] font-semibold">{resident.name}</div>
+            <div className="text-[12px]" style={{ color: 'var(--text-2)' }}>{resident.gender} \u00b7 Age {resident.age}</div>
+          </div>
+          <button onClick={onShowQR}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-[12px] font-semibold transition"
+            style={{ background: 'var(--bg-3)', color: 'var(--text-0)' }}>
+            <Icon.QR className="w-4 h-4"/>QR
+          </button>
+        </div>
+ 
+        <Section title="Personal Information">
+          <DetailRow label="Resident ID" value={resident.id}/>
+          <DetailRow label="Date of Birth" value={resident.dob}/>
+          <DetailRow label="Room Number" value={resident.room}/>
+        </Section>
+ 
+        <Section title="Medical">
+          <DetailRow label="Conditions" value={resident.conditions || '\u2014'}/>
+        </Section>
+ 
+        <Section title="Emergency Contact">
+          <DetailRow label="Name" value={resident.emergencyContact}/>
+          <DetailRow label="Phone" value={resident.contactPhone}/>
+        </Section>
+      </div>
+      <PanelFooter>
+        <button onClick={onDelete} className="px-3 py-2 rounded-lg text-[13px] transition"
+          style={{ color: '#fda4af' }}
+          onMouseEnter={e=>{e.currentTarget.style.background='rgba(244,63,94,0.1)';}}
+          onMouseLeave={e=>{e.currentTarget.style.background='transparent';}}>
+          <Icon.Trash className="w-4 h-4"/>
+        </button>
+        <div className="flex-1"/>
+        <button onClick={onEdit} className="btn-primary px-4 py-2 rounded-lg font-semibold text-[13px] flex items-center gap-2">
+          <Icon.Edit className="w-3.5 h-3.5"/>Edit
+        </button>
+      </PanelFooter>
+    </>
+  );
+}
+ 
+/* ========================================================================
+   RESIDENT EDIT PANEL
+   ======================================================================== */
+function ResidentEditPanel({ initial, onClose, onSave }) {
+  const [r, setR] = useState(initial || { name: '', room: '', age: '', dob: '', gender: 'Female', conditions: '', emergencyContact: '', contactPhone: '' });
+  const valid = r.name && r.room;
+  return (
+    <>
+      <PanelHeader title={initial ? 'Edit Resident' : 'Add Resident'} subtitle={initial ? `Editing ${initial.name}` : 'Add a new resident to the system'} onClose={onClose}/>
+      <div className="flex-1 overflow-y-auto p-6 grid grid-cols-2 gap-4">
+        <div className="col-span-2"><Field label="Full Name"><input className={inputCls} style={inputStyle} value={r.name} onChange={e=>setR({...r, name: e.target.value})}/></Field></div>
+        <Field label="Room Number"><input className={inputCls} style={inputStyle} value={r.room} onChange={e=>setR({...r, room: e.target.value})}/></Field>
+        <Field label="Gender">
+          <select className={inputCls} style={inputStyle} value={r.gender} onChange={e=>setR({...r, gender: e.target.value})}>
+            <option>Female</option><option>Male</option><option>Other</option>
+          </select>
+        </Field>
+        <Field label="Age"><input type="number" className={inputCls} style={inputStyle} value={r.age} onChange={e=>setR({...r, age: e.target.value})}/></Field>
+        <Field label="Date of Birth"><input type="date" className={inputCls} style={inputStyle} value={r.dob} onChange={e=>setR({...r, dob: e.target.value})}/></Field>
+        <div className="col-span-2"><Field label="Medical Conditions"><textarea rows={3} className={inputCls} style={inputStyle} value={r.conditions} onChange={e=>setR({...r, conditions: e.target.value})}/></Field></div>
+        <Field label="Emergency Contact Name"><input className={inputCls} style={inputStyle} value={r.emergencyContact} onChange={e=>setR({...r, emergencyContact: e.target.value})}/></Field>
+        <Field label="Contact Phone"><input className={inputCls} style={inputStyle} value={r.contactPhone} onChange={e=>setR({...r, contactPhone: e.target.value})}/></Field>
+      </div>
+      <PanelFooter>
+        <button onClick={onClose} className="px-4 py-2 rounded-lg text-[13px]" style={{ color: 'var(--text-2)' }}>Cancel</button>
+        <div className="flex-1"/>
+        <button disabled={!valid} onClick={()=>onSave(r)} className="btn-primary px-5 py-2 rounded-lg font-semibold text-[13px] disabled:opacity-40 disabled:cursor-not-allowed">
+          {initial ? 'Save Changes' : 'Add Resident'}
+        </button>
+      </PanelFooter>
+    </>
+  );
+}
+ 
+/* ========================================================================
+   EMPLOYEE VIEW / EDIT PANELS
+   ======================================================================== */
+function EmployeeViewPanel({ employee, onClose, onEdit, onDelete }) {
+  if (!employee) return null;
+  return (
+    <>
+      <PanelHeader title={employee.name} subtitle={`${employee.role} \u00b7 ${employee.shift} shift`} onClose={onClose}/>
+      <div className="flex-1 overflow-y-auto p-6 space-y-5">
+        <div className="flex items-center gap-3 pb-4" style={{ borderBottom: '1px solid var(--border)' }}>
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-lg font-semibold" style={{ background: 'linear-gradient(135deg, rgba(96,165,250,0.2), rgba(96,165,250,0.05))', color: '#60a5fa', border: '1px solid rgba(96,165,250,0.3)' }}>
+            {employee.name.split(' ').map(n => n[0]).slice(0,2).join('')}
+          </div>
+          <div className="flex-1">
+            <div className="text-[16px] font-semibold">{employee.name}</div>
+            <div className="text-[12px]" style={{ color: 'var(--text-2)' }}>{employee.role}</div>
+          </div>
+          <span className="inline-flex items-center gap-1.5 text-[12px] px-2.5 py-1 rounded-md" style={{ background: 'var(--bg-3)' }}>
+            <span className={`w-1.5 h-1.5 rounded-full ${employee.shift==='Day' ? 'dot-yellow' : employee.shift==='Night' ? 'dot-blue' : 'dot-orange'}`}/>
+            {employee.shift}
+          </span>
+        </div>
+ 
+        <Section title="Identification">
+          <DetailRow label="Employee ID" value={employee.id}/>
+          <DetailRow label="Role" value={employee.role}/>
+          <DetailRow label="Shift" value={employee.shift}/>
+        </Section>
+ 
+        <Section title="Contact">
+          <DetailRow label="Phone" value={employee.phone}/>
+          <DetailRow label="Email" value={employee.email}/>
+        </Section>
+      </div>
+      <PanelFooter>
+        <button onClick={onDelete} className="px-3 py-2 rounded-lg text-[13px]" style={{ color: '#fda4af' }}
+          onMouseEnter={e=>{e.currentTarget.style.background='rgba(244,63,94,0.1)';}}
+          onMouseLeave={e=>{e.currentTarget.style.background='transparent';}}>
+          <Icon.Trash className="w-4 h-4"/>
+        </button>
+        <div className="flex-1"/>
+        <button onClick={onEdit} className="btn-primary px-4 py-2 rounded-lg font-semibold text-[13px] flex items-center gap-2">
+          <Icon.Edit className="w-3.5 h-3.5"/>Edit
+        </button>
+      </PanelFooter>
+    </>
+  );
+}
+ 
+function EmployeeEditPanel({ initial, onClose, onSave }) {
+  const [e, setE] = useState(initial || { name: '', role: 'Registered Nurse', phone: '', email: '', shift: 'Day' });
+  const valid = e.name && e.role;
+  return (
+    <>
+      <PanelHeader title={initial ? 'Edit Employee' : 'Add Employee'} subtitle={initial ? `Editing ${initial.name}` : 'Add a new staff member'} onClose={onClose}/>
+      <div className="flex-1 overflow-y-auto p-6 grid grid-cols-2 gap-4">
+        <div className="col-span-2"><Field label="Full Name"><input className={inputCls} style={inputStyle} value={e.name} onChange={ev=>setE({...e, name: ev.target.value})}/></Field></div>
+        <Field label="Role">
+          <select className={inputCls} style={inputStyle} value={e.role} onChange={ev=>setE({...e, role: ev.target.value})}>
+            <option>Head Nurse</option><option>Registered Nurse</option><option>LPN</option><option>CNA</option><option>Administrator</option>
+          </select>
+        </Field>
+        <Field label="Shift">
+          <select className={inputCls} style={inputStyle} value={e.shift} onChange={ev=>setE({...e, shift: ev.target.value})}>
+            <option>Day</option><option>Evening</option><option>Night</option>
+          </select>
+        </Field>
+        <Field label="Phone"><input className={inputCls} style={inputStyle} value={e.phone} onChange={ev=>setE({...e, phone: ev.target.value})}/></Field>
+        <Field label="Email"><input type="email" className={inputCls} style={inputStyle} value={e.email} onChange={ev=>setE({...e, email: ev.target.value})}/></Field>
+      </div>
+      <PanelFooter>
+        <button onClick={onClose} className="px-4 py-2 rounded-lg text-[13px]" style={{ color: 'var(--text-2)' }}>Cancel</button>
+        <div className="flex-1"/>
+        <button disabled={!valid} onClick={()=>onSave(e)} className="btn-primary px-5 py-2 rounded-lg font-semibold text-[13px] disabled:opacity-40 disabled:cursor-not-allowed">
+          {initial ? 'Save Changes' : 'Add Employee'}
+        </button>
+      </PanelFooter>
+    </>
+  );
+}
+ 
+/* ========================================================================
+   QR CODE PANEL — modern 2x3" sticker poster
+   ======================================================================== */
+function ResidentQRPanel({ resident, nursingHome, onClose }) {
+  const qrContainerRef = useRef(null);
   const [url, setUrl] = useState('');
-
+  const [qrDataUrl, setQrDataUrl] = useState('');
+ 
   useEffect(() => {
-    // Build URL using current location, stripping any existing params
+    if (!resident) return;
     const base = window.location.origin + window.location.pathname;
     const u = `${base}?resident=${resident.id}`;
     setUrl(u);
-    if (canvasRef.current && window.QRCode) {
-      window.QRCode.toCanvas(canvasRef.current, u, {
-        width: 280,
-        margin: 1,
-        color: { dark: '#000000', light: '#ffffff' },
-        errorCorrectionLevel: 'H',
+ 
+    // Use qrcodejs library — it creates DOM elements via "new QRCode(element, options)"
+    if (qrContainerRef.current && window.QRCode) {
+      qrContainerRef.current.innerHTML = '';
+      const qr = new window.QRCode(qrContainerRef.current, {
+        text: u,
+        width: 256,
+        height: 256,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: window.QRCode.CorrectLevel.H,
       });
+      // The library renders either an img or canvas — extract data URL
+      setTimeout(() => {
+        const img = qrContainerRef.current.querySelector('img');
+        const canvas = qrContainerRef.current.querySelector('canvas');
+        if (img && img.src) setQrDataUrl(img.src);
+        else if (canvas) setQrDataUrl(canvas.toDataURL('image/png'));
+      }, 50);
     }
-  }, [resident.id]);
-
-  const printQR = () => {
+  }, [resident?.id]);
+ 
+  const initials = resident ? resident.name.split(' ').map(n => n[0]).slice(0,2).join('') : '';
+ 
+  const printPoster = () => {
+    if (!qrDataUrl) return;
     const w = window.open('', '_blank');
     if (!w) return;
-    const canvasData = canvasRef.current?.toDataURL('image/png') || '';
-    w.document.write(`
-      <html>
-      <head><title>Emergency QR — Room ${resident.room}</title>
-      <style>
-        body { margin:0; font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif; background:#fff; color:#000; }
-        .sheet { padding: 60px 40px; max-width: 600px; margin: 0 auto; text-align:center; }
-        .header { background: #ef3b5c; color: white; padding: 20px; border-radius: 12px; margin-bottom: 24px; }
-        .title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
-        .sub { font-size: 14px; opacity: 0.95; margin-top: 4px; text-transform: uppercase; letter-spacing: 2px; }
-        .resident { border: 3px solid #000; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
-        .resident .name { font-size: 32px; font-weight: 700; }
-        .resident .room { font-size: 56px; font-weight: 800; margin-top: 8px; }
-        .room-label { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color:#555; }
-        img { display: block; margin: 0 auto; border: 4px solid #000; padding: 8px; background:#fff; }
-        .instructions { font-size: 14px; color: #333; margin-top: 20px; line-height: 1.5; }
-        .footer { margin-top: 40px; font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 2px; }
-      </style>
-      </head>
-      <body><div class="sheet">
-        <div class="header">
-          <div class="title">⚠ EMERGENCY ⚠</div>
-          <div class="sub">Scan to contact EMS</div>
-        </div>
-        <div class="resident">
-          <div class="name">${resident.name}</div>
-          <div class="room-label">Room</div>
-          <div class="room">${resident.room}</div>
-        </div>
-        <img src="${canvasData}" alt="QR Code" />
-        <div class="instructions">
-          In case of medical emergency, scan this QR code with any smartphone camera to immediately contact 911 dispatch with resident information pre-filled.
-        </div>
-        <div class="footer">${nursingHome.name}</div>
-      </div>
-      <script>window.onload = () => setTimeout(() => window.print(), 300);<\/script>
-      </body></html>
-    `);
+    // 2 x 3 inch sticker, with bleed for safety
+    w.document.write(`<!doctype html>
+<html><head><title>CareLink Emergency Sticker — Room ${resident.room}</title>
+<style>
+  @page { size: 2in 3in; margin: 0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: #fff; color: #111; }
+  .sticker {
+    width: 2in; height: 3in;
+    padding: 0.12in;
+    display: flex; flex-direction: column;
+    background: #fff;
+    color: #111;
+    position: relative;
+  }
+  .sticker::before {
+    content: '';
+    position: absolute; inset: 0.06in;
+    border: 1.5px solid #111;
+    border-radius: 0.12in;
+    pointer-events: none;
+  }
+  .top {
+    background: #f43f5e; color: white;
+    border-radius: 0.08in;
+    padding: 0.06in 0.04in;
+    text-align: center;
+    margin-top: 0.04in;
+  }
+  .title { font-size: 11pt; font-weight: 800; letter-spacing: -0.2px; line-height: 1; }
+  .sub { font-size: 5pt; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; font-weight: 600; opacity: 0.95; }
+  .resident {
+    text-align: center;
+    margin: 0.08in 0 0.04in 0;
+  }
+  .name { font-size: 9pt; font-weight: 700; line-height: 1.1; }
+  .roomlabel { font-size: 5pt; text-transform: uppercase; letter-spacing: 1.5px; color: #666; margin-top: 0.04in; font-weight: 600; }
+  .room { font-size: 24pt; font-weight: 800; line-height: 1; margin-top: 0.01in; letter-spacing: -1px; }
+  .qrwrap {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0.04in 0;
+  }
+  .qrwrap img { width: 1.4in; height: 1.4in; display: block; }
+  .footer { text-align: center; font-size: 5pt; line-height: 1.3; color: #666; font-weight: 500; padding: 0 0.04in; }
+  .brand { font-size: 6pt; font-weight: 700; letter-spacing: 0.5px; margin-top: 0.02in; color: #111; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="sticker">
+  <div class="top">
+    <div class="title">EMERGENCY</div>
+    <div class="sub">Scan to call 911</div>
+  </div>
+  <div class="resident">
+    <div class="name">${resident.name}</div>
+    <div class="roomlabel">Room</div>
+    <div class="room">${resident.room}</div>
+  </div>
+  <div class="qrwrap">
+    <img src="${qrDataUrl}" alt="QR" />
+  </div>
+  <div class="footer">
+    Scan with any phone camera to instantly dispatch EMS.
+    <div class="brand">CareLink</div>
+  </div>
+</div>
+<script>window.onload = () => setTimeout(() => window.print(), 250);<\/script>
+</body></html>`);
     w.document.close();
   };
-
+ 
   const download = () => {
+    if (!qrDataUrl) return;
     const link = document.createElement('a');
-    link.download = `QR-${resident.id}-Room${resident.room}.png`;
-    link.href = canvasRef.current.toDataURL('image/png');
+    link.download = `CareLink-QR-Room${resident.room}.png`;
+    link.href = qrDataUrl;
     link.click();
   };
-
+ 
+  if (!resident) return null;
+ 
   return (
-    <ModalShell title={`Emergency QR — ${resident.name}`} onClose={onClose} maxWidth="28rem"
-      footer={
-        <div className="flex gap-2">
-          <button onClick={download} className="flex-1 px-4 py-2.5 rounded-lg text-[13px] font-semibold bg-[#1c1c1c] text-gray-200 hover:bg-[#262626] transition flex items-center justify-center gap-2">
-            <Icon.Download className="w-4 h-4"/>Download
-          </button>
-          <button onClick={printQR} className="flex-1 btn-primary px-4 py-2.5 rounded-lg text-[13px] font-semibold flex items-center justify-center gap-2">
-            <Icon.Print className="w-4 h-4"/>Print Poster
-          </button>
+    <>
+      <PanelHeader title="Emergency QR Code" subtitle={`${resident.name} \u00b7 Room ${resident.room}`} onClose={onClose}/>
+      <div className="flex-1 overflow-y-auto p-6">
+        {/* Sticker preview — designed as 2x3 inch sticker @ 4x scale for screen (480px wide \u2248 5in @ 96dpi) */}
+        <div className="mx-auto" style={{ width: '280px' }}>
+          <div className="bg-white text-black rounded-2xl overflow-hidden relative shadow-2xl" style={{ aspectRatio: '2/3', padding: '14px' }}>
+            {/* Inner border to look like sticker frame */}
+            <div className="absolute inset-2 rounded-xl border-[1.5px] border-black pointer-events-none"/>
+ 
+            <div className="h-full flex flex-col">
+              {/* Top emergency banner */}
+              <div className="text-white text-center py-2 rounded-lg" style={{ background: 'var(--primary)' }}>
+                <div className="text-[15px] font-extrabold tracking-tight leading-none">EMERGENCY</div>
+                <div className="text-[8px] uppercase tracking-[2px] font-semibold mt-1 opacity-95">Scan to call 911</div>
+              </div>
+ 
+              {/* Resident block */}
+              <div className="text-center mt-4">
+                <div className="text-[12px] font-bold leading-tight">{resident.name}</div>
+                <div className="text-[8px] uppercase tracking-[2px] font-semibold text-gray-500 mt-2">Room</div>
+                <div className="text-[36px] font-extrabold leading-none tracking-tight mt-0.5">{resident.room}</div>
+              </div>
+ 
+              {/* QR */}
+              <div className="flex-1 flex items-center justify-center my-2">
+                <div ref={qrContainerRef} className="bg-white p-1.5"/>
+              </div>
+ 
+              {/* Footer */}
+              <div className="text-center px-2">
+                <div className="text-[7px] leading-tight text-gray-500 font-medium">
+                  Scan with any phone camera to instantly dispatch EMS.
+                </div>
+                <div className="text-[8px] uppercase tracking-[1px] font-bold mt-1.5">CareLink</div>
+              </div>
+            </div>
+          </div>
         </div>
-      }>
-      <div className="p-6">
-        {/* Preview poster */}
-        <div className="bg-white text-black rounded-xl p-5 text-center">
-          <div className="bg-primary text-white rounded-lg py-3 mb-4">
-            <div className="text-lg font-extrabold tracking-tight">⚠ EMERGENCY ⚠</div>
-            <div className="text-[10px] uppercase tracking-widest mt-0.5 opacity-90">Scan to contact EMS</div>
+ 
+        <div className="mt-5 px-3.5 py-2.5 rounded-lg flex items-center gap-2" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
+          <Icon.QR className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--text-3)' }}/>
+          <div className="text-[12px]" style={{ color: 'var(--text-1)' }}>
+            Designed as a 2\u00d73 inch sticker for the resident\u2019s room.
           </div>
-          <div className="border-2 border-black rounded-lg p-4 mb-4">
-            <div className="text-lg font-bold">{resident.name}</div>
-            <div className="text-[9px] uppercase tracking-widest text-gray-600 mt-1">Room</div>
-            <div className="text-4xl font-extrabold mt-0.5">{resident.room}</div>
-          </div>
-          <div className="flex justify-center">
-            <canvas ref={canvasRef} className="border-2 border-black p-2 bg-white"/>
-          </div>
-          <div className="text-[10px] text-gray-600 mt-3 leading-relaxed">
-            Scan with any smartphone camera to immediately contact EMS dispatch.
-          </div>
-        </div>
-        <div className="mt-4 px-3 py-2 bg-[#161616] border border-[#262626] rounded-lg text-[11px] text-gray-400 font-mono break-all">
-          {url}
         </div>
       </div>
-    </ModalShell>
+ 
+      <PanelFooter>
+        <button onClick={download} className="flex-1 px-4 py-2.5 rounded-lg text-[13px] font-semibold flex items-center justify-center gap-2 transition"
+          style={{ background: 'var(--bg-3)', color: 'var(--text-0)' }}>
+          <Icon.Download className="w-4 h-4"/>Download QR
+        </button>
+        <button onClick={printPoster} className="flex-1 btn-primary px-4 py-2.5 rounded-lg text-[13px] font-semibold flex items-center justify-center gap-2">
+          <Icon.Print className="w-4 h-4"/>Print Sticker
+        </button>
+      </PanelFooter>
+    </>
   );
 }
-
+ 
 /* ========================================================================
-   MOBILE QR FLOW — matches uploaded mobile design
-   Three screens: emergency form -> "share location"/initial -> chat
+   MOBILE QR FLOW
    ======================================================================== */
 function MobileQRFlow({ resident, residentParam, employees, nursingHome, cfsList, addCfs, updateCfs, cfsParam, tick }) {
-  // If invalid resident
   if (!resident) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center p-6">
+      <div className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--bg-0)' }}>
         <div className="text-center max-w-sm">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/15 border border-primary/40 flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ background: 'var(--primary-soft)', border: '1px solid rgba(244,63,94,0.4)' }}>
             <Icon.Siren className="w-7 h-7 text-primary"/>
           </div>
           <h1 className="text-xl font-semibold tracking-tight mb-2">Invalid QR Code</h1>
-          <p className="text-sm text-gray-400 mb-6">No resident found for ID <span className="font-mono">{residentParam}</span>.</p>
+          <p className="text-sm mb-6" style={{ color: 'var(--text-2)' }}>No resident found for ID <span className="font-mono">{residentParam}</span>.</p>
           <a href={window.location.pathname} className="inline-block btn-primary px-5 py-2.5 rounded-lg text-[13px] font-semibold">Open Dashboard</a>
         </div>
       </div>
     );
   }
-
-  // Routing inside mobile flow: screen state
-  // screens: 'intro' (location preview) -> 'form' -> 'chat'
+ 
   const [screen, setScreen] = useState(cfsParam ? 'chat' : 'intro');
   const [activeCfsId, setActiveCfsId] = useState(cfsParam || null);
-
-  // Simulated dispatcher reply for active chat
+ 
   useEffect(() => {
     if (!activeCfsId) return;
     const cfs = cfsList.find(c => c.id === activeCfsId);
@@ -1414,7 +1752,7 @@ function MobileQRFlow({ resident, residentParam, employees, nursingHome, cfsList
       const replies = [
         'Copy that. Please keep the resident still and monitor their breathing.',
         'Understood. EMS is en route, approximate arrival 6 minutes.',
-        'Thank you for the update. Is the resident currently conscious and responsive?',
+        'Thank you. Is the resident currently conscious and responsive?',
         'Acknowledged. Please unlock the main entrance for EMS personnel.',
         'Got it. Have someone meet EMS at the front door if possible.',
       ];
@@ -1425,126 +1763,88 @@ function MobileQRFlow({ resident, residentParam, employees, nursingHome, cfsList
       }));
     }
   }, [tick, activeCfsId, cfsList, updateCfs]);
-
+ 
   const activeCfs = cfsList.find(c => c.id === activeCfsId);
-
+ 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white max-w-md mx-auto relative">
+    <div className="min-h-screen max-w-md mx-auto relative" style={{ background: 'var(--bg-0)' }}>
       {screen === 'intro' && (
-        <MobileIntroScreen
-          resident={resident}
-          nursingHome={nursingHome}
-          onContact={()=>setScreen('form')}
-        />
+        <MobileIntroScreen resident={resident} nursingHome={nursingHome} onContact={()=>setScreen('form')}/>
       )}
       {screen === 'form' && (
         <MobileFormScreen
-          resident={resident}
-          employees={employees}
-          nursingHome={nursingHome}
+          resident={resident} employees={employees} nursingHome={nursingHome}
           onBack={()=>setScreen('intro')}
-          onSubmit={(cfs) => {
-            addCfs(cfs);
-            setActiveCfsId(cfs.id);
-            setScreen('chat');
-          }}
+          onSubmit={(cfs) => { addCfs(cfs); setActiveCfsId(cfs.id); setScreen('chat'); }}
         />
       )}
       {screen === 'chat' && activeCfs && (
         <MobileChatScreen
-          cfs={activeCfs}
-          resident={resident}
-          onSendMessage={(text) => {
-            updateCfs(activeCfs.id, c => ({
-              ...c, _autoReplied: false,
-              messages: [...c.messages, { from: 'caller', text, ts: Date.now() }]
-            }));
-          }}
-          onSendLocation={() => {
-            updateCfs(activeCfs.id, c => ({
-              ...c, _autoReplied: false,
-              messages: [...c.messages, { from: 'caller', type: 'location', address: `${nursingHome.address} — Room ${resident.room}`, ts: Date.now() }]
-            }));
-          }}
+          cfs={activeCfs} resident={resident}
+          onSendMessage={(text) => updateCfs(activeCfs.id, c => ({...c, _autoReplied: false, messages: [...c.messages, { from: 'caller', text, ts: Date.now() }]}))}
+          onSendLocation={() => updateCfs(activeCfs.id, c => ({...c, _autoReplied: false, messages: [...c.messages, { from: 'caller', type: 'location', address: `${nursingHome.address} \u2014 Room ${resident.room}`, ts: Date.now() }]}))}
         />
       )}
     </div>
   );
 }
-
-/* --- mobile intro screen — matches the "Agency name / Share Updated Location" frame --- */
+ 
 function MobileIntroScreen({ resident, nursingHome, onContact }) {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
       <div className="px-5 pt-5 pb-3 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
-            <Icon.Siren className="w-4 h-4 text-white"/>
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: 'var(--primary)' }}>
+            <Icon.Heart className="w-4 h-4 text-white"/>
           </div>
-          <div className="font-semibold text-[15px] tracking-tight">{nursingHome.name}</div>
+          <div className="font-bold text-[15px] tracking-tight">CareLink</div>
         </div>
-        <button className="p-2 rounded-lg bg-[#1a1a1a] border border-[#262626]">
-          <Icon.File className="w-4 h-4 text-gray-300"/>
-        </button>
       </div>
-
-      {/* Search-like bar (decorative, matches the uploaded design) */}
-      <div className="px-5 mt-2 flex gap-2">
-        <div className="flex-1 relative">
-          <Icon.Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"/>
-          <input disabled placeholder="Search an address" className="w-full bg-[#161616] border border-[#262626] rounded-xl pl-10 pr-3 py-2.5 text-[13px] text-gray-400"/>
-        </div>
-        <button className="p-2.5 rounded-xl bg-[#161616] border border-[#262626]">
-          <Icon.MapPin className="w-4 h-4 text-gray-300"/>
-        </button>
-      </div>
-
-      {/* "Map" area (decorative dark space matching the upload) */}
-      <div className="flex-1 mt-4 mx-5 rounded-xl bg-[#0d0d0d] border border-[#1a1a1a] relative overflow-hidden min-h-[280px]">
-        {/* subtle grid texture */}
+ 
+      <div className="flex-1 mt-4 mx-5 rounded-2xl relative overflow-hidden min-h-[280px]" style={{ background: 'var(--bg-1)', border: '1px solid var(--border)' }}>
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
           backgroundSize: '24px 24px',
         }}/>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center mx-auto mb-2">
-              <Icon.MapPin className="w-5 h-5 text-primary"/>
+            <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: 'var(--primary-soft)', border: '2px solid var(--primary)' }}>
+              <Icon.MapPin className="w-6 h-6 text-primary"/>
             </div>
-            <div className="text-[11px] text-gray-500">Resident location</div>
+            <div className="text-[11px] uppercase tracking-widest font-semibold" style={{ color: 'var(--text-3)' }}>Resident Location</div>
+            <div className="text-[14px] mt-1 font-semibold">Room {resident.room}</div>
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <div className="px-5 pt-3 pb-5 bg-[#0a0a0a]">
+ 
+      <div className="px-5 pt-4 pb-5">
         <div className="text-[12px] flex items-center gap-2">
-          <span className="text-gray-400">Resident location</span>
-          <span className="px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 text-[10px] font-medium border border-green-500/30">Auto-detected</span>
+          <span style={{ color: 'var(--text-2)' }}>Address</span>
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-medium" style={{ background: 'rgba(52,211,153,0.15)', color: '#6ee7b7', border: '1px solid rgba(52,211,153,0.3)' }}>Auto-detected</span>
         </div>
         <div className="text-[14px] font-semibold mt-1">{nursingHome.address}</div>
-        <div className="text-[11px] text-gray-500 mt-0.5 mb-4">{resident.name} · Room {resident.room}</div>
-
-        <button onClick={onContact} className="w-full btn-primary py-3 rounded-xl font-semibold text-[14px] flex items-center justify-center gap-2 shadow-lg shadow-primary/30">
-          <Icon.Siren className="w-4 h-4"/>
-          Contact Emergency Services
+        <div className="text-[12px] mt-2" style={{ color: 'var(--text-1)' }}>
+          <span className="font-semibold">{resident.name}</span> \u00b7 Room {resident.room}
+        </div>
+ 
+        <button onClick={onContact}
+          className="w-full btn-primary py-3.5 rounded-xl font-semibold text-[14px] flex items-center justify-center gap-2 shadow-lg shadow-rose-500/30 mt-5">
+          <Icon.Siren className="w-4 h-4"/>Contact Emergency Services
         </button>
-        <div className="mt-2 text-center text-[10px] uppercase tracking-widest text-gray-600">Scanned from emergency QR</div>
+        <div className="mt-3 text-center text-[10px] uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>Scanned from emergency QR sticker</div>
       </div>
     </div>
   );
 }
-
-/* --- mobile emergency form (uses same logic as desktop) --- */
+ 
 function MobileFormScreen({ resident, employees, nursingHome, onBack, onSubmit }) {
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="px-5 pt-5 pb-3 flex items-center gap-3 border-b border-[#1a1a1a]">
-        <button onClick={onBack} className="p-1 -ml-1 text-gray-400"><Icon.ArrowLeft className="w-5 h-5"/></button>
+      <div className="px-5 pt-5 pb-3 flex items-center gap-3" style={{ borderBottom: '1px solid var(--border)' }}>
+        <button onClick={onBack} className="p-1 -ml-1" style={{ color: 'var(--text-2)' }}><Icon.ArrowLeft className="w-5 h-5"/></button>
         <div>
           <div className="text-[15px] font-semibold tracking-tight">Contact Dispatcher</div>
-          <div className="text-[11px] text-gray-500">{resident.name} · Room {resident.room}</div>
+          <div className="text-[11px]" style={{ color: 'var(--text-3)' }}>{resident.name} \u00b7 Room {resident.room}</div>
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
@@ -1553,7 +1853,7 @@ function MobileFormScreen({ resident, employees, nursingHome, onBack, onSubmit }
     </div>
   );
 }
-
+ 
 function MobileForm({ resident, employees, nursingHome, onSubmit }) {
   const [emergencyType, setEmergencyType] = useState('');
   const [severity, setSeverity] = useState('medium');
@@ -1561,10 +1861,10 @@ function MobileForm({ resident, employees, nursingHome, onSubmit }) {
   const [employeeMode, setEmployeeMode] = useState('select');
   const [employeeName, setEmployeeName] = useState('');
   const [manualName, setManualName] = useState('');
-
+ 
   const finalEmployeeName = employeeMode === 'manual' ? manualName : employeeName;
   const valid = emergencyType && severity && finalEmployeeName;
-
+ 
   const submit = () => {
     if (!valid) return;
     const now = Date.now();
@@ -1580,169 +1880,171 @@ function MobileForm({ resident, employees, nursingHome, onSubmit }) {
       callerNumber: nursingHome.callerNumber,
       messages: [
         { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: now },
-        { from: 'caller', text: `${emergencyType} — ${severity} severity. ${description || ''}`.trim(), ts: now + 2000 },
-        { from: 'caller', type: 'location', address: `${nursingHome.address} — Room ${resident.room}`, ts: now + 3000 },
+        { from: 'caller', text: `${emergencyType} \u2014 ${severity} severity. ${description || ''}`.trim(), ts: now + 2000 },
+        { from: 'caller', type: 'location', address: `${nursingHome.address} \u2014 Room ${resident.room}`, ts: now + 3000 },
       ],
     });
   };
-
+ 
   return (
     <div className="px-5 py-5 space-y-4 pb-32">
-      {/* Resident pinned card */}
-      <div className="px-4 py-3 rounded-xl bg-primary/10 border border-primary/30">
-        <div className="text-[10px] uppercase tracking-widest text-primary font-semibold mb-1">Resident (auto-filled)</div>
+      <div className="px-4 py-3 rounded-xl" style={{ background: 'var(--primary-soft)', border: '1px solid rgba(244,63,94,0.3)' }}>
+        <div className="text-[10px] uppercase tracking-widest font-semibold text-primary mb-1">Resident (auto-filled)</div>
         <div className="text-[14px] font-semibold">{resident.name}</div>
-        <div className="text-[12px] text-gray-300">Room {resident.room} · Age {resident.age}</div>
-        <div className="text-[11px] text-gray-400 mt-1">{resident.conditions}</div>
+        <div className="text-[12px]" style={{ color: 'var(--text-1)' }}>Room {resident.room} \u00b7 Age {resident.age}</div>
+        <div className="text-[11px] mt-1" style={{ color: 'var(--text-2)' }}>{resident.conditions}</div>
       </div>
-
+ 
       <Field label="Emergency Type">
-        <input className={inputCls} placeholder="e.g. Fall, Chest pain" value={emergencyType} onChange={e=>setEmergencyType(e.target.value)}/>
+        <input className={inputCls} style={inputStyle} placeholder="e.g. Fall, Chest pain" value={emergencyType} onChange={e=>setEmergencyType(e.target.value)}/>
       </Field>
-
+ 
       <Field label="Severity">
         <div className="grid grid-cols-3 gap-2">
           {['low','medium','high'].map(s => (
             <button key={s} type="button" onClick={()=>setSeverity(s)}
-              className={`py-2.5 rounded-lg text-[12px] font-semibold uppercase tracking-wider border ${
-                severity===s
-                  ? (s==='low' ? 'sev-low' : s==='medium' ? 'sev-medium' : 'sev-high')
-                  : 'bg-[#161616] border-[#262626] text-gray-500'
-              }`}>
+              className={`py-2.5 rounded-lg text-[12px] font-semibold uppercase tracking-wider transition ${severity===s ? `sev-${s}` : ''}`}
+              style={severity===s ? {} : { background: 'var(--bg-2)', border: '1px solid var(--border)', color: 'var(--text-3)' }}>
               {s}
             </button>
           ))}
         </div>
       </Field>
-
+ 
       <Field label="Description (optional)">
-        <textarea rows={3} className={inputCls} placeholder="Symptoms, what happened…" value={description} onChange={e=>setDescription(e.target.value)}/>
+        <textarea rows={3} className={inputCls} style={inputStyle} placeholder="Symptoms, what happened\u2026" value={description} onChange={e=>setDescription(e.target.value)}/>
       </Field>
-
+ 
       <div>
         <div className="flex items-center justify-between mb-1.5">
-          <label className="block text-[11px] uppercase tracking-wider text-gray-500 font-semibold">Reporting Employee</label>
-          <div className="flex bg-[#161616] border border-[#262626] rounded-md p-0.5">
-            <button type="button" onClick={()=>setEmployeeMode('select')} className={`px-2.5 py-1 text-[11px] rounded ${employeeMode==='select' ? 'bg-[#2a2a2a] text-white' : 'text-gray-500'}`}>From list</button>
-            <button type="button" onClick={()=>setEmployeeMode('manual')} className={`px-2.5 py-1 text-[11px] rounded ${employeeMode==='manual' ? 'bg-[#2a2a2a] text-white' : 'text-gray-500'}`}>Manually</button>
+          <label className="block text-[11px] uppercase tracking-wider font-semibold" style={{ color: 'var(--text-3)' }}>Reporting Employee</label>
+          <div className="flex p-0.5 rounded-md" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
+            <button type="button" onClick={()=>setEmployeeMode('select')}
+              className="px-2.5 py-1 text-[11px] rounded transition"
+              style={{ background: employeeMode==='select' ? 'var(--bg-3)' : 'transparent', color: employeeMode==='select' ? 'var(--text-0)' : 'var(--text-3)' }}>From list</button>
+            <button type="button" onClick={()=>setEmployeeMode('manual')}
+              className="px-2.5 py-1 text-[11px] rounded transition"
+              style={{ background: employeeMode==='manual' ? 'var(--bg-3)' : 'transparent', color: employeeMode==='manual' ? 'var(--text-0)' : 'var(--text-3)' }}>Manually</button>
           </div>
         </div>
         {employeeMode === 'select' ? (
-          <select className={inputCls} value={employeeName} onChange={e=>setEmployeeName(e.target.value)}>
-            <option value="">Select employee…</option>
-            {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name} — {emp.role}</option>)}
+          <select className={inputCls} style={inputStyle} value={employeeName} onChange={e=>setEmployeeName(e.target.value)}>
+            <option value="">Select employee\u2026</option>
+            {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name} \u2014 {emp.role}</option>)}
           </select>
         ) : (
-          <input className={inputCls} placeholder="Type your name" value={manualName} onChange={e=>setManualName(e.target.value)}/>
+          <input className={inputCls} style={inputStyle} placeholder="Type your name" value={manualName} onChange={e=>setManualName(e.target.value)}/>
         )}
       </div>
-
-      {/* Sticky submit */}
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md px-5 py-4 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/95 to-transparent">
+ 
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md px-5 py-4" style={{
+        background: 'linear-gradient(to top, var(--bg-0), rgba(15,17,21,0.95), transparent)',
+      }}>
         <button disabled={!valid} onClick={submit}
-          className="w-full btn-primary py-3.5 rounded-xl font-semibold text-[14px] flex items-center justify-center gap-2 shadow-lg shadow-primary/30 disabled:opacity-40 disabled:cursor-not-allowed">
+          className="w-full btn-primary py-3.5 rounded-xl font-semibold text-[14px] flex items-center justify-center gap-2 shadow-lg shadow-rose-500/30 disabled:opacity-40 disabled:cursor-not-allowed">
           <Icon.Siren className="w-4 h-4"/>Submit & Open Chat
         </button>
       </div>
     </div>
   );
 }
-
-/* --- mobile chat screen — matches uploaded design --- */
+ 
 function MobileChatScreen({ cfs, resident, onSendMessage, onSendLocation }) {
   const [input, setInput] = useState('');
   const [attachOpen, setAttachOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const scrollRef = useRef(null);
-
+ 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [cfs.messages.length]);
-
+ 
   const send = () => {
     if (!input.trim()) return;
     onSendMessage(input.trim());
     setInput('');
   };
-
+ 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <div className="px-3 pt-4 pb-3 flex items-center gap-2 border-b border-[#1a1a1a] sticky top-0 bg-[#0a0a0a] z-10">
-        <button className="p-1 text-gray-400"><Icon.ArrowLeft className="w-5 h-5"/></button>
+      <div className="px-3 pt-4 pb-3 flex items-center gap-2 sticky top-0 z-10" style={{ background: 'var(--bg-0)', borderBottom: '1px solid var(--border)' }}>
+        <button className="p-1" style={{ color: 'var(--text-2)' }}><Icon.ArrowLeft className="w-5 h-5"/></button>
         <div className="flex-1">
           <div className="text-[15px] font-semibold tracking-tight">Chat with Dispatcher</div>
           <div className="flex items-center gap-1.5 text-[11px] text-primary">
             <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot"/>
-            <span className="font-medium">LIVE · Ref #{cfs.refNumber}</span>
+            <span className="font-medium">LIVE \u00b7 Ref #{cfs.refNumber}</span>
           </div>
         </div>
-        <button onClick={()=>setDetailsOpen(true)} className="p-2 rounded-lg bg-[#1a1a1a] border border-[#262626]">
-          <Icon.File className="w-4 h-4 text-gray-300"/>
+        <button onClick={()=>setDetailsOpen(true)} className="p-2 rounded-lg" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
+          <Icon.File className="w-4 h-4" style={{ color: 'var(--text-1)' }}/>
         </button>
       </div>
-
-      {/* Messages */}
+ 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3 no-scrollbar">
         {cfs.messages.map((m, i) => <ChatBubble key={i} msg={m}/>)}
       </div>
-
-      {/* Attach popover */}
+ 
       {attachOpen && (
-        <div className="absolute bottom-20 left-3 bg-[#161616] border border-[#262626] rounded-xl py-1 shadow-xl z-20 w-44">
+        <div className="absolute bottom-20 left-3 rounded-xl py-1 z-20 w-44 shadow-xl" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
           {[
-            { icon: <Icon.Camera className="w-4 h-4"/>, label: 'Photo', action: ()=>{} },
-            { icon: <Icon.Video className="w-4 h-4"/>, label: 'Video', action: ()=>{} },
-            { icon: <Icon.File className="w-4 h-4"/>, label: 'File', action: ()=>{} },
+            { icon: <Icon.Camera className="w-4 h-4"/>, label: 'Photo', action: ()=>setAttachOpen(false) },
+            { icon: <Icon.Video className="w-4 h-4"/>, label: 'Video', action: ()=>setAttachOpen(false) },
+            { icon: <Icon.File className="w-4 h-4"/>, label: 'File', action: ()=>setAttachOpen(false) },
             { icon: <Icon.MapPin className="w-4 h-4"/>, label: 'Location', action: () => { onSendLocation(); setAttachOpen(false); }},
           ].map((it, i) => (
             <button key={i} onClick={it.action}
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 text-[13px] text-gray-200 hover:bg-[#1f1f1f] transition">
-              <span className="text-gray-400">{it.icon}</span>{it.label}
+              className="w-full flex items-center gap-3 px-3.5 py-2.5 text-[13px] transition"
+              style={{ color: 'var(--text-1)' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-3)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+              <span style={{ color: 'var(--text-2)' }}>{it.icon}</span>{it.label}
             </button>
           ))}
         </div>
       )}
-
-      {/* Input bar */}
-      <div className="px-3 py-3 border-t border-[#1a1a1a] flex items-center gap-2 sticky bottom-0 bg-[#0a0a0a]">
+ 
+      <div className="px-3 py-3 flex items-center gap-2 sticky bottom-0" style={{ background: 'var(--bg-0)', borderTop: '1px solid var(--border)' }}>
         <button onClick={()=>setAttachOpen(o=>!o)} className="p-2.5 rounded-full bg-primary text-white flex-shrink-0">
           <Icon.Plus className="w-4 h-4"/>
         </button>
         <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&send()}
-          placeholder="Message…"
-          className="flex-1 bg-[#161616] border border-[#262626] rounded-full px-4 py-2.5 text-[13px] focus:outline-none focus:border-[#3a3a3a]"/>
-        <button className="p-2 text-gray-500"><Icon.Mic className="w-4 h-4"/></button>
+          placeholder="Message\u2026"
+          className="flex-1 rounded-full px-4 py-2.5 text-[13px]"
+          style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}/>
+        <button className="p-2" style={{ color: 'var(--text-3)' }}><Icon.Mic className="w-4 h-4"/></button>
         <button onClick={send} className="p-2 text-primary"><Icon.Send className="w-4 h-4"/></button>
       </div>
-
-      {/* Details overlay (matches "Caller Details" + "Media and files" combined) */}
+ 
+      {/* Mobile details slide-in (also from right) */}
       {detailsOpen && (
-        <div className="fixed inset-0 bg-[#0a0a0a] z-30 max-w-md mx-auto flex flex-col">
-          <div className="px-3 pt-4 pb-3 flex items-center gap-2 border-b border-[#1a1a1a]">
-            <button onClick={()=>setDetailsOpen(false)} className="p-1 text-gray-400"><Icon.ArrowLeft className="w-5 h-5"/></button>
-            <div className="text-[15px] font-semibold tracking-tight">Caller Details</div>
-          </div>
-          <div className="flex-1 overflow-y-auto px-5 py-5 space-y-4 no-scrollbar text-[13px]">
-            <DetailRow label="Call Reference" value={`${cfs.refNumber} (${cfs.id})`}/>
-            <DetailRow label="Location" value={cfs.location}/>
-            <DetailRow label="Caller Number" value={cfs.callerNumber}/>
-            <DetailRow label="Caller Requested" value={`${formatDate(cfs.createdAt)}, ${formatTime(cfs.createdAt)}`}/>
-            <DetailRow label="Severity" value={
-              <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase sev-${cfs.severity}`}>{severityLabel(cfs.severity)}</span>
-            }/>
-            <div className="border-t border-[#1f1f1f] pt-4 space-y-3">
-              <div className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold">Resident</div>
-              <DetailRow label="Name" value={resident.name}/>
-              <DetailRow label="Room" value={resident.room}/>
-              <DetailRow label="Age" value={resident.age}/>
-              <DetailRow label="Conditions" value={resident.conditions}/>
-              <DetailRow label="Emergency Contact" value={`${resident.emergencyContact} · ${resident.contactPhone}`}/>
+        <div className="fixed inset-0 z-30 max-w-md mx-auto" style={{ background: 'var(--bg-0)' }}>
+          <div className="slide-in h-full flex flex-col">
+            <div className="px-3 pt-4 pb-3 flex items-center gap-2" style={{ borderBottom: '1px solid var(--border)' }}>
+              <button onClick={()=>setDetailsOpen(false)} className="p-1" style={{ color: 'var(--text-2)' }}><Icon.ArrowLeft className="w-5 h-5"/></button>
+              <div className="text-[15px] font-semibold tracking-tight">Caller Details</div>
             </div>
-            <div className="border-t border-[#1f1f1f] pt-4 space-y-3">
-              <div className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold">Reporter</div>
-              <DetailRow label="Employee" value={`${cfs.employeeName}${cfs.employeeManual ? ' (manual entry)' : ''}`}/>
-              <DetailRow label="Description" value={cfs.description || '—'}/>
+            <div className="flex-1 overflow-y-auto px-5 py-5 space-y-5 no-scrollbar text-[13px]">
+              <Section title="Call Information">
+                <DetailRow label="Reference" value={`${cfs.refNumber} (${cfs.id})`}/>
+                <DetailRow label="Location" value={cfs.location}/>
+                <DetailRow label="Caller Number" value={cfs.callerNumber}/>
+                <DetailRow label="Requested" value={`${formatDate(cfs.createdAt)}, ${formatTime(cfs.createdAt)}`}/>
+                <DetailRow label="Severity" value={
+                  <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase sev-${cfs.severity}`}>{severityLabel(cfs.severity)}</span>
+                }/>
+              </Section>
+              <Section title="Resident">
+                <DetailRow label="Name" value={resident.name}/>
+                <DetailRow label="Room" value={resident.room}/>
+                <DetailRow label="Age" value={resident.age}/>
+                <DetailRow label="Conditions" value={resident.conditions}/>
+                <DetailRow label="Emergency Contact" value={`${resident.emergencyContact} \u00b7 ${resident.contactPhone}`}/>
+              </Section>
+              <Section title="Reporter">
+                <DetailRow label="Employee" value={`${cfs.employeeName}${cfs.employeeManual ? ' (manual entry)' : ''}`}/>
+                <DetailRow label="Description" value={cfs.description || '\u2014'}/>
+              </Section>
             </div>
           </div>
         </div>
@@ -1750,7 +2052,7 @@ function MobileChatScreen({ cfs, resident, onSendMessage, onSendLocation }) {
     </div>
   );
 }
-
+ 
 /* ========================================================================
    MOUNT
    ======================================================================== */
