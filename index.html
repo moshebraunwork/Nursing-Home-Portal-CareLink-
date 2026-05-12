@@ -1176,7 +1176,7 @@ function EmergencyForm({ residents, employees, nursingHome, onCancel, onSubmit, 
  
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-[11px] uppercase tracking-wider font-semibold" style={{ color: 'var(--text-3)' }}>Reporting Employee</label>
+            <label className="block text-[11px] uppercase tracking-wider font-semibold" style={{ color: 'var(--text-3)' }}>Reporter</label>
             {isQR && (
               <div className="flex p-0.5 rounded-md" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
                 <button type="button" onClick={()=>setEmployeeMode('select')}
@@ -1740,7 +1740,7 @@ function MobileQRFlow({ resident, residentParam, employees, nursingHome, cfsList
     );
   }
  
-  const [screen, setScreen] = useState(cfsParam ? 'chat' : 'intro');
+  const [screen, setScreen] = useState(cfsParam ? 'chat' : 'form');
   const [activeCfsId, setActiveCfsId] = useState(cfsParam || null);
  
   useEffect(() => {
@@ -1768,14 +1768,14 @@ function MobileQRFlow({ resident, residentParam, employees, nursingHome, cfsList
  
   return (
     <div className="min-h-screen max-w-md mx-auto relative" style={{ background: 'var(--bg-0)' }}>
-      {screen === 'intro' && (
-        <MobileIntroScreen resident={resident} nursingHome={nursingHome} onContact={()=>setScreen('form')}/>
-      )}
       {screen === 'form' && (
         <MobileFormScreen
           resident={resident} employees={employees} nursingHome={nursingHome}
-          onBack={()=>setScreen('intro')}
-          onSubmit={(cfs) => { addCfs(cfs); setActiveCfsId(cfs.id); setScreen('chat'); }}
+          onSubmit={(cfs) => {
+            addCfs(cfs);
+            // Redirect to external caller-communication app
+            window.location.href = 'https://moshebraunwork.github.io/caller-communication/';
+          }}
         />
       )}
       {screen === 'chat' && activeCfs && (
@@ -1789,61 +1789,15 @@ function MobileQRFlow({ resident, residentParam, employees, nursingHome, cfsList
   );
 }
  
-function MobileIntroScreen({ resident, nursingHome, onContact }) {
-  return (
-    <div className="min-h-screen flex flex-col">
-      <div className="px-5 pt-5 pb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: 'var(--primary)' }}>
-            <Icon.Heart className="w-4 h-4 text-white"/>
-          </div>
-          <div className="font-bold text-[15px] tracking-tight">CareLink</div>
-        </div>
-      </div>
- 
-      <div className="flex-1 mt-4 mx-5 rounded-2xl relative overflow-hidden min-h-[280px]" style={{ background: 'var(--bg-1)', border: '1px solid var(--border)' }}>
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
-        }}/>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: 'var(--primary-soft)', border: '2px solid var(--primary)' }}>
-              <Icon.MapPin className="w-6 h-6 text-primary"/>
-            </div>
-            <div className="text-[11px] uppercase tracking-widest font-semibold" style={{ color: 'var(--text-3)' }}>Resident Location</div>
-            <div className="text-[14px] mt-1 font-semibold">Room {resident.room}</div>
-          </div>
-        </div>
-      </div>
- 
-      <div className="px-5 pt-4 pb-5">
-        <div className="text-[12px] flex items-center gap-2">
-          <span style={{ color: 'var(--text-2)' }}>Address</span>
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-medium" style={{ background: 'rgba(52,211,153,0.15)', color: '#6ee7b7', border: '1px solid rgba(52,211,153,0.3)' }}>Auto-detected</span>
-        </div>
-        <div className="text-[14px] font-semibold mt-1">{nursingHome.address}</div>
-        <div className="text-[12px] mt-2" style={{ color: 'var(--text-1)' }}>
-          <span className="font-semibold">{resident.name}</span> \u00b7 Room {resident.room}
-        </div>
- 
-        <button onClick={onContact}
-          className="w-full btn-primary py-3.5 rounded-xl font-semibold text-[14px] flex items-center justify-center gap-2 shadow-lg shadow-rose-500/30 mt-5">
-          <Icon.Siren className="w-4 h-4"/>Contact Emergency Services
-        </button>
-        <div className="mt-3 text-center text-[10px] uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>Scanned from emergency QR sticker</div>
-      </div>
-    </div>
-  );
-}
- 
-function MobileFormScreen({ resident, employees, nursingHome, onBack, onSubmit }) {
+function MobileFormScreen({ resident, employees, nursingHome, onSubmit }) {
   return (
     <div className="min-h-screen flex flex-col">
       <div className="px-5 pt-5 pb-3 flex items-center gap-3" style={{ borderBottom: '1px solid var(--border)' }}>
-        <button onClick={onBack} className="p-1 -ml-1" style={{ color: 'var(--text-2)' }}><Icon.ArrowLeft className="w-5 h-5"/></button>
+        <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'var(--primary)' }}>
+          <Icon.Heart className="w-4 h-4 text-white"/>
+        </div>
         <div>
-          <div className="text-[15px] font-semibold tracking-tight">Contact Dispatcher</div>
+          <div className="text-[15px] font-semibold tracking-tight">Contact Emergency Services</div>
           <div className="text-[11px]" style={{ color: 'var(--text-3)' }}>{resident.name} \u00b7 Room {resident.room}</div>
         </div>
       </div>
@@ -1858,12 +1812,13 @@ function MobileForm({ resident, employees, nursingHome, onSubmit }) {
   const [emergencyType, setEmergencyType] = useState('');
   const [severity, setSeverity] = useState('medium');
   const [description, setDescription] = useState('');
-  const [employeeMode, setEmployeeMode] = useState('select');
+  const [reporterMode, setReporterMode] = useState('select');
   const [employeeName, setEmployeeName] = useState('');
   const [manualName, setManualName] = useState('');
+  const [manualPhone, setManualPhone] = useState('');
  
-  const finalEmployeeName = employeeMode === 'manual' ? manualName : employeeName;
-  const valid = emergencyType && severity && finalEmployeeName;
+  const finalReporterName = reporterMode === 'manual' ? manualName : employeeName;
+  const valid = emergencyType && severity && finalReporterName && (reporterMode === 'select' || manualPhone);
  
   const submit = () => {
     if (!valid) return;
@@ -1872,8 +1827,9 @@ function MobileForm({ resident, employees, nursingHome, onSubmit }) {
     const refNumber = String(260500000 + Math.floor(Math.random()*99999) + 1);
     onSubmit({
       id, refNumber, residentId: resident.id,
-      employeeName: finalEmployeeName,
-      employeeManual: employeeMode === 'manual',
+      employeeName: finalReporterName,
+      employeeManual: reporterMode === 'manual',
+      reporterPhone: reporterMode === 'manual' ? manualPhone : null,
       emergencyType, severity, description,
       status: 'active', createdAt: now, source: 'qr',
       location: nursingHome.address,
@@ -1886,6 +1842,8 @@ function MobileForm({ resident, employees, nursingHome, onSubmit }) {
     });
   };
  
+  const req = <span className="text-primary ml-0.5">*</span>;
+ 
   return (
     <div className="px-5 py-5 space-y-4 pb-32">
       <div className="px-4 py-3 rounded-xl" style={{ background: 'var(--primary-soft)', border: '1px solid rgba(244,63,94,0.3)' }}>
@@ -1895,11 +1853,17 @@ function MobileForm({ resident, employees, nursingHome, onSubmit }) {
         <div className="text-[11px] mt-1" style={{ color: 'var(--text-2)' }}>{resident.conditions}</div>
       </div>
  
-      <Field label="Emergency Type">
+      <div>
+        <label className="block text-[11px] uppercase tracking-wider font-semibold mb-1.5" style={{ color: 'var(--text-3)' }}>
+          Emergency Type{req}
+        </label>
         <input className={inputCls} style={inputStyle} placeholder="e.g. Fall, Chest pain" value={emergencyType} onChange={e=>setEmergencyType(e.target.value)}/>
-      </Field>
+      </div>
  
-      <Field label="Severity">
+      <div>
+        <label className="block text-[11px] uppercase tracking-wider font-semibold mb-1.5" style={{ color: 'var(--text-3)' }}>
+          Severity{req}
+        </label>
         <div className="grid grid-cols-3 gap-2">
           {['low','medium','high'].map(s => (
             <button key={s} type="button" onClick={()=>setSeverity(s)}
@@ -1909,7 +1873,7 @@ function MobileForm({ resident, employees, nursingHome, onSubmit }) {
             </button>
           ))}
         </div>
-      </Field>
+      </div>
  
       <Field label="Description (optional)">
         <textarea rows={3} className={inputCls} style={inputStyle} placeholder="Symptoms, what happened\u2026" value={description} onChange={e=>setDescription(e.target.value)}/>
@@ -1917,23 +1881,34 @@ function MobileForm({ resident, employees, nursingHome, onSubmit }) {
  
       <div>
         <div className="flex items-center justify-between mb-1.5">
-          <label className="block text-[11px] uppercase tracking-wider font-semibold" style={{ color: 'var(--text-3)' }}>Reporting Employee</label>
+          <label className="block text-[11px] uppercase tracking-wider font-semibold" style={{ color: 'var(--text-3)' }}>
+            Reporter{req}
+          </label>
           <div className="flex p-0.5 rounded-md" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
-            <button type="button" onClick={()=>setEmployeeMode('select')}
+            <button type="button" onClick={()=>setReporterMode('select')}
               className="px-2.5 py-1 text-[11px] rounded transition"
-              style={{ background: employeeMode==='select' ? 'var(--bg-3)' : 'transparent', color: employeeMode==='select' ? 'var(--text-0)' : 'var(--text-3)' }}>From list</button>
-            <button type="button" onClick={()=>setEmployeeMode('manual')}
+              style={{ background: reporterMode==='select' ? 'var(--bg-3)' : 'transparent', color: reporterMode==='select' ? 'var(--text-0)' : 'var(--text-3)' }}>From list</button>
+            <button type="button" onClick={()=>setReporterMode('manual')}
               className="px-2.5 py-1 text-[11px] rounded transition"
-              style={{ background: employeeMode==='manual' ? 'var(--bg-3)' : 'transparent', color: employeeMode==='manual' ? 'var(--text-0)' : 'var(--text-3)' }}>Manually</button>
+              style={{ background: reporterMode==='manual' ? 'var(--bg-3)' : 'transparent', color: reporterMode==='manual' ? 'var(--text-0)' : 'var(--text-3)' }}>Manually</button>
           </div>
         </div>
-        {employeeMode === 'select' ? (
+        {reporterMode === 'select' ? (
           <select className={inputCls} style={inputStyle} value={employeeName} onChange={e=>setEmployeeName(e.target.value)}>
             <option value="">Select employee\u2026</option>
             {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name} \u2014 {emp.role}</option>)}
           </select>
         ) : (
-          <input className={inputCls} style={inputStyle} placeholder="Type your name" value={manualName} onChange={e=>setManualName(e.target.value)}/>
+          <div className="space-y-2">
+            <input className={inputCls} style={inputStyle} placeholder="Your full name" value={manualName} onChange={e=>setManualName(e.target.value)}/>
+            <input type="tel" className={inputCls} style={inputStyle} placeholder="Mobile number" value={manualPhone} onChange={e=>setManualPhone(e.target.value)}/>
+            <div className="flex items-start gap-2 px-3 py-2 rounded-lg" style={{ background: 'rgba(96,165,250,0.08)', border: '1px solid rgba(96,165,250,0.2)' }}>
+              <svg className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: '#60a5fa' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>
+              <div className="text-[11px] leading-snug" style={{ color: 'var(--text-1)' }}>
+                You\u2019ll receive a text message to this number with a link to follow up on this call.
+              </div>
+            </div>
+          </div>
         )}
       </div>
  
@@ -1942,7 +1917,7 @@ function MobileForm({ resident, employees, nursingHome, onSubmit }) {
       }}>
         <button disabled={!valid} onClick={submit}
           className="w-full btn-primary py-3.5 rounded-xl font-semibold text-[14px] flex items-center justify-center gap-2 shadow-lg shadow-rose-500/30 disabled:opacity-40 disabled:cursor-not-allowed">
-          <Icon.Siren className="w-4 h-4"/>Submit & Open Chat
+          <Icon.Siren className="w-4 h-4"/>Submit Emergency
         </button>
       </div>
     </div>
