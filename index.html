@@ -1,836 +1,1761 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CareLink | Nursing Home Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>HavenCare EMS — Nursing Home Emergency System</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:     #0a0a0a;
-  --s1:     #111;
-  --s2:     #161616;
-  --s3:     #1c1c1c;
-  --s4:     #222;
-  --b1:     #242424;
-  --b2:     #2e2e2e;
-  --fg:     #e8e8e8;
-  --fg2:    #888;
-  --fg3:    #444;
-  --pri:    #a9ee8a;
-  --pfg:    #0a0a0a;
-  --red:    #ef4444;
-  --blue:   #3b82f6;
-  --green:  #22c55e;
-  --orange: #f97316;
-  --yellow: #eab308;
-  --purple: #a855f7;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;overflow:hidden;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;}
-.mi {font-family:'Material Icons';         font-weight:normal;font-style:normal;font-size:18px;line-height:1;display:inline-block;text-transform:none;letter-spacing:normal;word-wrap:normal;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased;font-feature-settings:'liga';vertical-align:middle;}
-.mio{font-family:'Material Icons Outlined';font-weight:normal;font-style:normal;font-size:18px;line-height:1;display:inline-block;text-transform:none;letter-spacing:normal;word-wrap:normal;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased;font-feature-settings:'liga';vertical-align:middle;}
-.view{display:none;}.view.active{display:flex;}
-
-/* ── LOGIN ── */
-#view-login{min-height:100vh;align-items:stretch;overflow:auto;}
-.ll{flex:1;background-color:#0d2d3e;position:relative;display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden;}
-.ll-bg{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='96'%3E%3Cpolygon points='55,2 104,26 104,70 55,94 6,70 6,26' fill='none' stroke='%23ffffff' stroke-width='0.4' opacity='0.06'/%3E%3C/svg%3E");background-size:110px 96px;}
-.ll-logo{position:relative;z-index:1;}.ll-logo svg{width:270px;height:auto;}
-.lr{width:460px;flex-shrink:0;background:#f8fafc;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:52px 44px;}
-.l-badge{display:flex;align-items:center;gap:10px;margin-bottom:30px;}
-.l-badge-icon{width:36px;height:36px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;}
-.l-badge-name{font-size:15px;font-weight:700;color:#111;}.l-badge-sub{font-size:11px;color:#6b7280;margin-top:1px;}
-.l-form{width:100%;max-width:320px;}
-.l-form h1{font-size:20px;font-weight:600;color:#111;margin-bottom:4px;}
-.l-form>p{color:#6b7280;font-size:13px;margin-bottom:22px;}
-.lf{margin-bottom:13px;}.ll2{display:block;font-size:12px;font-weight:500;color:#374151;margin-bottom:4px;}
-.li{width:100%;height:38px;padding:0 12px;background:#fff;border:1px solid #d1d5db;border-radius:6px;color:#111;font-size:13px;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s;}
-.li:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12);}.li::placeholder{color:#9ca3af;}
-.l-btn{width:100%;height:40px;background:var(--pri);color:var(--pfg);border:none;border-radius:6px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:4px;transition:opacity .15s;}
-.l-btn:hover{opacity:.88;}
-@media(max-width:700px){.ll{display:none;}.lr{width:100%;background:var(--bg);}.l-badge-name,.l-form h1{color:var(--fg);}.l-form>p,.ll2,.l-badge-sub{color:var(--fg2);}.li{background:var(--s2);border-color:var(--b2);color:var(--fg);}}
-
-/* ── APP ── */
-#view-app{flex-direction:row;height:100vh;width:100%;overflow:hidden;}
-
-/* ── ICON SIDEBAR ── */
-.sidebar{width:44px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;align-items:center;height:100vh;}
-.sb-logo{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--b1);flex-shrink:0;}
-.sb-logo svg{width:22px;height:auto;}
-.sb-icons{flex:1;display:flex;flex-direction:column;align-items:center;padding:6px 0;gap:2px;}
-.sb-foot{padding:6px 0;display:flex;flex-direction:column;align-items:center;gap:2px;}
-.sbi{position:relative;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:var(--fg3);border-radius:5px;cursor:pointer;transition:background .1s,color .1s;}
-.sbi:hover{background:var(--s3);color:var(--fg2);}.sbi.active{background:var(--s3);color:var(--fg);}
-.sbi .mi,.sbi .mio{font-size:17px;}
-.sbi::after{content:attr(data-tip);position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);background:var(--s4);color:var(--fg);padding:4px 8px;border-radius:4px;font-size:11px;white-space:nowrap;border:1px solid var(--b2);pointer-events:none;opacity:0;transition:opacity .1s;z-index:9999;}
-.sbi:hover::after{opacity:1;}
-.sb-sep{width:22px;height:1px;background:var(--b1);margin:3px 0;}
-.u-dot{width:28px;height:28px;border-radius:50%;background:var(--pri);color:var(--pfg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;cursor:pointer;position:relative;}
-.u-dot::after{content:attr(data-tip);position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);background:var(--s4);color:var(--fg);padding:4px 8px;border-radius:4px;font-size:11px;white-space:nowrap;border:1px solid var(--b2);pointer-events:none;opacity:0;transition:opacity .1s;z-index:9999;}
-.u-dot:hover::after{opacity:1;}
-
-/* ── MAIN ── */
-.main{flex:1;min-width:0;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
-
-/* ── TOPBAR ── */
-.topbar{height:44px;flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 16px;}
-.topbar-bc{display:flex;align-items:center;gap:5px;font-size:13px;}
-.topbar-bc .crumb{color:var(--fg2);}.topbar-bc .sep{color:var(--fg3);font-size:11px;}.topbar-bc .page{color:var(--fg);font-weight:500;}
-.topbar-r{display:flex;align-items:center;gap:8px;}
-.sw{position:relative;}.sw .mio{position:absolute;top:50%;left:8px;transform:translateY(-50%);color:var(--fg3);font-size:14px;pointer-events:none;}
-.si{height:28px;padding:0 8px 0 28px;background:var(--s2);border:1px solid var(--b2);border-radius:5px;color:var(--fg);font-size:12px;font-family:inherit;outline:none;width:200px;}
-.si:focus{border-color:var(--fg3);}.si::placeholder{color:var(--fg3);}
-.btn{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 10px;font-size:12px;font-weight:500;border-radius:5px;border:1px solid transparent;cursor:pointer;font-family:inherit;transition:opacity .12s,background .12s;white-space:nowrap;}
-.btn .mi,.btn .mio{font-size:14px;}
-.btn-pri{background:var(--pri);color:var(--pfg);}.btn-pri:hover{opacity:.88;}
-.btn-ghost{background:transparent;border:none;color:var(--fg2);}.btn-ghost:hover{background:var(--s3);color:var(--fg);}
-.btn-icon{width:28px;height:28px;padding:0;justify-content:center;border:none;}
-
-/* ── PAGE AREA ── */
-.page-area{flex:1;overflow-y:auto;padding:20px;}
-
-/* ── TABLE CARD ── */
-.tbl-card{background:var(--s1);border:1px solid var(--b1);border-radius:6px;overflow:hidden;}
-table.tbl{width:100%;border-collapse:collapse;font-size:13px;}
-.tbl thead tr{border-bottom:1px solid var(--b1);}
-.tbl th{text-align:left;font-size:11px;font-weight:500;color:var(--fg2);padding:0 14px;height:34px;background:var(--s1);white-space:nowrap;position:sticky;top:0;z-index:2;}
-.tbl td{padding:0 14px;height:38px;border-bottom:1px solid var(--b1);color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;}
-.tbl td.m{color:var(--fg2);}
-.tbl tbody tr{cursor:pointer;transition:background .06s;}
-.tbl tbody tr:hover{background:var(--s2);}
-.tbl tbody tr:last-child td{border-bottom:none;}
-.tbl .rn>td:first-child{border-left:2px solid var(--red);}
-.tbl .ra>td:first-child{border-left:2px solid var(--blue);}
-.tbl .rc>td:first-child{border-left:2px solid var(--green);}
-
-/* ── BADGES ── */
-.bdg{display:inline-flex;align-items:center;padding:1px 7px;font-size:11px;font-weight:500;border-radius:3px;}
-.bn {background:rgba(239,68,68,.15); color:#fca5a5;}
-.ba {background:rgba(59,130,246,.15);color:#93c5fd;}
-.bc {background:rgba(34,197,94,.15); color:#86efac;}
-.badm{background:rgba(168,85,247,.15);color:#d8b4fe;}
-.bemp{background:var(--s3);color:var(--fg2);}
-.bcrit{background:rgba(239,68,68,.25);color:#fca5a5;}
-.bhigh{background:rgba(249,115,22,.15);color:#fdba74;}
-.bmed {background:rgba(234,179,8,.15); color:#fde047;}
-.blow {background:rgba(34,197,94,.15); color:#86efac;}
-
-/* ── CONTEXT MENU ── */
-.ctx{position:fixed;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:3px;min-width:190px;z-index:9000;box-shadow:0 8px 32px rgba(0,0,0,.7);animation:ctx-in .08s ease;}
-@keyframes ctx-in{from{opacity:0;transform:scale(.97) translateY(-2px);}to{opacity:1;transform:scale(1);}}
-.cxi{display:flex;align-items:center;gap:9px;width:100%;height:32px;padding:0 10px;background:transparent;border:none;color:var(--fg);border-radius:4px;cursor:pointer;font-family:inherit;font-size:13px;text-align:left;}
-.cxi:hover{background:var(--s3);}
-.cxi .mi,.cxi .mio{font-size:14px;color:var(--fg2);}
-.cxi.danger{color:var(--red);}.cxi.danger .mi,.cxi.danger .mio{color:var(--red);}
-.ctx-sep{height:1px;background:var(--b1);margin:3px 0;}
-
-/* ── SLIDE PANEL ── */
-.pscrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;opacity:0;pointer-events:none;transition:opacity .2s;}
-.pscrim.open{opacity:1;pointer-events:auto;}
-.panel{position:fixed;top:0;right:0;bottom:0;width:min(680px,58vw);background:var(--s1);border-left:1px solid var(--b1);z-index:301;transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
-.panel.open{transform:translateX(0);}
-
-/* Panel header */
-.ph{display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:48px;flex-shrink:0;border-bottom:1px solid var(--b1);}
-.ph-title{font-size:15px;font-weight:600;}
-.ph-right{display:flex;align-items:center;gap:6px;}
-.ph-close{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--b2);border-radius:4px;color:var(--fg2);cursor:pointer;transition:background .1s;}
-.ph-close:hover{background:var(--s3);color:var(--fg);}
-.ph-close .mi{font-size:16px;}
-
-/* Panel body — single scroll */
-.pbody{flex:1;overflow-y:auto;padding:22px 20px;}
-
-/* Section title inside panel */
-.psec{font-size:14px;font-weight:600;color:var(--fg);margin:0 0 14px;}
-.psec-group{margin-bottom:24px;}
-.p-divider{height:1px;background:var(--b1);margin:20px 0;}
-
-/* Key-value grid — small muted label, value below */
-.kvg{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
-.kv{padding:0 0 14px;}.kv.full{grid-column:1/-1;}
-.kv-k{font-size:11px;color:var(--fg2);margin-bottom:3px;}
-.kv-v{font-size:13px;color:var(--fg);}
-.kv-v.dash{color:var(--fg3);}
-
-/* Panel footer — green button + close */
-.pfooter{flex-shrink:0;border-top:1px solid var(--b1);}
-.pf-main{display:block;width:100%;height:46px;background:var(--pri);color:var(--pfg);border:none;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity .12s;}
-.pf-main:hover{opacity:.88;}
-.pf-sec{display:block;width:100%;height:40px;background:transparent;color:var(--fg2);border:none;border-top:1px solid var(--b1);font-size:13px;font-family:inherit;cursor:pointer;transition:background .1s;}
-.pf-sec:hover{background:var(--s2);}
-
-/* Form fields inside panel */
-.field{margin-bottom:13px;}
-.flbl{display:block;font-size:12px;font-weight:500;color:var(--fg2);margin-bottom:4px;}
-.flbl .req{color:var(--red);}
-.inp,.sel,.ta{width:100%;height:34px;padding:0 10px;background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--fg);font-size:13px;font-family:inherit;outline:none;transition:border-color .12s;}
-.inp:focus,.sel:focus,.ta:focus{border-color:var(--pri);}
-.inp::placeholder{color:var(--fg3);}
-.ta{height:auto;min-height:72px;padding:8px 10px;resize:vertical;}
-.sel{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23444' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 8px center;padding-right:28px;cursor:pointer;}
-.sel option{background:#1a1a1a;}
-.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-
-/* QR inside panel */
-.qr-panel-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
-.qr-white-box{background:#fff;padding:14px;border-radius:5px;display:inline-block;}
-.qr-rows{width:100%;display:flex;flex-direction:column;gap:4px;}
-.qr-row{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--s2);border-radius:4px;}
-.qr-k{font-size:11px;color:var(--fg2);}.qr-v{font-size:12px;font-weight:500;}
-
-/* Chat */
-.chatbox{border:1px solid var(--b1);border-radius:4px;overflow:hidden;}
-.chat-hd{padding:7px 11px;background:var(--s2);border-bottom:1px solid var(--b1);font-size:11px;font-weight:500;color:var(--fg2);display:flex;align-items:center;gap:6px;}
-.chat-msgs{padding:10px;min-height:140px;max-height:220px;overflow-y:auto;background:var(--bg);display:flex;flex-direction:column;gap:7px;}
-.msg{display:flex;flex-direction:column;gap:2px;}
-.mmeta{font-size:10px;color:var(--fg3);}
-.mbubble{padding:5px 9px;border-radius:4px;font-size:12px;line-height:1.45;max-width:85%;}
-.msg.in .mbubble{background:var(--s2);}
-.msg.out{align-items:flex-end;}
-.msg.out .mbubble{background:rgba(169,238,138,.08);border:1px solid rgba(169,238,138,.15);}
-.chat-row{display:flex;gap:6px;padding:7px 9px;border-top:1px solid var(--b1);background:var(--s1);}
-.chat-inp{flex:1;height:28px;padding:0 9px;background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--fg);font-size:12px;font-family:inherit;outline:none;}
-.chat-inp:focus{border-color:var(--pri);}
-.chat-inp::placeholder{color:var(--fg3);}
-
-/* Toast */
-#toasts{position:fixed;bottom:14px;right:14px;display:flex;flex-direction:column;gap:5px;z-index:9999;pointer-events:none;}
-.toast{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--s2);border:1px solid var(--b2);border-radius:5px;box-shadow:0 4px 20px rgba(0,0,0,.6);font-size:12px;animation:ti .14s ease;pointer-events:auto;}
-@keyframes ti{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
-.toast.ok{border-left:2px solid var(--green);}.toast.err{border-left:2px solid var(--red);}
-.tic{font-size:14px;flex-shrink:0;}.toast.ok .tic{color:var(--green);}.toast.err .tic{color:var(--red);}
-
-/* Scan page */
-#view-scan{min-height:100vh;flex-direction:column;align-items:center;background:var(--bg);overflow-y:auto;}
-.stb{width:100%;padding:11px 14px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px;background:var(--s1);flex-shrink:0;}
-.stb svg{height:20px;width:auto;}
-.stb-name{font-size:13px;font-weight:600;}.stb-sub{font-size:10px;color:var(--fg2);}
-.sbody{width:100%;max-width:420px;padding:14px 10px;display:flex;flex-direction:column;gap:11px;}
-.salert{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:5px;}
-.sai{width:30px;height:30px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;}
-.sai .mi{font-size:15px;}
-.sat{font-size:12px;font-weight:600;color:#fca5a5;margin-bottom:2px;}
-.sas{font-size:11px;color:var(--fg2);line-height:1.5;}
-.scard{background:var(--s1);border:1px solid var(--b1);border-radius:5px;overflow:hidden;}
-.sch{padding:11px 13px;background:var(--s2);border-bottom:1px solid var(--b1);}
-.scn{font-size:15px;font-weight:600;}.scm{font-size:11px;color:var(--fg2);margin-top:2px;}
-.scb{padding:13px;}
-.ssub{width:100%;height:38px;background:var(--red);color:#fff;border:none;border-radius:5px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px;transition:opacity .12s;}
-.ssub:hover{opacity:.88;}
-.sok{display:none;flex-direction:column;align-items:center;text-align:center;padding:26px 14px;gap:9px;}
-.sokc{width:48px;height:48px;border-radius:50%;background:rgba(34,197,94,.1);border:2px solid rgba(34,197,94,.25);display:flex;align-items:center;justify-content:center;color:var(--green);}
-.sokc .mi{font-size:22px;}
-.sokt{font-size:15px;font-weight:600;}
-.soks{font-size:12px;color:var(--fg2);line-height:1.6;}
-.sftr{font-size:11px;color:var(--fg3);text-align:center;padding:7px 10px 18px;line-height:1.7;}
-.sftr strong{color:#fca5a5;}
-
-/* Utils */
-.muted{color:var(--fg2);}
-.pulse{width:5px;height:5px;border-radius:50%;background:var(--red);display:inline-block;animation:pp 1.8s infinite;}
-@keyframes pp{0%,100%{opacity:1;}50%{opacity:.15;}}
-.empty{text-align:center;padding:48px 20px;color:var(--fg2);}
-.empty .mio{font-size:34px;display:block;margin:0 auto 8px;opacity:.2;}
-::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px;}
-@media print{body *{visibility:hidden;}#pz,#pz *{visibility:visible;}#pz{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}}
+  html, body { font-family: 'Inter', system-ui, sans-serif; background: #0a0a0a; color: #fff; }
+  * { -webkit-tap-highlight-color: transparent; }
+  /* hide scrollbar but keep scroll */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  /* Severity color tokens */
+  .sev-low { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+  .sev-medium { background: rgba(234,179,8,0.12); color: #facc15; border: 1px solid rgba(234,179,8,0.3); }
+  .sev-high { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.35); }
+  /* primary red used in mock */
+  :root {
+    --bg-0: #0a0a0a;
+    --bg-1: #111111;
+    --bg-2: #161616;
+    --bg-3: #1c1c1c;
+    --border: #262626;
+    --primary: #ef3b5c;
+    --primary-hover: #d8334f;
+  }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .text-primary { color: var(--primary); }
+  .bg-primary { background: var(--primary); }
+  .border-primary { border-color: var(--primary); }
+  /* pulsing dot */
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+  }
+  .pulse-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
+  /* fade-in for chat messages */
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .msg-in { animation: msgIn 0.25s ease-out; }
+  /* typing dots */
+  @keyframes typing {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-3px); }
+  }
+  .typing-dot { animation: typing 1.2s infinite; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  /* checkbox */
+  input[type="checkbox"], input[type="radio"] {
+    accent-color: var(--primary);
+  }
+  select, input, textarea {
+    color-scheme: dark;
+  }
+  /* hide on mobile when on desktop view & vice versa */
+  .scroll-shadow {
+    background:
+      linear-gradient(#0a0a0a 30%, rgba(10,10,10,0)) center top,
+      linear-gradient(rgba(10,10,10,0), #0a0a0a 70%) center bottom,
+      radial-gradient(farthest-side at 50% 0, rgba(0,0,0,0.4), rgba(0,0,0,0)) center top,
+      radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,0.4), rgba(0,0,0,0)) center bottom;
+    background-repeat: no-repeat;
+    background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+    background-attachment: local, local, scroll, scroll;
+  }
 </style>
 </head>
 <body>
-<div id="toasts"></div>
-<div id="pz" style="display:none;"></div>
+<div id="root"></div>
 
-<!-- LOGIN -->
-<div id="view-login" class="view active">
-  <div class="ll">
-    <div class="ll-bg"></div>
-    <div class="ll-logo">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 396 75" fill="none">
-        <path d="M395.529 38.4136L357.014 0C354.83.278 352.71.74 350.66 1.372L368.475 19.156C373.809 24.48 376.455 31.447 376.455 38.414C376.455 45.381 373.803 52.341 368.468 57.671L352.229 73.887C354.368 74.444 356.577 74.823 358.843 75L395.535 38.414H395.529ZM371.278 38.414L339.655 6.879C338.174 7.953 336.769 9.129 335.465 10.413L344.217 19.163C349.559 24.486 352.198 31.453 352.198 38.414C352.198 45.381 349.552 52.348 344.211 57.677L336.503 65.384C337.864 66.617 339.313 67.749 340.844 68.773L371.278 38.42V38.414ZM329.118 56.267C328.168 54.63 327.339 52.91 326.637 51.121C333.149 43.705 332.959 32.458 326.055 25.27C326.694 23.392 327.479 21.584 328.396 19.845L347.015 38.414L329.118 56.261V56.267Z" fill="#A9EE8A"/>
-        <path d="M109.367 22.637H103.545C103.241 16.874 99.225 14.366 93.339 14.366C87.453 14.366 83.671 16.846 83.671 21.567C83.671 26.288 87.517 27.879 91.837 28.646L97.298 29.629C103.63 30.764 109.785 33.707 109.785 42.036C109.785 50.366 102.943 55.123 94.998 55.123C86.052 55.123 76.892 50.402 76.588 39.802H82.41C82.828 46.975 87.63 49.917 93.998 49.917C100.365 49.917 104.02 46.946 104.02 42.101C104.02 37.257 99.848 35.637 95.315 34.806L89.854 33.83C84.089 32.789 77.905 29.846 77.905 21.632C77.905 13.418 84.931 9.16 93.332 9.16C101.732 9.16 108.999 13.447 109.36 22.644M121.706 54.198H125.368C125.849 54.198 126.027 54.256 126.211 54.567C126.388 54.87 126.331 55.181 126.147 55.673L124.405 60.452C124.192 61.067 123.802 61.37 123.023 61.37C121.826 61.37 120.381 60.944 116.776 60.944H113.596V65.846H119.361C125.963 65.846 129.15 63.944 131.07 57.943L141.999 23.563V22.341H136.594L127.648 50.959C127.528 51.327 127.351 51.45 126.99 51.45C126.629 51.45 126.451 51.327 126.331 50.959L117.385 22.341H111.981V23.563L121.706 54.205V54.198ZM14.888 55.116C24.557 55.116 31.335 48.131 31.335 30.417C31.335 15.522 24.224 9.152 15.002 9.152C5.78 9.152 0 15.587 0 24.17C0 32.752 5.822 38.696 13.628 38.696C19.089 38.696 22.545 36.057 24.344 32.478C24.642 31.863 24.854 31.805 25.187 31.805C25.484 31.805 25.669 31.993 25.669 32.355C25.669 45.225 21.043 50.033 14.895 50.033C8.747 50.033 6.913 46.02 6.431 42.557H0.659C1.261 48.5 5.043 55.123 14.888 55.123M15.065 14.243C20.767 14.243 24.493 18.227 24.493 23.989C24.493 29.752 20.774 33.736 15.065 33.736C9.357 33.736 5.638 29.752 5.638 23.989C5.638 18.227 9.364 14.243 15.065 14.243ZM44.247 10.078V14.98C44.247 16.86 42.753 18.386 40.911 18.386H33.623V22.341H43.95V54.205H49.531V10.078H44.247ZM63.945 10.078V14.98C63.945 16.86 62.45 18.386 60.609 18.386H53.32V22.341H63.647V54.205H69.229V10.078H63.945Z" fill="white"/>
-      </svg>
-    </div>
-  </div>
-  <div class="lr">
-    <div class="l-badge">
-      <div class="l-badge-icon">CL</div>
-      <div><div class="l-badge-name">CareLink</div><div class="l-badge-sub">Nursing Home Portal</div></div>
-    </div>
-    <div class="l-form">
-      <h1>Sign in</h1>
-      <p>Enter your credentials to continue</p>
-      <div class="lf"><label class="ll2">Email address</label><input class="li" type="email" placeholder="you@facility.com" value="admin@greenmeadows.com"></div>
-      <div class="lf"><label class="ll2">Password</label><input class="li" type="password" placeholder="••••••••" value="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
-      <button class="l-btn" onclick="doLogin()">Sign in</button>
-    </div>
-  </div>
-</div>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useMemo, useCallback } = React;
 
-<!-- APP -->
-<div id="view-app" class="view">
-  <aside class="sidebar">
-    <div class="sb-logo">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 75" fill="none"><path d="M59.5 38.4L42.5 0C41.2.3 40 .7 38.8 1.1l10.8 10.7C53 16.2 54.6 22.3 54.6 38.4c0 6.9-2 13.9-6.8 19.2L37.7 68.9c1.3.4 2.6.7 4 .9L59.5 38.4ZM44.7 38.4L23.2 6.9c-.9.8-1.7 1.6-2.5 2.4L26 15.2c3.4 5.3 5.1 11.4 5.1 23.2 0 6.9-2 13.9-6.8 19.3l-4.6 4.5c.8.8 1.7 1.6 2.6 2.2L44.7 38.4ZM13.1 56.3c-.6-1.1-1-2.3-1.4-3.5C16 46.2 15.9 37 11.4 31.3c.4-1.2.9-2.4 1.5-3.5l11 10.6L13.1 56.3Z" fill="#A9EE8A"/></svg>
-    </div>
-    <div class="sb-icons">
-      <button class="sbi active" id="si-e" data-tip="Active Emergencies" onclick="showPage('e')"><span class="mio">monitor_heart</span></button>
-      <button class="sbi" id="si-r" data-tip="Resident Management" onclick="showPage('r')"><span class="mio">group</span></button>
-      <button class="sbi" id="si-p" data-tip="Employee Management" onclick="showPage('p')"><span class="mio">badge</span></button>
-      <div class="sb-sep"></div>
-      <button class="sbi" data-tip="Settings" onclick="toast('Settings coming soon')"><span class="mio">settings</span></button>
-      <button class="sbi" data-tip="Help" onclick="toast('Help center')"><span class="mio">help_outline</span></button>
-    </div>
-    <div class="sb-foot">
-      <div class="u-dot" data-tip="Moshe Braun — Admin">MB</div>
-      <button class="sbi" data-tip="Log out" onclick="doLogout()" style="margin-top:4px"><span class="mio">logout</span></button>
-    </div>
-  </aside>
+/* ========================================================================
+   ICONS — inline SVG to match the uploaded design language
+   ======================================================================== */
+const Icon = {
+  Search: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
+  Plus: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M5 12h14"/><path d="M12 5v14"/></svg>,
+  X: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>,
+  Edit: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>,
+  Trash: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>,
+  QR: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h.01M21 14h.01M14 21h.01M21 21h.01M17 14v3M14 17h3M17 21v-1M21 17h-1"/></svg>,
+  Users: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+  Bed: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>,
+  Siren: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M7 18v-6a5 5 0 1 1 10 0v6"/><path d="M5 21a1 1 0 0 1-1-1v-1a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1Z"/><path d="M21 12h1"/><path d="M18.5 4.5 18 5"/><path d="M2 12h1"/><path d="M12 2v1"/><path d="m4.929 4.929.707.707"/><path d="M12 12v6"/></svg>,
+  Phone: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
+  Mic: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>,
+  Send: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>,
+  File: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>,
+  Camera: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>,
+  Video: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2" ry="2"/></svg>,
+  MapPin: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M20 10c0 7-8 13-8 13s-8-6-8-13a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>,
+  ArrowLeft: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>,
+  Download: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>,
+  Print: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>,
+  Layout: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg>,
+  Check: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><polyline points="20 6 9 17 4 12"/></svg>,
+  ChevronDown: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><polyline points="6 9 12 15 18 9"/></svg>,
+  Settings: (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>,
+};
 
-  <div class="main">
-    <!-- EMERGENCIES -->
-    <div id="pg-e" style="display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;">
-      <div class="topbar">
-        <div class="topbar-bc"><span class="crumb">CareLink</span><span class="sep"> › </span><span class="page">Active Emergencies</span></div>
-        <div class="topbar-r">
-          <div class="sw"><span class="mio">search</span><input class="si" placeholder="Search emergencies…" oninput="eSearch(this.value)"></div>
-          <button class="btn btn-pri" onclick="openPanel('create-e',null)"><span class="mi">add</span>Create emergency</button>
-        </div>
-      </div>
-      <div class="page-area">
-        <div class="tbl-card">
-          <table class="tbl"><thead><tr><th>Resident</th><th>Status</th><th>Emergency Type</th><th>Description</th><th>Room</th><th>Time of Emergency</th></tr></thead>
-          <tbody id="e-tb"></tbody></table>
-        </div>
-      </div>
-    </div>
-
-    <!-- RESIDENTS -->
-    <div id="pg-r" style="display:none;flex-direction:column;flex:1;min-height:0;overflow:hidden;">
-      <div class="topbar">
-        <div class="topbar-bc"><span class="crumb">CareLink</span><span class="sep"> › </span><span class="page">Resident Management</span></div>
-        <div class="topbar-r">
-          <div class="sw"><span class="mio">search</span><input class="si" placeholder="Search residents…" oninput="rSearch(this.value)"></div>
-          <button class="btn btn-pri" onclick="openPanel('add-r',null)"><span class="mi">add</span>Add resident</button>
-        </div>
-      </div>
-      <div class="page-area">
-        <div class="tbl-card">
-          <table class="tbl"><thead><tr><th>First name</th><th>Last name</th><th>Room</th><th>Date of Birth</th><th>Sex</th><th>Allergies</th></tr></thead>
-          <tbody id="r-tb"></tbody></table>
-        </div>
-      </div>
-    </div>
-
-    <!-- EMPLOYEES -->
-    <div id="pg-p" style="display:none;flex-direction:column;flex:1;min-height:0;overflow:hidden;">
-      <div class="topbar">
-        <div class="topbar-bc"><span class="crumb">CareLink</span><span class="sep"> › </span><span class="page">Employee Management</span></div>
-        <div class="topbar-r">
-          <div class="sw"><span class="mio">search</span><input class="si" placeholder="Search employees…" oninput="pSearch(this.value)"></div>
-          <button class="btn btn-pri" onclick="openPanel('add-p',null)"><span class="mi">add</span>Add employee</button>
-        </div>
-      </div>
-      <div class="page-area">
-        <div class="tbl-card">
-          <table class="tbl"><thead><tr><th>First name</th><th>Last name</th><th>Role</th><th>Department</th><th>Email address</th><th>Phone number</th></tr></thead>
-          <tbody id="p-tb"></tbody></table>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- SCAN PAGE -->
-<div id="view-scan" class="view">
-  <div class="stb">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 75" fill="none"><path d="M59.5 38.4L42.5 0C41.2.3 40 .7 38.8 1.1l10.8 10.7C53 16.2 54.6 22.3 54.6 38.4c0 6.9-2 13.9-6.8 19.2L37.7 68.9c1.3.4 2.6.7 4 .9L59.5 38.4ZM44.7 38.4L23.2 6.9c-.9.8-1.7 1.6-2.5 2.4L26 15.2c3.4 5.3 5.1 11.4 5.1 23.2 0 6.9-2 13.9-6.8 19.3l-4.6 4.5c.8.8 1.7 1.6 2.6 2.2L44.7 38.4ZM13.1 56.3c-.6-1.1-1-2.3-1.4-3.5C16 46.2 15.9 37 11.4 31.3c.4-1.2.9-2.4 1.5-3.5l11 10.6L13.1 56.3Z" fill="#A9EE8A"/></svg>
-    <div><div class="stb-name">CareLink</div><div class="stb-sub">Emergency Response System</div></div>
-  </div>
-  <div class="sbody">
-    <div class="salert">
-      <div class="sai"><span class="mi">emergency</span></div>
-      <div><div class="sat">Emergency Request Form</div><div class="sas">This will immediately alert emergency dispatch. Only use in a real emergency.</div></div>
-    </div>
-    <div class="scard">
-      <div class="sch"><div class="scn" id="sc-name">Loading…</div><div class="scm" id="sc-meta">Green Meadows Care Center</div></div>
-      <div class="scb" id="sc-form">
-        <div class="field"><label class="flbl">Emergency type <span class="req">*</span></label><input class="inp" id="sc-t" placeholder="e.g. Fall, Chest pain, Difficulty breathing"></div>
-        <div class="field"><label class="flbl">Severity <span class="req">*</span></label><select class="sel" id="sc-s"><option value="">Select severity</option><option value="Low">Low — Stable, non-urgent</option><option value="Medium">Medium — Needs attention soon</option><option value="High">High — Urgent</option><option value="Critical">Critical — Life-threatening</option></select></div>
-        <div class="field"><label class="flbl">Description</label><textarea class="ta" id="sc-d" placeholder="Describe what you observe…"></textarea></div>
-        <div class="field"><label class="flbl">Your name <span class="req">*</span></label><input class="inp" id="sc-n" placeholder="Nurse / staff name"></div>
-        <button class="ssub" onclick="submitScan()"><span class="mi">emergency</span>Submit Emergency Request</button>
-      </div>
-      <div class="sok" id="sc-ok">
-        <div class="sokc"><span class="mi">check</span></div>
-        <div class="sokt">Emergency Request Sent</div>
-        <div class="soks">Your request has been received. Help is on the way. Stay with the resident.</div>
-        <div style="padding:7px 11px;background:var(--s2);border-radius:4px;font-size:12px;display:flex;align-items:center;gap:6px;margin-top:4px;"><span class="pulse"></span><span class="muted">Waiting for dispatcher to accept…</span></div>
-      </div>
-    </div>
-    <div class="sftr">CareLink · Green Meadows Care Center<br><strong>If life-threatening — also call 911 immediately.</strong></div>
-  </div>
-</div>
-
-<!-- SINGLE PANEL -->
-<div class="pscrim" id="pscrim" onclick="closePanel()"></div>
-<div class="panel" id="main-panel">
-  <div class="ph">
-    <span class="ph-title" id="panel-title">Details</span>
-    <div class="ph-right">
-      <div id="panel-badges" style="display:flex;gap:5px;"></div>
-      <button class="ph-close" onclick="closePanel()"><span class="mi">close</span></button>
-    </div>
-  </div>
-  <div class="pbody" id="panel-body"></div>
-  <div class="pfooter" id="panel-footer"></div>
-</div>
-
-<script>
-/* ═══ DATA ═══ */
-const RES=[
-  {id:'R001',fn:'Jennifer',ln:'Villanueva',rm:'200A',db:'1954-03-12',sx:'Female',bl:'A+',al:'Penicillin',ec:'Claude Bogisich · 660-660-5742',nt:'History of hypertension. On blood thinners.'},
-  {id:'R002',fn:'Brian',ln:'Johnson',rm:'200B',db:'1935-07-24',sx:'Male',bl:'O+',al:'None',ec:'Sandra Johnson · 555-234-5678',nt:'Diabetic. Check blood sugar regularly.'},
-  {id:'R003',fn:'Alexis',ln:'Cole',rm:'200C',db:'1955-11-03',sx:'Female',bl:'B-',al:'Latex',ec:'Mark Cole · 555-345-6789',nt:'Recent hip replacement. Fall risk.'},
-  {id:'R004',fn:'Kristen',ln:'Graves',rm:'200D',db:'1941-06-15',sx:'Female',bl:'AB+',al:'Sulfa drugs',ec:'Tom Graves · 555-456-7890',nt:'Mild dementia. Requires supervision.'},
-  {id:'R005',fn:'Leslie',ln:'Hogan',rm:'200E',db:'1936-09-28',sx:'Female',bl:'A-',al:'None',ec:'Amy Hogan · 555-567-8901',nt:'COPD. Has rescue inhaler nearby.'},
-  {id:'R006',fn:'Tammy',ln:'Orr',rm:'200F',db:'1950-02-18',sx:'Female',bl:'O-',al:'Aspirin',ec:'Joel Orr · 555-678-9012',nt:'Pacemaker. No MRI.'},
-  {id:'R007',fn:'Brett',ln:'Cooper',rm:'200G',db:'1950-12-05',sx:'Male',bl:'B+',al:'None',ec:'Lisa Cooper · 555-789-0123',nt:'Post-stroke. Limited mobility right side.'},
-  {id:'R008',fn:'Dakota',ln:'Garcia',rm:'200H',db:'1951-04-22',sx:'Male',bl:'A+',al:'Codeine',ec:'Maria Garcia · 555-890-1234',nt:'Anxiety disorder.'},
-  {id:'R009',fn:'Ryan',ln:'Daniel',rm:'200I',db:'1931-08-11',sx:'Female',bl:'O+',al:'None',ec:'Peter Daniel · 555-901-2345',nt:'Very frail.'},
-  {id:'R010',fn:'Alicia',ln:'Brown',rm:'200J',db:'1951-05-30',sx:'Female',bl:'AB-',al:'None',ec:'George Brown · 555-012-3456',nt:"Early Parkinson's."},
-  {id:'R011',fn:'Juan',ln:'Robinson',rm:'200K',db:'1946-10-07',sx:'Male',bl:'A+',al:'Shellfish',ec:'Carlos Robinson · 555-111-2222',nt:'Hearing impaired.'},
-  {id:'R012',fn:'Christopher',ln:'Scott',rm:'200L',db:'1927-01-19',sx:'Male',bl:'B+',al:'None',ec:'Helen Scott · 555-222-3333',nt:'Recovering from pneumonia.'},
-  {id:'R013',fn:'Andrew',ln:'Crosby',rm:'200M',db:'1956-03-14',sx:'Male',bl:'O+',al:'Morphine',ec:'Nancy Crosby · 555-333-4444',nt:'Prior cardiac history.'},
-  {id:'R014',fn:'John',ln:'Jones',rm:'200N',db:'1954-07-29',sx:'Male',bl:'A-',al:'None',ec:'Mary Jones · 555-444-5555',nt:'Visually impaired.'},
-  {id:'R015',fn:'Lisa',ln:'Armstrong',rm:'200P',db:'1949-02-04',sx:'Female',bl:'O+',al:'None',ec:'Paul Armstrong · 555-666-7777',nt:'Type 2 diabetes.'},
-  {id:'R016',fn:'Tiffany',ln:'Jensen',rm:'200Q',db:'1939-05-17',sx:'Female',bl:'A+',al:'None',ec:'Carl Jensen · 555-777-8888',nt:'Mild cognitive impairment.'},
-  {id:'R017',fn:'Eric',ln:'Barnes',rm:'200R',db:'1948-09-03',sx:'Male',bl:'AB+',al:'Latex',ec:'Sara Barnes · 555-888-9999',nt:'Requires oxygen at night.'},
-  {id:'R018',fn:'Michael',ln:'Diaz',rm:'200S',db:'1935-12-16',sx:'Male',bl:'O-',al:'None',ec:'Carmen Diaz · 555-999-0000',nt:'Pacemaker.'},
-  {id:'R019',fn:'Nathan',ln:'Benjamin',rm:'200T',db:'1931-06-25',sx:'Male',bl:'B+',al:'Penicillin',ec:'Rachel Benjamin · 555-100-2000',nt:'End-stage renal disease. Dialysis 3x/week.'},
-  {id:'R020',fn:'Sofia',ln:'Martinez',rm:'201A',db:'1943-11-08',sx:'Female',bl:'A+',al:'None',ec:'Luis Martinez · 555-201-3040',nt:'Recent cataract surgery.'},
-];
-const EMG=[
-  {id:'E001',rid:'R001',tp:'Fall, Hip injury',ds:'Resident fell in bathroom, possible hip injury',rm:'200A',ts:new Date(Date.now()-120000),st:'New',sv:'High',ch:[{w:'Dispatcher',m:'Unit dispatched. ETA 4 minutes.',t:new Date(Date.now()-90000)}]},
-  {id:'E002',rid:'R002',tp:'Allergic reaction',ds:'Skin rash developed, possible allergic reaction',rm:'200B',ts:new Date(Date.now()-300000),st:'New',sv:'Medium',ch:[]},
-  {id:'E003',rid:'R003',tp:'Migraine, Headache',ds:'Severe headache, history of migraines',rm:'200C',ts:new Date(Date.now()-600000),st:'New',sv:'Medium',ch:[]},
-  {id:'E004',rid:'R004',tp:'Dizziness, Dehydration',ds:'Patient reported dizziness, potential dehydration',rm:'200D',ts:new Date(Date.now()-900000),st:'Accepted',sv:'Low',ch:[{w:'Dispatcher',m:'CFS accepted. Unit 1002 assigned.',t:new Date(Date.now()-840000)},{w:'Nurse Sarah',m:'Patient is still dizzy, gave water.',t:new Date(Date.now()-720000)}]},
-  {id:'E005',rid:'R005',tp:'Asthma, Breathing issue',ds:'Shortness of breath, possible asthma attack',rm:'200E',ts:new Date(Date.now()-1020000),st:'Accepted',sv:'High',ch:[{w:'Dispatcher',m:'Paramedics en route. Keep patient calm.',t:new Date(Date.now()-960000)}]},
-  {id:'E006',rid:'R007',tp:'Stroke symptoms',ds:'New onset of confusion, possible stroke symptoms',rm:'200G',ts:new Date(Date.now()-1800000),st:'Closed',sv:'Critical',ch:[{w:'Dispatcher',m:'CFS closed. Patient transported.',t:new Date(Date.now()-900000)}]},
-  {id:'E007',rid:'R010',tp:'Chest pain',ds:'Chest pain radiating to left arm',rm:'200J',ts:new Date(Date.now()-2700000),st:'Closed',sv:'High',ch:[]},
-  {id:'E008',rid:'R012',tp:'Headache, Disoriented',ds:'Severe headache with nausea',rm:'200L',ts:new Date(Date.now()-3600000),st:'Closed',sv:'Medium',ch:[]},
-];
-const EMP=[
-  {id:'P001',fn:'Sylvia',ln:'Walker',rl:'Employee',dp:'Therapy',em:'sylvia.walker@greenmeadows.com',ph:'001-444-753-9042'},
-  {id:'P002',fn:'Eric',ln:'Valenzuela',rl:'Administrator',dp:'Medical',em:'eric.v@greenmeadows.com',ph:'(994)101-4744'},
-  {id:'P003',fn:'Ryan',ln:'Skinner',rl:'Administrator',dp:'Care',em:'ryan.skinner@greenmeadows.com',ph:'+1-521-526-8834'},
-  {id:'P004',fn:'Michael',ln:'Goodwin',rl:'Employee',dp:'Medical',em:'m.goodwin@greenmeadows.com',ph:'(613)976-1415'},
-  {id:'P005',fn:'Logan',ln:'Brown',rl:'Administrator',dp:'Therapy',em:'l.brown@greenmeadows.com',ph:'769-391-0091'},
-  {id:'P006',fn:'Mark',ln:'Smith',rl:'Employee',dp:'Administration',em:'mark.smith@greenmeadows.com',ph:'937-505-1032'},
-  {id:'P007',fn:'Julie',ln:'Ritter',rl:'Employee',dp:'Medical',em:'julie.ritter@greenmeadows.com',ph:'+1-351-193-4841'},
-  {id:'P008',fn:'Christina',ln:'Riddle',rl:'Administrator',dp:'Therapy',em:'c.riddle@greenmeadows.com',ph:'9608314830'},
-  {id:'P009',fn:'Steven',ln:'Phillips',rl:'Employee',dp:'Care',em:'s.phillips@greenmeadows.com',ph:'327-560-5604'},
-  {id:'P010',fn:'Amanda',ln:'Moreno',rl:'Administrator',dp:'Administration',em:'a.moreno@greenmeadows.com',ph:'199-509-0932'},
-  {id:'P011',fn:'Hannah',ln:'Andrews',rl:'Administrator',dp:'Care',em:'h.andrews@greenmeadows.com',ph:'+1-002-185-5787'},
-  {id:'P012',fn:'Timothy',ln:'Torres',rl:'Employee',dp:'Administration',em:'t.torres@greenmeadows.com',ph:'152-930-0196'},
-  {id:'P013',fn:'Robert',ln:'Boyd',rl:'Administrator',dp:'Medical',em:'r.boyd@greenmeadows.com',ph:'790-212-3322'},
-  {id:'P014',fn:'Wendy',ln:'Olson',rl:'Employee',dp:'Care',em:'w.olson@greenmeadows.com',ph:'(321)815-3384'},
-  {id:'P015',fn:'Janet',ln:'Young',rl:'Employee',dp:'Therapy',em:'j.young@greenmeadows.com',ph:'(948)206-3718'},
+/* ========================================================================
+   MOCK DATA SEED
+   ======================================================================== */
+const SEED_EMPLOYEES = [
+  { id: 'E001', name: 'Sarah Mitchell',  role: 'Head Nurse',       phone: '(845) 555-0101', email: 'sarah.mitchell@havencare.com',  shift: 'Day' },
+  { id: 'E002', name: 'James Rodriguez',  role: 'Registered Nurse', phone: '(845) 555-0102', email: 'james.rodriguez@havencare.com', shift: 'Day' },
+  { id: 'E003', name: 'Emily Chen',       role: 'LPN',              phone: '(845) 555-0103', email: 'emily.chen@havencare.com',      shift: 'Day' },
+  { id: 'E004', name: 'Michael Thompson', role: 'CNA',              phone: '(845) 555-0104', email: 'michael.thompson@havencare.com', shift: 'Night' },
+  { id: 'E005', name: 'Ashley Williams',  role: 'Registered Nurse', phone: '(845) 555-0105', email: 'ashley.williams@havencare.com', shift: 'Night' },
+  { id: 'E006', name: 'David Park',       role: 'LPN',              phone: '(845) 555-0106', email: 'david.park@havencare.com',      shift: 'Evening' },
+  { id: 'E007', name: 'Jessica Brown',    role: 'CNA',              phone: '(845) 555-0107', email: 'jessica.brown@havencare.com',   shift: 'Evening' },
+  { id: 'E008', name: 'Daniel Cohen',     role: 'Registered Nurse', phone: '(845) 555-0108', email: 'daniel.cohen@havencare.com',    shift: 'Day' },
+  { id: 'E009', name: 'Maria Gonzalez',   role: 'LPN',              phone: '(845) 555-0109', email: 'maria.gonzalez@havencare.com',  shift: 'Night' },
+  { id: 'E010', name: 'Robert Singh',     role: 'CNA',              phone: '(845) 555-0110', email: 'robert.singh@havencare.com',    shift: 'Day' },
+  { id: 'E011', name: 'Linda Foster',     role: 'Head Nurse',       phone: '(845) 555-0111', email: 'linda.foster@havencare.com',    shift: 'Evening' },
+  { id: 'E012', name: 'Kevin O\u2019Brien', role: 'Registered Nurse', phone: '(845) 555-0112', email: 'kevin.obrien@havencare.com',  shift: 'Day' },
 ];
 
-/* ═══ STATE ═══ */
-let _eq='',_rq='',_pq='',_ctx=null,_qrr=null;
+const SEED_RESIDENTS = [
+  { id: 'R001', name: 'Margaret Williams',   room: '101', age: 84, dob: '1941-03-12', gender: 'Female', conditions: 'Hypertension, Type 2 Diabetes', emergencyContact: 'John Williams (Son)',   contactPhone: '(845) 555-0201' },
+  { id: 'R002', name: 'Robert Johnson',      room: '102', age: 79, dob: '1946-07-22', gender: 'Male',   conditions: 'COPD, Arthritis',                emergencyContact: 'Mary Johnson (Daughter)', contactPhone: '(845) 555-0202' },
+  { id: 'R003', name: 'Dorothy Anderson',    room: '103', age: 87, dob: '1938-11-04', gender: 'Female', conditions: 'Alzheimer\u2019s, Hypertension',  emergencyContact: 'Susan Anderson (Daughter)', contactPhone: '(845) 555-0203' },
+  { id: 'R004', name: 'Charles Davis',       room: '104', age: 81, dob: '1944-02-18', gender: 'Male',   conditions: 'Heart Disease, Diabetes',          emergencyContact: 'James Davis (Son)',     contactPhone: '(845) 555-0204' },
+  { id: 'R005', name: 'Helen Martinez',      room: '201', age: 76, dob: '1949-09-30', gender: 'Female', conditions: 'Osteoporosis, Anxiety',            emergencyContact: 'Carlos Martinez (Son)', contactPhone: '(845) 555-0205' },
+  { id: 'R006', name: 'William Brown',       room: '202', age: 89, dob: '1936-05-14', gender: 'Male',   conditions: 'Dementia, Mobility issues',        emergencyContact: 'Patricia Brown (Wife)', contactPhone: '(845) 555-0206' },
+  { id: 'R007', name: 'Elizabeth Wilson',    room: '203', age: 82, dob: '1943-08-08', gender: 'Female', conditions: 'Parkinson\u2019s, Hypertension',   emergencyContact: 'Tom Wilson (Son)',      contactPhone: '(845) 555-0207' },
+  { id: 'R008', name: 'George Taylor',       room: '204', age: 77, dob: '1948-12-25', gender: 'Male',   conditions: 'CHF, Stroke history',              emergencyContact: 'Helen Taylor (Daughter)', contactPhone: '(845) 555-0208' },
+  { id: 'R009', name: 'Patricia Moore',      room: '301', age: 85, dob: '1940-04-17', gender: 'Female', conditions: 'Cancer remission, Hypertension',   emergencyContact: 'Lisa Moore (Daughter)', contactPhone: '(845) 555-0209' },
+  { id: 'R010', name: 'Frank Garcia',        room: '302', age: 80, dob: '1945-10-11', gender: 'Male',   conditions: 'Diabetes, Kidney disease',         emergencyContact: 'Anna Garcia (Wife)',    contactPhone: '(845) 555-0210' },
+  { id: 'R011', name: 'Barbara Thomas',      room: '303', age: 78, dob: '1947-06-23', gender: 'Female', conditions: 'Arthritis, Depression',            emergencyContact: 'David Thomas (Son)',    contactPhone: '(845) 555-0211' },
+  { id: 'R012', name: 'Edward Jackson',      room: '304', age: 83, dob: '1942-01-09', gender: 'Male',   conditions: 'COPD, Atrial fibrillation',        emergencyContact: 'Carol Jackson (Wife)',  contactPhone: '(845) 555-0212' },
+];
 
-/* ═══ ROUTING ═══ */
-function sv(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');}
-function showPage(p){['e','r','p'].forEach(n=>{document.getElementById('pg-'+n).style.display=n===p?'flex':'none';document.getElementById('si-'+n).classList.toggle('active',n===p);});if(p==='e')redE();if(p==='r')redR();if(p==='p')redP();}
-function doLogin(){sv('view-app');redE();}
-function doLogout(){sv('view-login');}
+const SEED_CFS = [
+  // a couple of historical/completed CFS so the active CFS page isn't empty
+  {
+    id: 'CFS000005',
+    refNumber: '260500005',
+    residentId: 'R005',
+    employeeName: 'Sarah Mitchell',
+    employeeManual: false,
+    emergencyType: 'Fall',
+    severity: 'medium',
+    description: 'Resident slipped getting out of bed. Conscious, complaining of hip pain.',
+    status: 'active',
+    createdAt: Date.now() - 1000 * 60 * 12, // 12 min ago
+    source: 'system',
+    location: '500 Haven Way, Spring Valley, NY 10977',
+    callerNumber: '(845) 555-0000',
+    messages: [
+      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 12 },
+      { from: 'caller', text: 'Fall — medium severity. Resident slipped getting out of bed. Conscious, complaining of hip pain.', ts: Date.now() - 1000 * 60 * 11 },
+      { from: 'caller', type: 'location', address: '500 Haven Way, Spring Valley, NY 10977 — Room 201', ts: Date.now() - 1000 * 60 * 11 },
+      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 10 },
+    ],
+  },
+  {
+    id: 'CFS000004',
+    refNumber: '260500004',
+    residentId: 'R002',
+    employeeName: 'James Rodriguez',
+    employeeManual: false,
+    emergencyType: 'Difficulty breathing',
+    severity: 'high',
+    description: 'Resident with COPD experiencing acute shortness of breath. O2 sat 88%.',
+    status: 'active',
+    createdAt: Date.now() - 1000 * 60 * 3, // 3 min ago
+    source: 'qr',
+    location: '500 Haven Way, Spring Valley, NY 10977',
+    callerNumber: '(845) 555-0000',
+    messages: [
+      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 3 },
+      { from: 'caller', text: 'Difficulty breathing — high severity. Resident with COPD experiencing acute shortness of breath. O2 sat 88%.', ts: Date.now() - 1000 * 60 * 3 + 5000 },
+      { from: 'caller', type: 'location', address: '500 Haven Way, Spring Valley, NY 10977 — Room 102', ts: Date.now() - 1000 * 60 * 3 + 6000 },
+      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 2 },
+    ],
+  },
+  {
+    id: 'CFS000003',
+    refNumber: '260500003',
+    residentId: 'R007',
+    employeeName: 'Emily Chen',
+    employeeManual: false,
+    emergencyType: 'Chest pain',
+    severity: 'high',
+    description: 'Acute chest pain radiating to left arm. History of cardiac issues.',
+    status: 'closed',
+    createdAt: Date.now() - 1000 * 60 * 60 * 26, // yesterday
+    source: 'system',
+    location: '500 Haven Way, Spring Valley, NY 10977',
+    callerNumber: '(845) 555-0000',
+    messages: [
+      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 60 * 26 },
+      { from: 'caller', text: 'Chest pain — high severity. Acute chest pain radiating to left arm. History of cardiac issues.', ts: Date.now() - 1000 * 60 * 60 * 26 + 5000 },
+      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 60 * 26 + 30000 },
+      { from: 'caller', text: 'EMS arrived 8 minutes after dispatch. Resident transported to Good Samaritan Hospital.', ts: Date.now() - 1000 * 60 * 60 * 25 },
+    ],
+  },
+  {
+    id: 'CFS000002',
+    refNumber: '260500002',
+    residentId: 'R010',
+    employeeName: 'Michael Thompson',
+    employeeManual: false,
+    emergencyType: 'Diabetic emergency',
+    severity: 'medium',
+    description: 'Blood sugar 42 mg/dL. Resident confused, sweating.',
+    status: 'closed',
+    createdAt: Date.now() - 1000 * 60 * 60 * 52,
+    source: 'system',
+    location: '500 Haven Way, Spring Valley, NY 10977',
+    callerNumber: '(845) 555-0000',
+    messages: [
+      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 60 * 52 },
+      { from: 'caller', text: 'Diabetic emergency — medium severity. Blood sugar 42 mg/dL. Resident confused, sweating.', ts: Date.now() - 1000 * 60 * 60 * 52 + 5000 },
+      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 60 * 52 + 20000 },
+    ],
+  },
+  {
+    id: 'CFS000001',
+    refNumber: '260500001',
+    residentId: 'R001',
+    employeeName: 'Ashley Williams',
+    employeeManual: false,
+    emergencyType: 'Allergic reaction',
+    severity: 'low',
+    description: 'Mild allergic reaction to new medication. Hives, no breathing issues.',
+    status: 'closed',
+    createdAt: Date.now() - 1000 * 60 * 60 * 78,
+    source: 'qr',
+    location: '500 Haven Way, Spring Valley, NY 10977',
+    callerNumber: '(845) 555-0000',
+    messages: [
+      { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: Date.now() - 1000 * 60 * 60 * 78 },
+      { from: 'caller', text: 'Allergic reaction — low severity. Mild allergic reaction to new medication. Hives, no breathing issues.', ts: Date.now() - 1000 * 60 * 60 * 78 + 5000 },
+      { from: 'dispatcher', text: 'Help is on the way. Can you provide more details about the situation?', ts: Date.now() - 1000 * 60 * 60 * 78 + 20000 },
+    ],
+  },
+];
 
-/* ═══ HELPERS ═══ */
-function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,4);}
-function ago(d){const s=Math.floor((Date.now()-d)/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
-function gr(id){return RES.find(r=>r.id===id);}
-function h(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function toast(msg,type='ok'){const el=document.createElement('div');el.className='toast '+type;el.innerHTML=`<span class="mi tic">${type==='ok'?'check_circle':'error'}</span><span>${h(msg)}</span>`;document.getElementById('toasts').appendChild(el);setTimeout(()=>el.remove(),3000);}
-function svb(s){const m={Critical:'bcrit',High:'bhigh',Medium:'bmed',Low:'blow'};return`<span class="bdg ${m[s]||'blow'}">${h(s)}</span>`;}
+const NURSING_HOME = {
+  name: 'HavenCare Senior Living',
+  address: '500 Haven Way, Spring Valley, NY 10977',
+  callerNumber: '(845) 555-0000',
+};
 
-/* ═══ CONTEXT MENU ═══ */
-function rmCtx(){if(_ctx){_ctx.remove();_ctx=null;}}
-document.addEventListener('click',rmCtx);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){rmCtx();closePanel();}});
-function showCtx(e,items){
-  e.preventDefault();e.stopPropagation();rmCtx();
-  const m=document.createElement('div');m.className='ctx';
-  items.forEach(it=>{
-    if(it==='-'){const s=document.createElement('div');s.className='ctx-sep';m.appendChild(s);}
-    else{const b=document.createElement('button');b.className='cxi'+(it.danger?' danger':'');b.innerHTML=`<span class="${it.oi?'mio':'mi'}">${it.icon}</span>${h(it.label)}`;b.onclick=ev=>{ev.stopPropagation();rmCtx();it.action();};m.appendChild(b);}
+/* ========================================================================
+   PERSISTENCE
+   ======================================================================== */
+const STORAGE_KEY = 'havencare-ems-v1';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+}
+
+function saveState(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+}
+
+/* ========================================================================
+   HELPERS
+   ======================================================================== */
+function timeAgo(ts) {
+  const diff = Date.now() - ts;
+  const sec = Math.floor(diff/1000);
+  if (sec < 60) return `${sec}s ago`;
+  const min = Math.floor(sec/60);
+  if (min < 60) return `${min} min ago`;
+  const hr = Math.floor(min/60);
+  if (hr < 24) return `${hr}h ago`;
+  const d = Math.floor(hr/24);
+  return `${d}d ago`;
+}
+
+function formatTime(ts) {
+  const d = new Date(ts);
+  let h = d.getHours();
+  const m = String(d.getMinutes()).padStart(2,'0');
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${String(h).padStart(2,'0')}:${m} ${ampm}`;
+}
+
+function formatDate(ts) {
+  const d = new Date(ts);
+  return `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}/${d.getFullYear()}`;
+}
+
+function nextCfsId(cfsList) {
+  let max = 0;
+  cfsList.forEach(c => {
+    const n = parseInt(c.id.replace('CFS',''), 10);
+    if (n > max) max = n;
   });
-  document.body.appendChild(m);_ctx=m;
-  const vw=window.innerWidth,vh=window.innerHeight,mw=m.offsetWidth,mh=m.offsetHeight;
-  m.style.left=(e.clientX+mw>vw?e.clientX-mw:e.clientX)+'px';
-  m.style.top=(e.clientY+mh>vh?e.clientY-mh:e.clientY)+'px';
+  return 'CFS' + String(max+1).padStart(6, '0');
+}
+function nextRefNumber(cfsList) {
+  let max = 260500000;
+  cfsList.forEach(c => {
+    const n = parseInt(c.refNumber, 10);
+    if (n > max) max = n;
+  });
+  return String(max+1);
 }
 
-/* ═══ SINGLE PANEL ENGINE ═══ */
-function openPanel(type, id){
-  const panel=document.getElementById('main-panel');
-  const body=document.getElementById('panel-body');
-  const footer=document.getElementById('panel-footer');
-  const title=document.getElementById('panel-title');
-  const badges=document.getElementById('panel-badges');
-  badges.innerHTML='';
+function severityLabel(s) {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+}
 
-  /* scroll to top */
-  body.scrollTop=0;
+/* ========================================================================
+   ROOT APP — routes between Desktop dashboard and Mobile QR flow
+   ======================================================================== */
+function App() {
+  // Persistent state
+  const initial = loadState();
+  const [employees, setEmployees] = useState(initial?.employees || SEED_EMPLOYEES);
+  const [residents, setResidents] = useState(initial?.residents || SEED_RESIDENTS);
+  const [cfsList, setCfsList]     = useState(initial?.cfsList   || SEED_CFS);
 
-  if(type==='view-e'){
-    const e=EMG.find(x=>x.id===id);if(!e)return;
-    const r=gr(e.rid);const nm=r?r.fn+' '+r.ln:'Unknown';
-    const bc=e.st==='New'?'bn':e.st==='Accepted'?'ba':'bc';
-    title.textContent=nm;
-    badges.innerHTML=`<span class="bdg ${bc}">${e.st}</span>${svb(e.sv)}`;
-    const chatHtml=e.ch.length?e.ch.map(c=>`<div class="msg ${c.w==='Dispatcher'||c.w==='System'?'in':'out'}"><div class="mmeta">${h(c.w)} · ${ago(c.t)}</div><div class="mbubble">${h(c.m)}</div></div>`).join(''):'<p style="text-align:center;font-size:12px;color:var(--fg3);padding:18px 0">No messages yet</p>';
-    body.innerHTML=`
-      <div class="psec-group">
-        <div class="psec">Emergency details</div>
-        <div class="kvg">
-          <div class="kv"><div class="kv-k">Emergency type</div><div class="kv-v">${h(e.tp)}</div></div>
-          <div class="kv"><div class="kv-k">Severity</div><div class="kv-v">${svb(e.sv)}</div></div>
-          <div class="kv"><div class="kv-k">Room</div><div class="kv-v">${e.rm}</div></div>
-          <div class="kv"><div class="kv-k">Time of emergency</div><div class="kv-v">${ago(e.ts)}</div></div>
-          <div class="kv full"><div class="kv-k">Description</div><div class="kv-v" style="color:var(--fg2);line-height:1.5">${h(e.ds)}</div></div>
+  // Save state on change
+  useEffect(() => {
+    saveState({ employees, residents, cfsList });
+  }, [employees, residents, cfsList]);
+
+  // URL-based routing: ?resident=R001 => mobile QR flow; otherwise desktop dashboard
+  const [routeParams, setRouteParams] = useState(() => new URLSearchParams(window.location.search));
+  useEffect(() => {
+    const handler = () => setRouteParams(new URLSearchParams(window.location.search));
+    window.addEventListener('popstate', handler);
+    return () => window.removeEventListener('popstate', handler);
+  }, []);
+
+  const residentParam = routeParams.get('resident');
+  const cfsParam = routeParams.get('cfs');
+
+  // Tick every 15s to refresh timestamps and trigger auto dispatcher messages
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t+1), 15000);
+    return () => clearInterval(id);
+  }, []);
+
+  // CFS helpers exposed via context-like prop drilling
+  const addCfs = useCallback((cfs) => {
+    setCfsList(prev => [cfs, ...prev]);
+  }, []);
+  const updateCfs = useCallback((id, updater) => {
+    setCfsList(prev => prev.map(c => c.id === id ? updater(c) : c));
+  }, []);
+
+  // If URL has resident param => render mobile QR/emergency flow
+  if (residentParam) {
+    const resident = residents.find(r => r.id === residentParam);
+    return (
+      <MobileQRFlow
+        resident={resident}
+        residentParam={residentParam}
+        employees={employees}
+        nursingHome={NURSING_HOME}
+        cfsList={cfsList}
+        addCfs={addCfs}
+        updateCfs={updateCfs}
+        cfsParam={cfsParam}
+        tick={tick}
+      />
+    );
+  }
+
+  // Otherwise: desktop dashboard
+  return (
+    <DesktopDashboard
+      employees={employees} setEmployees={setEmployees}
+      residents={residents} setResidents={setResidents}
+      cfsList={cfsList} addCfs={addCfs} updateCfs={updateCfs}
+      nursingHome={NURSING_HOME}
+      tick={tick}
+    />
+  );
+}
+
+/* ========================================================================
+   DESKTOP DASHBOARD
+   ======================================================================== */
+function DesktopDashboard({ employees, setEmployees, residents, setResidents, cfsList, addCfs, updateCfs, nursingHome, tick }) {
+  const [page, setPage] = useState('cfs'); // cfs | residents | employees
+  const [emergencyOpen, setEmergencyOpen] = useState(false);
+  const [openCfsId, setOpenCfsId] = useState(null);
+  const [qrResidentId, setQrResidentId] = useState(null);
+
+  const openCfs = cfsList.find(c => c.id === openCfsId);
+
+  // Simulated dispatcher auto-replies: any active CFS gets a follow-up after a while
+  useEffect(() => {
+    cfsList.forEach(cfs => {
+      if (cfs.status !== 'active') return;
+      const lastMsg = cfs.messages[cfs.messages.length - 1];
+      if (!lastMsg) return;
+      // If last message is from caller and >20s old, dispatcher replies (once)
+      if (lastMsg.from === 'caller' && Date.now() - lastMsg.ts > 20000 && !cfs._autoReplied) {
+        const replies = [
+          'Copy that. Please keep the resident still and monitor their breathing.',
+          'Understood. EMS is en route, approximate arrival 6 minutes.',
+          'Thank you for the update. Is the resident currently conscious and responsive?',
+          'Acknowledged. Please unlock the main entrance for EMS personnel.',
+          'Got it. Have someone meet EMS at the front door if possible.',
+        ];
+        const reply = replies[Math.floor(Math.random() * replies.length)];
+        updateCfs(cfs.id, c => ({
+          ...c,
+          _autoReplied: true,
+          messages: [...c.messages, { from: 'dispatcher', text: reply, ts: Date.now() }],
+        }));
+      }
+    });
+  }, [tick, cfsList, updateCfs]);
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0a] text-white flex">
+      {/* Sidebar */}
+      <aside className="w-64 bg-[#0f0f0f] border-r border-[#1f1f1f] flex flex-col">
+        <div className="p-5 border-b border-[#1f1f1f]">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
+              <Icon.Siren className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <div className="font-semibold text-[15px] tracking-tight">HavenCare</div>
+              <div className="text-[11px] text-gray-500">EMS Portal</div>
+            </div>
+          </div>
+        </div>
+
+        <nav className="flex-1 p-3 space-y-0.5">
+          <SidebarLink active={page==='cfs'} onClick={()=>setPage('cfs')} icon={<Icon.Siren className="w-4 h-4"/>} label="Active CFS" badge={cfsList.filter(c=>c.status==='active').length} />
+          <SidebarLink active={page==='residents'} onClick={()=>setPage('residents')} icon={<Icon.Bed className="w-4 h-4"/>} label="Residents" />
+          <SidebarLink active={page==='employees'} onClick={()=>setPage('employees')} icon={<Icon.Users className="w-4 h-4"/>} label="Employees" />
+        </nav>
+
+        <div className="p-3 border-t border-[#1f1f1f]">
+          <div className="px-3 py-2.5 rounded-lg bg-[#161616] border border-[#1f1f1f]">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-primary flex items-center justify-center text-xs font-semibold">SM</div>
+              <div className="min-w-0">
+                <div className="text-[13px] font-medium truncate">Sarah Mitchell</div>
+                <div className="text-[11px] text-gray-500 truncate">Administrator</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main */}
+      <main className="flex-1 flex flex-col min-w-0">
+        {/* Top bar */}
+        <header className="h-16 border-b border-[#1f1f1f] flex items-center justify-between px-7 bg-[#0a0a0a]/80 backdrop-blur sticky top-0 z-30">
+          <div>
+            <h1 className="text-[18px] font-semibold tracking-tight">
+              {page==='cfs' && 'Active Calls for Service'}
+              {page==='residents' && 'Residents'}
+              {page==='employees' && 'Employees'}
+            </h1>
+            <div className="text-[12px] text-gray-500 mt-0.5">{nursingHome.name} · {nursingHome.address}</div>
+          </div>
+          <button
+            onClick={()=>setEmergencyOpen(true)}
+            className="btn-primary px-4 py-2.5 rounded-lg font-semibold text-[13px] flex items-center gap-2 shadow-lg shadow-primary/20 transition"
+          >
+            <Icon.Siren className="w-4 h-4"/>
+            Contact Emergency Services
+          </button>
+        </header>
+
+        {/* Page content */}
+        <div className="flex-1 overflow-auto">
+          {page === 'cfs' && (
+            <ActiveCFSPage
+              cfsList={cfsList}
+              residents={residents}
+              onOpenCfs={setOpenCfsId}
+              onCloseCfs={(id) => updateCfs(id, c => ({...c, status:'closed'}))}
+            />
+          )}
+          {page === 'residents' && (
+            <ResidentsPage
+              residents={residents} setResidents={setResidents}
+              onShowQR={setQrResidentId}
+            />
+          )}
+          {page === 'employees' && (
+            <EmployeesPage employees={employees} setEmployees={setEmployees}/>
+          )}
+        </div>
+      </main>
+
+      {/* Modals */}
+      {emergencyOpen && (
+        <EmergencyFormModal
+          mode="desktop"
+          residents={residents}
+          employees={employees}
+          nursingHome={nursingHome}
+          onClose={()=>setEmergencyOpen(false)}
+          onSubmit={(cfs) => {
+            addCfs(cfs);
+            setEmergencyOpen(false);
+            setOpenCfsId(cfs.id);
+          }}
+        />
+      )}
+      {openCfs && (
+        <CfsDetailModal
+          cfs={openCfs}
+          resident={residents.find(r=>r.id===openCfs.residentId)}
+          onClose={()=>setOpenCfsId(null)}
+          onSendMessage={(text) => {
+            updateCfs(openCfs.id, c => ({
+              ...c, _autoReplied: false,
+              messages: [...c.messages, { from:'caller', text, ts: Date.now() }]
+            }));
+          }}
+          onCloseCfs={() => {
+            updateCfs(openCfs.id, c => ({...c, status:'closed'}));
+            setOpenCfsId(null);
+          }}
+        />
+      )}
+      {qrResidentId && (
+        <QRModal
+          resident={residents.find(r=>r.id===qrResidentId)}
+          nursingHome={nursingHome}
+          onClose={()=>setQrResidentId(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+function SidebarLink({ active, onClick, icon, label, badge }) {
+  return (
+    <button onClick={onClick}
+      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] transition ${active ? 'bg-[#1c1c1c] text-white' : 'text-gray-400 hover:bg-[#161616] hover:text-white'}`}>
+      <span className={active ? 'text-primary' : ''}>{icon}</span>
+      <span className="flex-1 text-left font-medium">{label}</span>
+      {badge > 0 && (
+        <span className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-primary text-white">{badge}</span>
+      )}
+    </button>
+  );
+}
+
+/* ========================================================================
+   ACTIVE CFS PAGE
+   ======================================================================== */
+function ActiveCFSPage({ cfsList, residents, onOpenCfs, onCloseCfs }) {
+  const [filter, setFilter] = useState('active'); // active | all | closed
+  const [search, setSearch] = useState('');
+
+  const filtered = cfsList
+    .filter(c => filter === 'all' ? true : c.status === filter)
+    .filter(c => {
+      if (!search) return true;
+      const q = search.toLowerCase();
+      const r = residents.find(r => r.id === c.residentId);
+      return c.refNumber.includes(q)
+        || c.emergencyType.toLowerCase().includes(q)
+        || (r && r.name.toLowerCase().includes(q))
+        || (r && r.room.includes(q));
+    });
+
+  const stats = {
+    active: cfsList.filter(c=>c.status==='active').length,
+    total: cfsList.length,
+    closed: cfsList.filter(c=>c.status==='closed').length,
+  };
+
+  return (
+    <div className="p-7">
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <StatCard label="Active CFS" value={stats.active} icon={<Icon.Siren className="w-4 h-4"/>} accent />
+        <StatCard label="Total Calls" value={stats.total} icon={<Icon.Phone className="w-4 h-4"/>} />
+        <StatCard label="Closed Today" value={cfsList.filter(c=>c.status==='closed' && Date.now()-c.createdAt < 86400000).length} icon={<Icon.Check className="w-4 h-4"/>} />
+      </div>
+
+      {/* Controls */}
+      <div className="flex items-center justify-between mb-4 gap-3">
+        <div className="flex bg-[#111] border border-[#1f1f1f] rounded-lg p-0.5">
+          {['active','all','closed'].map(f => (
+            <button key={f} onClick={()=>setFilter(f)}
+              className={`px-3.5 py-1.5 text-[12px] font-medium rounded-md capitalize transition ${filter===f ? 'bg-[#222] text-white' : 'text-gray-400 hover:text-white'}`}>
+              {f}
+            </button>
+          ))}
+        </div>
+        <div className="relative flex-1 max-w-sm">
+          <Icon.Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"/>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search by ref, resident, room…"
+            className="w-full bg-[#111] border border-[#1f1f1f] rounded-lg pl-9 pr-3 py-2 text-[13px] focus:outline-none focus:border-[#333]"/>
         </div>
       </div>
-      ${r?`<div class="p-divider"></div>
-      <div class="psec-group">
-        <div class="psec">Resident information</div>
-        <div class="kvg">
-          <div class="kv"><div class="kv-k">Name</div><div class="kv-v">${r.fn} ${r.ln}</div></div>
-          <div class="kv"><div class="kv-k">Room</div><div class="kv-v">${r.rm}</div></div>
-          <div class="kv"><div class="kv-k">Date of birth</div><div class="kv-v">${r.db||'—'}</div></div>
-          <div class="kv"><div class="kv-k">Blood type</div><div class="kv-v">${r.bl||'—'}</div></div>
-          <div class="kv full"><div class="kv-k">Allergies</div><div class="kv-v" style="color:${r.al&&r.al!=='None'?'#fca5a5':'var(--fg)'}">${r.al||'None'}</div></div>
-          <div class="kv full"><div class="kv-k">Emergency contact</div><div class="kv-v">${r.ec||'—'}</div></div>
-          ${r.nt?`<div class="kv full"><div class="kv-k">Medical notes</div><div class="kv-v" style="color:var(--fg2);line-height:1.5">${h(r.nt)}</div></div>`:''}
-        </div>
-      </div>`:''}
-      <div class="p-divider"></div>
-      <div class="psec-group">
-        <div class="psec" style="display:flex;align-items:center;gap:6px">Dispatcher chat <span class="pulse"></span></div>
-        <div class="chatbox">
-          <div class="chat-msgs" id="cm-${e.id}">${chatHtml}</div>
-          <div class="chat-row"><input class="chat-inp" id="ci-${e.id}" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendChat('${e.id}')"><button class="btn btn-pri" style="height:26px;padding:0 8px;font-size:11px" onclick="sendChat('${e.id}')"><span class="mi">send</span></button></div>
-        </div>
-      </div>`;
-    footer.innerHTML = e.st==='Accepted'
-      ? `<button class="pf-main" onclick="closeE('${e.id}')">Mark as Closed</button><button class="pf-sec" onclick="closePanel()">Close</button>`
-      : `<button class="pf-sec" style="border-top:none" onclick="closePanel()">Close</button>`;
-  }
 
-  else if(type==='view-r'){
-    const r=RES.find(x=>x.id===id);if(!r)return;
-    const hist=EMG.filter(e=>e.rid===id).sort((a,b)=>b.ts-a.ts);
-    const bc=s=>s==='New'?'bn':s==='Accepted'?'ba':'bc';
-    title.textContent=r.fn+' '+r.ln;
-    body.innerHTML=`
-      <div class="psec-group">
-        <div class="psec">Personal information</div>
-        <div class="kvg">
-          <div class="kv"><div class="kv-k">First name</div><div class="kv-v">${r.fn}</div></div>
-          <div class="kv"><div class="kv-k">Last name</div><div class="kv-v">${r.ln}</div></div>
-          <div class="kv"><div class="kv-k">Room</div><div class="kv-v">${r.rm}</div></div>
-          <div class="kv"><div class="kv-k">Date of birth</div><div class="kv-v">${r.db||'—'}</div></div>
-          <div class="kv"><div class="kv-k">Sex</div><div class="kv-v">${r.sx}</div></div>
-          <div class="kv"><div class="kv-k">Blood type</div><div class="kv-v">${r.bl||'—'}</div></div>
+      {/* Table */}
+      <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-xl overflow-hidden">
+        <div className="grid grid-cols-[110px_1fr_1fr_120px_140px_120px_100px] gap-4 px-5 py-3 border-b border-[#1f1f1f] text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
+          <div>Ref #</div>
+          <div>Resident</div>
+          <div>Emergency</div>
+          <div>Severity</div>
+          <div>Time</div>
+          <div>Source</div>
+          <div>Status</div>
+        </div>
+        {filtered.length === 0 ? (
+          <div className="py-16 text-center text-gray-500 text-sm">
+            No calls match the current filter.
+          </div>
+        ) : filtered.map(c => {
+          const r = residents.find(x => x.id === c.residentId);
+          return (
+            <div key={c.id}
+              onClick={()=>onOpenCfs(c.id)}
+              className="grid grid-cols-[110px_1fr_1fr_120px_140px_120px_100px] gap-4 px-5 py-4 border-b border-[#1a1a1a] hover:bg-[#141414] cursor-pointer transition items-center last:border-0">
+              <div className="text-[12px] font-mono text-gray-300">{c.refNumber}</div>
+              <div className="min-w-0">
+                <div className="text-[13px] font-medium truncate">{r ? r.name : 'Unknown'}</div>
+                <div className="text-[11px] text-gray-500">Room {r ? r.room : '—'}</div>
+              </div>
+              <div className="min-w-0">
+                <div className="text-[13px] truncate">{c.emergencyType}</div>
+                <div className="text-[11px] text-gray-500 truncate">By {c.employeeName}{c.employeeManual ? ' (manual)' : ''}</div>
+              </div>
+              <div>
+                <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase sev-${c.severity}`}>
+                  {severityLabel(c.severity)}
+                </span>
+              </div>
+              <div className="text-[12px] text-gray-400">
+                {timeAgo(c.createdAt)}
+                <div className="text-[10px] text-gray-600">{formatTime(c.createdAt)}</div>
+              </div>
+              <div className="flex items-center gap-1.5 text-[12px] text-gray-400">
+                {c.source === 'qr' ? <Icon.QR className="w-3.5 h-3.5"/> : <Icon.Layout className="w-3.5 h-3.5"/>}
+                <span className="capitalize">{c.source === 'qr' ? 'QR Scan' : 'System'}</span>
+              </div>
+              <div>
+                {c.status === 'active' ? (
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-primary">
+                    <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot"/>
+                    Active
+                  </span>
+                ) : (
+                  <span className="text-[11px] text-gray-500">Closed</span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function StatCard({ label, value, icon, accent }) {
+  return (
+    <div className={`p-4 rounded-xl border ${accent ? 'bg-gradient-to-br from-[#1a0c10] to-[#0f0f0f] border-[#3a1a23]' : 'bg-[#0f0f0f] border-[#1f1f1f]'}`}>
+      <div className="flex items-center justify-between">
+        <div className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold">{label}</div>
+        <div className={accent ? 'text-primary' : 'text-gray-500'}>{icon}</div>
+      </div>
+      <div className="text-3xl font-semibold mt-2 tracking-tight">{value}</div>
+    </div>
+  );
+}
+
+/* ========================================================================
+   RESIDENTS PAGE
+   ======================================================================== */
+function ResidentsPage({ residents, setResidents, onShowQR }) {
+  const [editing, setEditing] = useState(null); // resident object or 'new'
+  const [search, setSearch] = useState('');
+
+  const filtered = residents.filter(r => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return r.name.toLowerCase().includes(q) || r.room.includes(q) || r.id.toLowerCase().includes(q);
+  });
+
+  const onSave = (r) => {
+    if (editing === 'new') {
+      const id = 'R' + String(Math.max(0, ...residents.map(x => parseInt(x.id.replace('R',''), 10))) + 1).padStart(3, '0');
+      setResidents(prev => [...prev, { ...r, id }]);
+    } else {
+      setResidents(prev => prev.map(x => x.id === editing.id ? { ...x, ...r } : x));
+    }
+    setEditing(null);
+  };
+
+  const onDelete = (id) => {
+    if (confirm('Delete this resident?')) {
+      setResidents(prev => prev.filter(r => r.id !== id));
+    }
+  };
+
+  return (
+    <div className="p-7">
+      <div className="flex items-center justify-between mb-4 gap-3">
+        <div className="relative flex-1 max-w-sm">
+          <Icon.Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"/>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search residents…"
+            className="w-full bg-[#111] border border-[#1f1f1f] rounded-lg pl-9 pr-3 py-2 text-[13px] focus:outline-none focus:border-[#333]"/>
+        </div>
+        <button onClick={()=>setEditing('new')}
+          className="btn-primary px-4 py-2 rounded-lg font-semibold text-[13px] flex items-center gap-2">
+          <Icon.Plus className="w-4 h-4"/>Add Resident
+        </button>
+      </div>
+
+      <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-xl overflow-hidden">
+        <div className="grid grid-cols-[80px_1fr_80px_60px_1fr_1fr_140px] gap-4 px-5 py-3 border-b border-[#1f1f1f] text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
+          <div>ID</div>
+          <div>Name</div>
+          <div>Room</div>
+          <div>Age</div>
+          <div>Conditions</div>
+          <div>Emergency Contact</div>
+          <div className="text-right">Actions</div>
+        </div>
+        {filtered.map(r => (
+          <div key={r.id} className="grid grid-cols-[80px_1fr_80px_60px_1fr_1fr_140px] gap-4 px-5 py-3.5 border-b border-[#1a1a1a] last:border-0 items-center hover:bg-[#141414] transition">
+            <div className="text-[12px] font-mono text-gray-400">{r.id}</div>
+            <div className="text-[13px] font-medium">{r.name}</div>
+            <div className="text-[13px]">{r.room}</div>
+            <div className="text-[13px] text-gray-400">{r.age}</div>
+            <div className="text-[12px] text-gray-400 truncate">{r.conditions}</div>
+            <div className="min-w-0">
+              <div className="text-[12px] truncate">{r.emergencyContact}</div>
+              <div className="text-[11px] text-gray-500">{r.contactPhone}</div>
+            </div>
+            <div className="flex items-center justify-end gap-1">
+              <IconBtn onClick={()=>onShowQR(r.id)} title="Show QR Code"><Icon.QR className="w-4 h-4"/></IconBtn>
+              <IconBtn onClick={()=>setEditing(r)} title="Edit"><Icon.Edit className="w-4 h-4"/></IconBtn>
+              <IconBtn onClick={()=>onDelete(r.id)} title="Delete" danger><Icon.Trash className="w-4 h-4"/></IconBtn>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {editing && (
+        <ResidentFormModal
+          initial={editing === 'new' ? null : editing}
+          onClose={()=>setEditing(null)}
+          onSave={onSave}
+        />
+      )}
+    </div>
+  );
+}
+
+function IconBtn({ children, onClick, title, danger }) {
+  return (
+    <button onClick={(e)=>{e.stopPropagation(); onClick();}} title={title}
+      className={`p-1.5 rounded-md transition ${danger ? 'text-gray-500 hover:text-red-400 hover:bg-red-500/10' : 'text-gray-500 hover:text-white hover:bg-[#1c1c1c]'}`}>
+      {children}
+    </button>
+  );
+}
+
+/* ========================================================================
+   EMPLOYEES PAGE
+   ======================================================================== */
+function EmployeesPage({ employees, setEmployees }) {
+  const [editing, setEditing] = useState(null);
+  const [search, setSearch] = useState('');
+
+  const filtered = employees.filter(e => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return e.name.toLowerCase().includes(q) || e.role.toLowerCase().includes(q) || e.email.toLowerCase().includes(q);
+  });
+
+  const onSave = (e) => {
+    if (editing === 'new') {
+      const id = 'E' + String(Math.max(0, ...employees.map(x => parseInt(x.id.replace('E',''), 10))) + 1).padStart(3, '0');
+      setEmployees(prev => [...prev, { ...e, id }]);
+    } else {
+      setEmployees(prev => prev.map(x => x.id === editing.id ? { ...x, ...e } : x));
+    }
+    setEditing(null);
+  };
+  const onDelete = (id) => {
+    if (confirm('Delete this employee?')) setEmployees(prev => prev.filter(e => e.id !== id));
+  };
+
+  return (
+    <div className="p-7">
+      <div className="flex items-center justify-between mb-4 gap-3">
+        <div className="relative flex-1 max-w-sm">
+          <Icon.Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"/>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search employees…"
+            className="w-full bg-[#111] border border-[#1f1f1f] rounded-lg pl-9 pr-3 py-2 text-[13px] focus:outline-none focus:border-[#333]"/>
+        </div>
+        <button onClick={()=>setEditing('new')}
+          className="btn-primary px-4 py-2 rounded-lg font-semibold text-[13px] flex items-center gap-2">
+          <Icon.Plus className="w-4 h-4"/>Add Employee
+        </button>
+      </div>
+
+      <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-xl overflow-hidden">
+        <div className="grid grid-cols-[80px_1fr_1fr_1fr_1fr_100px_100px] gap-4 px-5 py-3 border-b border-[#1f1f1f] text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
+          <div>ID</div>
+          <div>Name</div>
+          <div>Role</div>
+          <div>Phone</div>
+          <div>Email</div>
+          <div>Shift</div>
+          <div className="text-right">Actions</div>
+        </div>
+        {filtered.map(e => (
+          <div key={e.id} className="grid grid-cols-[80px_1fr_1fr_1fr_1fr_100px_100px] gap-4 px-5 py-3.5 border-b border-[#1a1a1a] last:border-0 items-center hover:bg-[#141414] transition">
+            <div className="text-[12px] font-mono text-gray-400">{e.id}</div>
+            <div className="text-[13px] font-medium">{e.name}</div>
+            <div className="text-[12px] text-gray-400">{e.role}</div>
+            <div className="text-[12px] text-gray-400">{e.phone}</div>
+            <div className="text-[12px] text-gray-400 truncate">{e.email}</div>
+            <div className="text-[12px]">
+              <span className="px-2 py-0.5 rounded-full bg-[#1c1c1c] text-gray-300 text-[10px] font-medium">{e.shift}</span>
+            </div>
+            <div className="flex items-center justify-end gap-1">
+              <IconBtn onClick={()=>setEditing(e)} title="Edit"><Icon.Edit className="w-4 h-4"/></IconBtn>
+              <IconBtn onClick={()=>onDelete(e.id)} title="Delete" danger><Icon.Trash className="w-4 h-4"/></IconBtn>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {editing && (
+        <EmployeeFormModal
+          initial={editing === 'new' ? null : editing}
+          onClose={()=>setEditing(null)}
+          onSave={onSave}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ========================================================================
+   MODALS — generic shell
+   ======================================================================== */
+function ModalShell({ title, onClose, children, maxWidth = '32rem', footer }) {
+  return (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in" onClick={onClose}>
+      <div onClick={e=>e.stopPropagation()}
+        className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl"
+        style={{ maxWidth }}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#1f1f1f] flex-shrink-0">
+          <h2 className="text-[15px] font-semibold tracking-tight">{title}</h2>
+          <button onClick={onClose} className="p-1.5 rounded-md text-gray-500 hover:text-white hover:bg-[#1c1c1c]">
+            <Icon.X className="w-4 h-4"/>
+          </button>
+        </div>
+        <div className="overflow-y-auto flex-1">{children}</div>
+        {footer && <div className="px-6 py-4 border-t border-[#1f1f1f] flex-shrink-0">{footer}</div>}
+      </div>
+    </div>
+  );
+}
+
+function Field({ label, children }) {
+  return (
+    <div>
+      <label className="block text-[11px] uppercase tracking-wider text-gray-500 font-semibold mb-1.5">{label}</label>
+      {children}
+    </div>
+  );
+}
+const inputCls = "w-full bg-[#161616] border border-[#262626] rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-[#3a3a3a] transition";
+
+/* ========================================================================
+   RESIDENT FORM MODAL
+   ======================================================================== */
+function ResidentFormModal({ initial, onClose, onSave }) {
+  const [r, setR] = useState(initial || { name: '', room: '', age: '', dob: '', gender: 'Female', conditions: '', emergencyContact: '', contactPhone: '' });
+  const valid = r.name && r.room;
+  return (
+    <ModalShell title={initial ? 'Edit Resident' : 'Add Resident'} onClose={onClose} maxWidth="38rem"
+      footer={
+        <div className="flex justify-end gap-2">
+          <button onClick={onClose} className="px-4 py-2 rounded-lg text-[13px] text-gray-400 hover:text-white hover:bg-[#1c1c1c]">Cancel</button>
+          <button disabled={!valid} onClick={()=>onSave(r)} className="btn-primary px-5 py-2 rounded-lg font-semibold text-[13px] disabled:opacity-40 disabled:cursor-not-allowed">
+            {initial ? 'Save Changes' : 'Add Resident'}
+          </button>
+        </div>
+      }>
+      <div className="p-6 grid grid-cols-2 gap-4">
+        <Field label="Full Name">
+          <input className={inputCls} value={r.name} onChange={e=>setR({...r, name: e.target.value})}/>
+        </Field>
+        <Field label="Room Number">
+          <input className={inputCls} value={r.room} onChange={e=>setR({...r, room: e.target.value})}/>
+        </Field>
+        <Field label="Age">
+          <input type="number" className={inputCls} value={r.age} onChange={e=>setR({...r, age: e.target.value})}/>
+        </Field>
+        <Field label="Date of Birth">
+          <input type="date" className={inputCls} value={r.dob} onChange={e=>setR({...r, dob: e.target.value})}/>
+        </Field>
+        <Field label="Gender">
+          <select className={inputCls} value={r.gender} onChange={e=>setR({...r, gender: e.target.value})}>
+            <option>Female</option><option>Male</option><option>Other</option>
+          </select>
+        </Field>
+        <div></div>
+        <div className="col-span-2">
+          <Field label="Medical Conditions">
+            <textarea rows={2} className={inputCls} value={r.conditions} onChange={e=>setR({...r, conditions: e.target.value})}/>
+          </Field>
+        </div>
+        <Field label="Emergency Contact Name">
+          <input className={inputCls} value={r.emergencyContact} onChange={e=>setR({...r, emergencyContact: e.target.value})}/>
+        </Field>
+        <Field label="Contact Phone">
+          <input className={inputCls} value={r.contactPhone} onChange={e=>setR({...r, contactPhone: e.target.value})}/>
+        </Field>
+      </div>
+    </ModalShell>
+  );
+}
+
+/* ========================================================================
+   EMPLOYEE FORM MODAL
+   ======================================================================== */
+function EmployeeFormModal({ initial, onClose, onSave }) {
+  const [e, setE] = useState(initial || { name: '', role: 'Registered Nurse', phone: '', email: '', shift: 'Day' });
+  const valid = e.name && e.role;
+  return (
+    <ModalShell title={initial ? 'Edit Employee' : 'Add Employee'} onClose={onClose} maxWidth="34rem"
+      footer={
+        <div className="flex justify-end gap-2">
+          <button onClick={onClose} className="px-4 py-2 rounded-lg text-[13px] text-gray-400 hover:text-white hover:bg-[#1c1c1c]">Cancel</button>
+          <button disabled={!valid} onClick={()=>onSave(e)} className="btn-primary px-5 py-2 rounded-lg font-semibold text-[13px] disabled:opacity-40 disabled:cursor-not-allowed">
+            {initial ? 'Save Changes' : 'Add Employee'}
+          </button>
+        </div>
+      }>
+      <div className="p-6 grid grid-cols-2 gap-4">
+        <div className="col-span-2">
+          <Field label="Full Name"><input className={inputCls} value={e.name} onChange={ev=>setE({...e, name: ev.target.value})}/></Field>
+        </div>
+        <Field label="Role">
+          <select className={inputCls} value={e.role} onChange={ev=>setE({...e, role: ev.target.value})}>
+            <option>Head Nurse</option><option>Registered Nurse</option><option>LPN</option><option>CNA</option><option>Administrator</option>
+          </select>
+        </Field>
+        <Field label="Shift">
+          <select className={inputCls} value={e.shift} onChange={ev=>setE({...e, shift: ev.target.value})}>
+            <option>Day</option><option>Evening</option><option>Night</option>
+          </select>
+        </Field>
+        <Field label="Phone"><input className={inputCls} value={e.phone} onChange={ev=>setE({...e, phone: ev.target.value})}/></Field>
+        <Field label="Email"><input type="email" className={inputCls} value={e.email} onChange={ev=>setE({...e, email: ev.target.value})}/></Field>
+      </div>
+    </ModalShell>
+  );
+}
+
+/* ========================================================================
+   EMERGENCY FORM MODAL (desktop) & inline variant used in mobile
+   ======================================================================== */
+function EmergencyFormModal({ mode, residents, employees, nursingHome, onClose, onSubmit, lockedResidentId, isQR }) {
+  const [residentId, setResidentId] = useState(lockedResidentId || '');
+  const [emergencyType, setEmergencyType] = useState('');
+  const [severity, setSeverity] = useState('medium');
+  const [description, setDescription] = useState('');
+  const [employeeMode, setEmployeeMode] = useState('select'); // 'select' or 'manual'
+  const [employeeName, setEmployeeName] = useState('');
+  const [manualName, setManualName] = useState('');
+
+  const finalEmployeeName = employeeMode === 'manual' ? manualName : employeeName;
+  const valid = residentId && emergencyType && severity && finalEmployeeName;
+
+  const submit = () => {
+    if (!valid) return;
+    const resident = residents.find(r => r.id === residentId);
+    const now = Date.now();
+    const cfsListLocal = []; // not needed for IDs across instances; using simple gen
+    const id = 'CFS' + String(Math.floor(Math.random()*900000)+100000).padStart(6,'0');
+    const refNumber = String(260500000 + Math.floor(Math.random()*99999) + 1);
+    const newCfs = {
+      id,
+      refNumber,
+      residentId,
+      employeeName: finalEmployeeName,
+      employeeManual: employeeMode === 'manual',
+      emergencyType,
+      severity,
+      description,
+      status: 'active',
+      createdAt: now,
+      source: isQR ? 'qr' : 'system',
+      location: nursingHome.address,
+      callerNumber: nursingHome.callerNumber,
+      messages: [
+        { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: now },
+        { from: 'caller', text: `${emergencyType} — ${severity} severity. ${description || ''}`.trim(), ts: now + 2000 },
+        { from: 'caller', type: 'location', address: `${nursingHome.address} — Room ${resident?.room || '—'}`, ts: now + 3000 },
+      ],
+    };
+    onSubmit(newCfs);
+  };
+
+  return (
+    <ModalShell title="Contact Emergency Services" onClose={onClose} maxWidth="36rem"
+      footer={
+        <div className="flex justify-end gap-2">
+          <button onClick={onClose} className="px-4 py-2 rounded-lg text-[13px] text-gray-400 hover:text-white hover:bg-[#1c1c1c]">Cancel</button>
+          <button disabled={!valid} onClick={submit} className="btn-primary px-5 py-2 rounded-lg font-semibold text-[13px] disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2">
+            <Icon.Siren className="w-4 h-4"/>Submit & Open Chat
+          </button>
+        </div>
+      }>
+      <div className="p-6 space-y-4">
+        <div className="px-4 py-3 rounded-lg bg-primary/10 border border-primary/30 flex items-start gap-3">
+          <Icon.Siren className="w-4 h-4 text-primary mt-0.5 flex-shrink-0"/>
+          <div className="text-[12px] text-gray-300">
+            This will initiate a live call for service to EMS dispatch. Complete all fields and review before submitting.
+          </div>
+        </div>
+
+        <Field label="Resident">
+          {lockedResidentId ? (
+            <div className="bg-[#161616] border border-[#262626] rounded-lg px-3 py-2.5 text-[13px] flex items-center justify-between">
+              <span>{residents.find(r=>r.id===lockedResidentId)?.name} — Room {residents.find(r=>r.id===lockedResidentId)?.room}</span>
+              <span className="text-[10px] text-gray-500 uppercase tracking-wider">Auto-filled from QR</span>
+            </div>
+          ) : (
+            <select className={inputCls} value={residentId} onChange={e=>setResidentId(e.target.value)}>
+              <option value="">Select resident…</option>
+              {residents.map(r => <option key={r.id} value={r.id}>{r.name} — Room {r.room}</option>)}
+            </select>
+          )}
+        </Field>
+
+        <Field label="Emergency Type">
+          <input className={inputCls} placeholder="e.g. Fall, Chest pain, Difficulty breathing" value={emergencyType} onChange={e=>setEmergencyType(e.target.value)}/>
+        </Field>
+
+        <Field label="Severity Level">
+          <div className="grid grid-cols-3 gap-2">
+            {['low','medium','high'].map(s => (
+              <button key={s} type="button" onClick={()=>setSeverity(s)}
+                className={`py-2.5 rounded-lg text-[12px] font-semibold uppercase tracking-wider transition border ${
+                  severity===s
+                    ? (s==='low' ? 'sev-low' : s==='medium' ? 'sev-medium' : 'sev-high')
+                    : 'bg-[#161616] border-[#262626] text-gray-500 hover:text-white'
+                }`}>
+                {s}
+              </button>
+            ))}
+          </div>
+        </Field>
+
+        <Field label="Description (optional)">
+          <textarea rows={3} className={inputCls} placeholder="Symptoms, what happened, current state…" value={description} onChange={e=>setDescription(e.target.value)}/>
+        </Field>
+
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="block text-[11px] uppercase tracking-wider text-gray-500 font-semibold">Reporting Employee</label>
+            {isQR && (
+              <div className="flex bg-[#161616] border border-[#262626] rounded-md p-0.5">
+                <button type="button" onClick={()=>setEmployeeMode('select')} className={`px-2.5 py-1 text-[11px] rounded ${employeeMode==='select' ? 'bg-[#2a2a2a] text-white' : 'text-gray-500'}`}>From list</button>
+                <button type="button" onClick={()=>setEmployeeMode('manual')} className={`px-2.5 py-1 text-[11px] rounded ${employeeMode==='manual' ? 'bg-[#2a2a2a] text-white' : 'text-gray-500'}`}>Enter manually</button>
+              </div>
+            )}
+          </div>
+          {employeeMode === 'select' ? (
+            <select className={inputCls} value={employeeName} onChange={e=>setEmployeeName(e.target.value)}>
+              <option value="">Select employee…</option>
+              {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name} — {emp.role}</option>)}
+            </select>
+          ) : (
+            <input className={inputCls} placeholder="Type your name" value={manualName} onChange={e=>setManualName(e.target.value)}/>
+          )}
         </div>
       </div>
-      <div class="p-divider"></div>
-      <div class="psec-group">
-        <div class="psec">Emergency contacts</div>
-        <div class="kvg"><div class="kv full"><div class="kv-k">Emergency contact</div><div class="kv-v">${r.ec||'—'}</div></div></div>
-      </div>
-      <div class="p-divider"></div>
-      <div class="psec-group">
-        <div class="psec">Medical information</div>
-        <div class="kvg">
-          <div class="kv full"><div class="kv-k">Allergies</div><div class="kv-v" style="color:${r.al&&r.al!=='None'?'#fca5a5':'var(--fg)'}">${r.al||'None'}</div></div>
-          <div class="kv full"><div class="kv-k">Medical notes</div><div class="kv-v" style="color:var(--fg2);line-height:1.5">${r.nt||'—'}</div></div>
+    </ModalShell>
+  );
+}
+
+/* ========================================================================
+   CFS DETAIL MODAL (desktop) — chat + caller details
+   ======================================================================== */
+function CfsDetailModal({ cfs, resident, onClose, onSendMessage, onCloseCfs }) {
+  const [tab, setTab] = useState('chat'); // chat | details
+  const [input, setInput] = useState('');
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [cfs.messages.length, tab]);
+
+  const send = () => {
+    if (!input.trim()) return;
+    onSendMessage(input.trim());
+    setInput('');
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div onClick={e=>e.stopPropagation()} className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl w-full max-w-4xl h-[85vh] flex overflow-hidden shadow-2xl">
+        {/* Left: chat */}
+        <div className="flex-1 flex flex-col border-r border-[#1f1f1f]">
+          <div className="px-5 py-4 border-b border-[#1f1f1f] flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-[15px] font-semibold tracking-tight">Chat with Dispatcher</h3>
+                {cfs.status === 'active' && (
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-primary">
+                    <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot"/>LIVE
+                  </span>
+                )}
+              </div>
+              <div className="text-[11px] text-gray-500 mt-0.5">Ref #{cfs.refNumber} · {cfs.emergencyType}</div>
+            </div>
+            <button onClick={onClose} className="p-1.5 rounded-md text-gray-500 hover:text-white hover:bg-[#1c1c1c]"><Icon.X className="w-4 h-4"/></button>
+          </div>
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-4 space-y-3 no-scrollbar">
+            {cfs.messages.map((m, i) => <ChatBubble key={i} msg={m}/>)}
+          </div>
+          {cfs.status === 'active' ? (
+            <div className="px-4 py-3 border-t border-[#1f1f1f] flex items-center gap-2">
+              <button className="p-2 rounded-full bg-primary text-white"><Icon.Plus className="w-4 h-4"/></button>
+              <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&send()}
+                placeholder="Message…"
+                className="flex-1 bg-[#161616] border border-[#262626] rounded-full px-4 py-2 text-[13px] focus:outline-none focus:border-[#3a3a3a]"/>
+              <button className="p-2 text-gray-500 hover:text-white"><Icon.Mic className="w-4 h-4"/></button>
+              <button onClick={send} className="p-2 text-primary hover:text-white"><Icon.Send className="w-4 h-4"/></button>
+            </div>
+          ) : (
+            <div className="px-4 py-3 border-t border-[#1f1f1f] text-center text-[12px] text-gray-500">
+              This call has been closed.
+            </div>
+          )}
+        </div>
+
+        {/* Right: details */}
+        <div className="w-[340px] flex flex-col">
+          <div className="px-5 py-4 border-b border-[#1f1f1f]">
+            <h3 className="text-[15px] font-semibold tracking-tight">Caller Details</h3>
+          </div>
+          <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 no-scrollbar text-[13px]">
+            <DetailRow label="Call Reference" value={`${cfs.refNumber} (${cfs.id})`}/>
+            <DetailRow label="Status" value={
+              cfs.status === 'active' ? (
+                <span className="inline-flex items-center gap-1.5 text-primary font-medium">
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot"/>Active
+                </span>
+              ) : <span className="text-gray-500">Closed</span>
+            }/>
+            <DetailRow label="Severity" value={
+              <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase sev-${cfs.severity}`}>{severityLabel(cfs.severity)}</span>
+            }/>
+            <DetailRow label="Source" value={cfs.source === 'qr' ? 'QR Scan' : 'System'}/>
+            <DetailRow label="Location" value={cfs.location}/>
+            <DetailRow label="Caller Number" value={cfs.callerNumber}/>
+            <DetailRow label="Caller Requested" value={`${formatDate(cfs.createdAt)}, ${formatTime(cfs.createdAt)}`}/>
+            <div className="border-t border-[#1f1f1f] pt-4">
+              <div className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold mb-2">Resident</div>
+              {resident ? (
+                <div className="space-y-2">
+                  <DetailRow label="Name" value={resident.name}/>
+                  <DetailRow label="Room" value={resident.room}/>
+                  <DetailRow label="Age" value={resident.age}/>
+                  <DetailRow label="Conditions" value={resident.conditions}/>
+                  <DetailRow label="Emergency Contact" value={`${resident.emergencyContact} · ${resident.contactPhone}`}/>
+                </div>
+              ) : <div className="text-gray-500 text-[12px]">Resident data unavailable</div>}
+            </div>
+            <div className="border-t border-[#1f1f1f] pt-4 space-y-2">
+              <div className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold mb-2">Reporter</div>
+              <DetailRow label="Employee" value={`${cfs.employeeName}${cfs.employeeManual ? ' (manual entry)' : ''}`}/>
+              <DetailRow label="Description" value={cfs.description || '—'}/>
+            </div>
+          </div>
+          {cfs.status === 'active' && (
+            <div className="p-4 border-t border-[#1f1f1f]">
+              <button onClick={onCloseCfs} className="w-full py-2.5 rounded-lg text-[13px] font-semibold bg-[#1c1c1c] text-gray-300 hover:bg-[#262626] hover:text-white transition">
+                Close Call
+              </button>
+            </div>
+          )}
         </div>
       </div>
-      <div class="p-divider"></div>
-      <div class="psec-group">
-        <div class="psec">Emergency history</div>
-        ${hist.length===0?'<p class="muted" style="font-size:13px">No emergencies on record</p>':hist.map(e=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--b1)"><div><div style="font-size:13px;font-weight:500">${h(e.tp)}</div><div class="muted" style="font-size:11px;margin-top:1px">${ago(e.ts)}</div></div><span class="bdg ${bc(e.st)}">${e.st}</span></div>`).join('')}
-      </div>`;
-    footer.innerHTML=`<button class="pf-main" onclick="openPanel('edit-r','${id}')">Edit</button><button class="pf-sec" onclick="closePanel()">Close</button>`;
-  }
+    </div>
+  );
+}
 
-  else if(type==='edit-r'){
-    const r=RES.find(x=>x.id===id)||{id:id,fn:'',ln:'',rm:'',db:'',sx:'Male',bl:'',al:'',ec:'',nt:''};
-    const isNew=!RES.find(x=>x.id===id);
-    title.textContent=isNew?'Add resident':r.fn+' '+r.ln;
-    body.innerHTML=`
-      <div class="psec-group">
-        <div class="psec">Personal information</div>
-        <div class="f2">
-          <div class="field"><label class="flbl">First name <span class="req">*</span></label><input class="inp" id="rf-fn" value="${h(r.fn)}" placeholder="First name"></div>
-          <div class="field"><label class="flbl">Last name <span class="req">*</span></label><input class="inp" id="rf-ln" value="${h(r.ln)}" placeholder="Last name"></div>
-        </div>
-        <div class="f2">
-          <div class="field"><label class="flbl">Room <span class="req">*</span></label><input class="inp" id="rf-rm" value="${h(r.rm)}" placeholder="e.g. 204A"></div>
-          <div class="field"><label class="flbl">Date of birth</label><input class="inp" type="date" id="rf-db" value="${r.db||''}"></div>
-        </div>
-        <div class="f2">
-          <div class="field"><label class="flbl">Sex</label><select class="sel" id="rf-sx"><option${r.sx==='Male'?' selected':''}>Male</option><option${r.sx==='Female'?' selected':''}>Female</option><option${r.sx==='Other'?' selected':''}>Other</option></select></div>
-          <div class="field"><label class="flbl">Blood type</label><select class="sel" id="rf-bl"><option value="">Unknown</option>${['A+','A-','B+','B-','AB+','AB-','O+','O-'].map(b=>`<option${r.bl===b?' selected':''}>${b}</option>`).join('')}</select></div>
+function DetailRow({ label, value }) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="text-[11px] uppercase tracking-wider text-gray-500 font-medium w-[100px] flex-shrink-0 pt-0.5">{label}</div>
+      <div className="text-[13px] text-gray-200 flex-1 min-w-0 break-words">{value}</div>
+    </div>
+  );
+}
+
+/* ========================================================================
+   CHAT BUBBLE — used in both desktop & mobile
+   ======================================================================== */
+function ChatBubble({ msg }) {
+  if (msg.type === 'location') {
+    return (
+      <div className="flex justify-end msg-in">
+        <div className="max-w-[80%]">
+          <div className="bg-primary text-white rounded-2xl rounded-br-md overflow-hidden">
+            <div className="flex items-center gap-2 px-3.5 py-2.5">
+              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+                <Icon.MapPin className="w-4 h-4"/>
+              </div>
+              <div className="min-w-0">
+                <div className="text-[13px] font-semibold">Location</div>
+                <div className="text-[11px] opacity-90 truncate">{msg.address}</div>
+              </div>
+            </div>
+          </div>
+          <div className="text-[10px] text-gray-500 mt-1 text-right">{formatTime(msg.ts)}</div>
         </div>
       </div>
-      <div class="p-divider"></div>
-      <div class="psec-group">
-        <div class="psec">Emergency contacts</div>
-        <div class="field"><label class="flbl">Emergency contact</label><input class="inp" id="rf-ec" value="${h(r.ec||'')}" placeholder="Name, phone number"></div>
+    );
+  }
+  const isCaller = msg.from === 'caller';
+  return (
+    <div className={`flex ${isCaller ? 'justify-end' : 'justify-start'} msg-in`}>
+      <div className="max-w-[80%]">
+        <div className={`px-3.5 py-2.5 text-[13px] leading-snug ${
+          isCaller
+            ? 'bg-primary text-white rounded-2xl rounded-br-md'
+            : 'bg-[#1c1c1c] text-gray-100 rounded-2xl rounded-bl-md'
+        }`}>
+          {msg.text}
+        </div>
+        <div className={`text-[10px] text-gray-500 mt-1 ${isCaller ? 'text-right' : ''}`}>{formatTime(msg.ts)}</div>
       </div>
-      <div class="p-divider"></div>
-      <div class="psec-group">
-        <div class="psec">Medical information</div>
-        <div class="field"><label class="flbl">Allergies</label><input class="inp" id="rf-al" value="${h(r.al==='None'?'':r.al||'')}" placeholder="e.g. Penicillin — leave blank if none"></div>
-        <div class="field"><label class="flbl">Medical notes</label><textarea class="ta" id="rf-nt" placeholder="Relevant conditions, history…">${h(r.nt||'')}</textarea></div>
-      </div>`;
-    footer.innerHTML=`<button class="pf-main" onclick="saveRes('${id}',${isNew})">Save</button><button class="pf-sec" onclick="closePanel()">Cancel</button>`;
-  }
+    </div>
+  );
+}
 
-  else if(type==='add-r'){
-    const id='R'+uid();
-    openPanel('edit-r',id);return;
-  }
+/* ========================================================================
+   QR CODE MODAL — generated dynamically from window.location
+   ======================================================================== */
+function QRModal({ resident, nursingHome, onClose }) {
+  const canvasRef = useRef(null);
+  const [url, setUrl] = useState('');
 
-  else if(type==='qr-r'){
-    const r=RES.find(x=>x.id===id);if(!r)return;_qrr=r;
-    title.textContent='QR Code — '+r.fn+' '+r.ln;
-    const url=window.location.href.split('?')[0]+'?scan=1&rid='+r.id;
-    body.innerHTML=`<div class="qr-panel-wrap">
-      <div class="qr-white-box" id="qr-canvas-p"></div>
-      <p style="font-size:11px;color:var(--fg2);text-align:center">Scan to initiate an emergency for this resident</p>
-      <div class="qr-rows">${[['Resident ID',r.id],['Name',r.fn+' '+r.ln],['Room',r.rm],['Allergies',r.al||'None'],['Emergency contact',r.ec||'—']].map(([k,v])=>`<div class="qr-row"><span class="qr-k">${k}</span><span class="qr-v">${h(v)}</span></div>`).join('')}</div>
-    </div>`;
-    footer.innerHTML=`<button class="pf-main" onclick="doPrintQR()">Print QR Code</button><button class="pf-sec" onclick="closePanel()">Close</button>`;
-    // Generate QR after DOM is ready
-    setTimeout(()=>{
-      const qc=document.getElementById('qr-canvas-p');
-      if(qc){new QRCode(qc,{text:url,width:180,height:180,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});}
-    },50);
-  }
+  useEffect(() => {
+    // Build URL using current location, stripping any existing params
+    const base = window.location.origin + window.location.pathname;
+    const u = `${base}?resident=${resident.id}`;
+    setUrl(u);
+    if (canvasRef.current && window.QRCode) {
+      window.QRCode.toCanvas(canvasRef.current, u, {
+        width: 280,
+        margin: 1,
+        color: { dark: '#000000', light: '#ffffff' },
+        errorCorrectionLevel: 'H',
+      });
+    }
+  }, [resident.id]);
 
-  else if(type==='create-e'){
-    title.textContent='Create emergency';
-    body.innerHTML=`
-      <div class="psec-group">
-        <div class="psec">Emergency details</div>
-        <div class="field"><label class="flbl">Resident <span class="req">*</span></label><select class="sel" id="ce-res"><option value="">Select resident…</option>${RES.map(r=>`<option value="${r.id}">${r.fn} ${r.ln} — Room ${r.rm}</option>`).join('')}</select></div>
-        <div class="field"><label class="flbl">Emergency type <span class="req">*</span></label><input class="inp" id="ce-type" placeholder="e.g. Fall, Chest pain, Difficulty breathing"></div>
-        <div class="field"><label class="flbl">Severity</label><select class="sel" id="ce-sev"><option value="Low">Low</option><option value="Medium" selected>Medium</option><option value="High">High</option><option value="Critical">Critical</option></select></div>
-        <div class="field"><label class="flbl">Description</label><textarea class="ta" id="ce-desc" placeholder="Describe the situation…"></textarea></div>
-      </div>`;
-    footer.innerHTML=`<button class="pf-main" onclick="submitCreateE()">Submit emergency</button><button class="pf-sec" onclick="closePanel()">Cancel</button>`;
-    if(id){setTimeout(()=>{const s=document.getElementById('ce-res');if(s)s.value=id;},0);}
-  }
-
-  else if(type==='add-p'){
-    title.textContent='Add employee';
-    body.innerHTML=`
-      <div class="psec-group">
-        <div class="psec">Employee details</div>
-        <div class="f2">
-          <div class="field"><label class="flbl">First name <span class="req">*</span></label><input class="inp" id="pf-fn" placeholder="First name"></div>
-          <div class="field"><label class="flbl">Last name <span class="req">*</span></label><input class="inp" id="pf-ln" placeholder="Last name"></div>
+  const printQR = () => {
+    const w = window.open('', '_blank');
+    if (!w) return;
+    const canvasData = canvasRef.current?.toDataURL('image/png') || '';
+    w.document.write(`
+      <html>
+      <head><title>Emergency QR — Room ${resident.room}</title>
+      <style>
+        body { margin:0; font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif; background:#fff; color:#000; }
+        .sheet { padding: 60px 40px; max-width: 600px; margin: 0 auto; text-align:center; }
+        .header { background: #ef3b5c; color: white; padding: 20px; border-radius: 12px; margin-bottom: 24px; }
+        .title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+        .sub { font-size: 14px; opacity: 0.95; margin-top: 4px; text-transform: uppercase; letter-spacing: 2px; }
+        .resident { border: 3px solid #000; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+        .resident .name { font-size: 32px; font-weight: 700; }
+        .resident .room { font-size: 56px; font-weight: 800; margin-top: 8px; }
+        .room-label { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color:#555; }
+        img { display: block; margin: 0 auto; border: 4px solid #000; padding: 8px; background:#fff; }
+        .instructions { font-size: 14px; color: #333; margin-top: 20px; line-height: 1.5; }
+        .footer { margin-top: 40px; font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 2px; }
+      </style>
+      </head>
+      <body><div class="sheet">
+        <div class="header">
+          <div class="title">⚠ EMERGENCY ⚠</div>
+          <div class="sub">Scan to contact EMS</div>
         </div>
-        <div class="f2">
-          <div class="field"><label class="flbl">Role</label><select class="sel" id="pf-rl"><option>Employee</option><option>Administrator</option></select></div>
-          <div class="field"><label class="flbl">Department</label><select class="sel" id="pf-dp"><option>Medical</option><option>Therapy</option><option>Care</option><option>Administration</option></select></div>
+        <div class="resident">
+          <div class="name">${resident.name}</div>
+          <div class="room-label">Room</div>
+          <div class="room">${resident.room}</div>
         </div>
-        <div class="field"><label class="flbl">Email <span class="req">*</span></label><input class="inp" type="email" id="pf-em" placeholder="email@facility.com"></div>
-        <div class="field"><label class="flbl">Phone</label><input class="inp" id="pf-ph" placeholder="+1 (555) 000-0000"></div>
-      </div>`;
-    footer.innerHTML=`<button class="pf-main" onclick="saveEmp()">Add employee</button><button class="pf-sec" onclick="closePanel()">Cancel</button>`;
+        <img src="${canvasData}" alt="QR Code" />
+        <div class="instructions">
+          In case of medical emergency, scan this QR code with any smartphone camera to immediately contact 911 dispatch with resident information pre-filled.
+        </div>
+        <div class="footer">${nursingHome.name}</div>
+      </div>
+      <script>window.onload = () => setTimeout(() => window.print(), 300);<\/script>
+      </body></html>
+    `);
+    w.document.close();
+  };
+
+  const download = () => {
+    const link = document.createElement('a');
+    link.download = `QR-${resident.id}-Room${resident.room}.png`;
+    link.href = canvasRef.current.toDataURL('image/png');
+    link.click();
+  };
+
+  return (
+    <ModalShell title={`Emergency QR — ${resident.name}`} onClose={onClose} maxWidth="28rem"
+      footer={
+        <div className="flex gap-2">
+          <button onClick={download} className="flex-1 px-4 py-2.5 rounded-lg text-[13px] font-semibold bg-[#1c1c1c] text-gray-200 hover:bg-[#262626] transition flex items-center justify-center gap-2">
+            <Icon.Download className="w-4 h-4"/>Download
+          </button>
+          <button onClick={printQR} className="flex-1 btn-primary px-4 py-2.5 rounded-lg text-[13px] font-semibold flex items-center justify-center gap-2">
+            <Icon.Print className="w-4 h-4"/>Print Poster
+          </button>
+        </div>
+      }>
+      <div className="p-6">
+        {/* Preview poster */}
+        <div className="bg-white text-black rounded-xl p-5 text-center">
+          <div className="bg-primary text-white rounded-lg py-3 mb-4">
+            <div className="text-lg font-extrabold tracking-tight">⚠ EMERGENCY ⚠</div>
+            <div className="text-[10px] uppercase tracking-widest mt-0.5 opacity-90">Scan to contact EMS</div>
+          </div>
+          <div className="border-2 border-black rounded-lg p-4 mb-4">
+            <div className="text-lg font-bold">{resident.name}</div>
+            <div className="text-[9px] uppercase tracking-widest text-gray-600 mt-1">Room</div>
+            <div className="text-4xl font-extrabold mt-0.5">{resident.room}</div>
+          </div>
+          <div className="flex justify-center">
+            <canvas ref={canvasRef} className="border-2 border-black p-2 bg-white"/>
+          </div>
+          <div className="text-[10px] text-gray-600 mt-3 leading-relaxed">
+            Scan with any smartphone camera to immediately contact EMS dispatch.
+          </div>
+        </div>
+        <div className="mt-4 px-3 py-2 bg-[#161616] border border-[#262626] rounded-lg text-[11px] text-gray-400 font-mono break-all">
+          {url}
+        </div>
+      </div>
+    </ModalShell>
+  );
+}
+
+/* ========================================================================
+   MOBILE QR FLOW — matches uploaded mobile design
+   Three screens: emergency form -> "share location"/initial -> chat
+   ======================================================================== */
+function MobileQRFlow({ resident, residentParam, employees, nursingHome, cfsList, addCfs, updateCfs, cfsParam, tick }) {
+  // If invalid resident
+  if (!resident) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center p-6">
+        <div className="text-center max-w-sm">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/15 border border-primary/40 flex items-center justify-center">
+            <Icon.Siren className="w-7 h-7 text-primary"/>
+          </div>
+          <h1 className="text-xl font-semibold tracking-tight mb-2">Invalid QR Code</h1>
+          <p className="text-sm text-gray-400 mb-6">No resident found for ID <span className="font-mono">{residentParam}</span>.</p>
+          <a href={window.location.pathname} className="inline-block btn-primary px-5 py-2.5 rounded-lg text-[13px] font-semibold">Open Dashboard</a>
+        </div>
+      </div>
+    );
   }
 
-  else if(type==='edit-p'){
-    const e=EMP.find(x=>x.id===id);if(!e)return;
-    title.textContent=e.fn+' '+e.ln;
-    body.innerHTML=`
-      <div class="psec-group">
-        <div class="psec">Employee details</div>
-        <div class="f2">
-          <div class="field"><label class="flbl">First name <span class="req">*</span></label><input class="inp" id="pf-fn" value="${h(e.fn)}"></div>
-          <div class="field"><label class="flbl">Last name <span class="req">*</span></label><input class="inp" id="pf-ln" value="${h(e.ln)}"></div>
+  // Routing inside mobile flow: screen state
+  // screens: 'intro' (location preview) -> 'form' -> 'chat'
+  const [screen, setScreen] = useState(cfsParam ? 'chat' : 'intro');
+  const [activeCfsId, setActiveCfsId] = useState(cfsParam || null);
+
+  // Simulated dispatcher reply for active chat
+  useEffect(() => {
+    if (!activeCfsId) return;
+    const cfs = cfsList.find(c => c.id === activeCfsId);
+    if (!cfs || cfs.status !== 'active') return;
+    const lastMsg = cfs.messages[cfs.messages.length - 1];
+    if (lastMsg && lastMsg.from === 'caller' && Date.now() - lastMsg.ts > 15000 && !cfs._autoReplied) {
+      const replies = [
+        'Copy that. Please keep the resident still and monitor their breathing.',
+        'Understood. EMS is en route, approximate arrival 6 minutes.',
+        'Thank you for the update. Is the resident currently conscious and responsive?',
+        'Acknowledged. Please unlock the main entrance for EMS personnel.',
+        'Got it. Have someone meet EMS at the front door if possible.',
+      ];
+      const reply = replies[Math.floor(Math.random() * replies.length)];
+      updateCfs(activeCfsId, c => ({
+        ...c, _autoReplied: true,
+        messages: [...c.messages, { from: 'dispatcher', text: reply, ts: Date.now() }],
+      }));
+    }
+  }, [tick, activeCfsId, cfsList, updateCfs]);
+
+  const activeCfs = cfsList.find(c => c.id === activeCfsId);
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0a] text-white max-w-md mx-auto relative">
+      {screen === 'intro' && (
+        <MobileIntroScreen
+          resident={resident}
+          nursingHome={nursingHome}
+          onContact={()=>setScreen('form')}
+        />
+      )}
+      {screen === 'form' && (
+        <MobileFormScreen
+          resident={resident}
+          employees={employees}
+          nursingHome={nursingHome}
+          onBack={()=>setScreen('intro')}
+          onSubmit={(cfs) => {
+            addCfs(cfs);
+            setActiveCfsId(cfs.id);
+            setScreen('chat');
+          }}
+        />
+      )}
+      {screen === 'chat' && activeCfs && (
+        <MobileChatScreen
+          cfs={activeCfs}
+          resident={resident}
+          onSendMessage={(text) => {
+            updateCfs(activeCfs.id, c => ({
+              ...c, _autoReplied: false,
+              messages: [...c.messages, { from: 'caller', text, ts: Date.now() }]
+            }));
+          }}
+          onSendLocation={() => {
+            updateCfs(activeCfs.id, c => ({
+              ...c, _autoReplied: false,
+              messages: [...c.messages, { from: 'caller', type: 'location', address: `${nursingHome.address} — Room ${resident.room}`, ts: Date.now() }]
+            }));
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+/* --- mobile intro screen — matches the "Agency name / Share Updated Location" frame --- */
+function MobileIntroScreen({ resident, nursingHome, onContact }) {
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <div className="px-5 pt-5 pb-3 flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
+            <Icon.Siren className="w-4 h-4 text-white"/>
+          </div>
+          <div className="font-semibold text-[15px] tracking-tight">{nursingHome.name}</div>
         </div>
-        <div class="f2">
-          <div class="field"><label class="flbl">Role</label><select class="sel" id="pf-rl"><option${e.rl==='Employee'?' selected':''}>Employee</option><option${e.rl==='Administrator'?' selected':''}>Administrator</option></select></div>
-          <div class="field"><label class="flbl">Department</label><select class="sel" id="pf-dp"><option${e.dp==='Medical'?' selected':''}>Medical</option><option${e.dp==='Therapy'?' selected':''}>Therapy</option><option${e.dp==='Care'?' selected':''}>Care</option><option${e.dp==='Administration'?' selected':''}>Administration</option></select></div>
+        <button className="p-2 rounded-lg bg-[#1a1a1a] border border-[#262626]">
+          <Icon.File className="w-4 h-4 text-gray-300"/>
+        </button>
+      </div>
+
+      {/* Search-like bar (decorative, matches the uploaded design) */}
+      <div className="px-5 mt-2 flex gap-2">
+        <div className="flex-1 relative">
+          <Icon.Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"/>
+          <input disabled placeholder="Search an address" className="w-full bg-[#161616] border border-[#262626] rounded-xl pl-10 pr-3 py-2.5 text-[13px] text-gray-400"/>
         </div>
-        <div class="field"><label class="flbl">Email <span class="req">*</span></label><input class="inp" type="email" id="pf-em" value="${h(e.em)}"></div>
-        <div class="field"><label class="flbl">Phone</label><input class="inp" id="pf-ph" value="${h(e.ph)}"></div>
-      </div>`;
-    footer.innerHTML=`<button class="pf-main" onclick="saveEmpEdit('${id}')">Save changes</button><button class="pf-sec" onclick="closePanel()">Cancel</button>`;
-  }
+        <button className="p-2.5 rounded-xl bg-[#161616] border border-[#262626]">
+          <Icon.MapPin className="w-4 h-4 text-gray-300"/>
+        </button>
+      </div>
 
-  document.getElementById('pscrim').classList.add('open');
-  document.getElementById('main-panel').classList.add('open');
-}
+      {/* "Map" area (decorative dark space matching the upload) */}
+      <div className="flex-1 mt-4 mx-5 rounded-xl bg-[#0d0d0d] border border-[#1a1a1a] relative overflow-hidden min-h-[280px]">
+        {/* subtle grid texture */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
+        }}/>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center mx-auto mb-2">
+              <Icon.MapPin className="w-5 h-5 text-primary"/>
+            </div>
+            <div className="text-[11px] text-gray-500">Resident location</div>
+          </div>
+        </div>
+      </div>
 
-function closePanel(){document.getElementById('pscrim').classList.remove('open');document.getElementById('main-panel').classList.remove('open');}
+      {/* Footer */}
+      <div className="px-5 pt-3 pb-5 bg-[#0a0a0a]">
+        <div className="text-[12px] flex items-center gap-2">
+          <span className="text-gray-400">Resident location</span>
+          <span className="px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 text-[10px] font-medium border border-green-500/30">Auto-detected</span>
+        </div>
+        <div className="text-[14px] font-semibold mt-1">{nursingHome.address}</div>
+        <div className="text-[11px] text-gray-500 mt-0.5 mb-4">{resident.name} · Room {resident.room}</div>
 
-/* ═══ EMERGENCIES ═══ */
-function eSearch(q){_eq=q.toLowerCase();redE();}
-function redE(){
-  let list=[...EMG].sort((a,b)=>b.ts-a.ts);
-  if(_eq)list=list.filter(e=>{const r=gr(e.rid);return(r&&(r.fn+' '+r.ln).toLowerCase().includes(_eq))||e.tp.toLowerCase().includes(_eq)||e.ds.toLowerCase().includes(_eq);});
-  const tb=document.getElementById('e-tb');
-  if(!list.length){tb.innerHTML='<tr><td colspan="6"><div class="empty"><span class="mio">monitor_heart</span><p>No emergencies found</p></div></td></tr>';return;}
-  tb.innerHTML=list.map(e=>{
-    const r=gr(e.rid);const nm=r?r.fn+' '+r.ln:'Unknown';
-    const rc=e.st==='New'?'rn':e.st==='Accepted'?'ra':'rc';
-    const bc=e.st==='New'?'bn':e.st==='Accepted'?'ba':'bc';
-    return`<tr class="${rc}" onclick="openPanel('view-e','${e.id}')" oncontextmenu="eCtx(event,'${e.id}')">
-      <td style="font-weight:500">${h(nm)}</td>
-      <td><span class="bdg ${bc}">${e.st}</span></td>
-      <td>${h(e.tp)}</td>
-      <td class="m">${h(e.ds)}</td>
-      <td>${e.rm}</td>
-      <td class="m">${ago(e.ts)}</td>
-    </tr>`;
-  }).join('');
-}
-function eCtx(ev,id){
-  const e=EMG.find(x=>x.id===id);if(!e)return;
-  showCtx(ev,[
-    {icon:'visibility',oi:true,label:'View',action:()=>openPanel('view-e',id)},
-    {icon:'add',oi:false,label:'Add emergency',action:()=>openPanel('create-e',null)},
-    ...(e.st!=='Closed'?[{icon:'check_circle',oi:true,label:'Mark as closed',action:()=>closeE(id)}]:[]),
-    '-',
-    {icon:'delete',oi:true,label:'Delete',danger:true,action:()=>delE(id)},
-  ]);
-}
-function closeE(id){const e=EMG.find(x=>x.id===id);if(!e)return;e.st='Closed';e.ch.push({w:'System',m:'Emergency closed.',t:new Date()});redE();toast('Marked as closed');closePanel();}
-function delE(id){const i=EMG.findIndex(x=>x.id===id);if(i>-1)EMG.splice(i,1);redE();toast('Emergency deleted');}
-function sendChat(eid){
-  const e=EMG.find(x=>x.id===eid);const inp=document.getElementById('ci-'+eid);
-  if(!e||!inp||!inp.value.trim())return;
-  e.ch.push({w:'Nurse',m:inp.value.trim(),t:new Date()});inp.value='';
-  const msgs=document.getElementById('cm-'+eid);
-  if(msgs){msgs.innerHTML=e.ch.map(c=>`<div class="msg ${c.w==='Dispatcher'||c.w==='System'?'in':'out'}"><div class="mmeta">${h(c.w)} · ${ago(c.t)}</div><div class="mbubble">${h(c.m)}</div></div>`).join('');msgs.scrollTop=msgs.scrollHeight;}
-}
-function submitCreateE(){
-  const rid=document.getElementById('ce-res')?.value;const tp=document.getElementById('ce-type')?.value.trim();
-  if(!rid){toast('Please select a resident','err');return;}if(!tp){toast('Please enter emergency type','err');return;}
-  const r=gr(rid);
-  EMG.unshift({id:'E'+uid(),rid,tp,ds:document.getElementById('ce-desc')?.value.trim()||tp,rm:r?r.rm:'—',ts:new Date(),st:'Accepted',sv:document.getElementById('ce-sev')?.value||'Medium',ch:[{w:'System',m:'Emergency submitted — EMS contacted automatically.',t:new Date()}]});
-  closePanel();redE();toast('Emergency created — EMS contacted');
+        <button onClick={onContact} className="w-full btn-primary py-3 rounded-xl font-semibold text-[14px] flex items-center justify-center gap-2 shadow-lg shadow-primary/30">
+          <Icon.Siren className="w-4 h-4"/>
+          Contact Emergency Services
+        </button>
+        <div className="mt-2 text-center text-[10px] uppercase tracking-widest text-gray-600">Scanned from emergency QR</div>
+      </div>
+    </div>
+  );
 }
 
-/* ═══ RESIDENTS ═══ */
-function rSearch(q){_rq=q.toLowerCase();redR();}
-function redR(){
-  let list=RES.filter(r=>!_rq||(r.fn+' '+r.ln+r.rm).toLowerCase().includes(_rq));
-  const tb=document.getElementById('r-tb');
-  if(!list.length){tb.innerHTML='<tr><td colspan="6"><div class="empty"><span class="mio">group</span><p>No residents found</p></div></td></tr>';return;}
-  tb.innerHTML=list.map(r=>`<tr onclick="openPanel('view-r','${r.id}')" oncontextmenu="rCtx(event,'${r.id}')">
-    <td style="font-weight:500">${r.fn}</td><td>${r.ln}</td><td>${r.rm}</td>
-    <td class="m">${r.db||'—'}</td><td>${r.sx}</td>
-    <td style="color:${r.al&&r.al!=='None'?'#fca5a5':'var(--fg2)'}">${r.al||'None'}</td>
-  </tr>`).join('');
-}
-function rCtx(ev,id){
-  showCtx(ev,[
-    {icon:'visibility',oi:true,label:'View',action:()=>openPanel('view-r',id)},
-    {icon:'add',oi:false,label:'Add resident',action:()=>openPanel('add-r',null)},
-    {icon:'edit',oi:true,label:'Edit',action:()=>openPanel('edit-r',id)},
-    {icon:'emergency',oi:false,label:'New emergency',action:()=>openPanel('create-e',id)},
-    {icon:'qr_code_2',oi:true,label:'QR Code',action:()=>openPanel('qr-r',id)},
-    '-',
-    {icon:'delete',oi:true,label:'Delete',danger:true,action:()=>delR(id)},
-  ]);
-}
-function saveRes(id,isNew){
-  const fn=document.getElementById('rf-fn')?.value.trim();const ln=document.getElementById('rf-ln')?.value.trim();const rm=document.getElementById('rf-rm')?.value.trim();
-  if(!fn||!ln||!rm){toast('Fill required fields','err');return;}
-  if(isNew){
-    RES.unshift({id,fn,ln,rm,db:document.getElementById('rf-db')?.value||'',sx:document.getElementById('rf-sx')?.value||'Male',bl:document.getElementById('rf-bl')?.value||'',al:document.getElementById('rf-al')?.value.trim()||'None',ec:document.getElementById('rf-ec')?.value.trim()||'',nt:document.getElementById('rf-nt')?.value.trim()||''});
-    toast('Resident added');
-  } else {
-    const r=RES.find(x=>x.id===id);if(!r)return;
-    r.fn=fn;r.ln=ln;r.rm=rm;r.db=document.getElementById('rf-db')?.value||'';r.sx=document.getElementById('rf-sx')?.value||r.sx;r.bl=document.getElementById('rf-bl')?.value||'';
-    try{r.al=document.getElementById('rf-al')?.value.trim()||'None';}catch(e){}
-    try{r.ec=document.getElementById('rf-ec')?.value.trim()||'';}catch(e){}
-    try{r.nt=document.getElementById('rf-nt')?.value.trim()||'';}catch(e){}
-    toast('Resident saved');
-  }
-  closePanel();redR();
-}
-function delR(id){const i=RES.findIndex(r=>r.id===id);if(i>-1)RES.splice(i,1);redR();toast('Resident deleted');}
-
-/* ═══ QR PRINT ═══ */
-function doPrintQR(){
-  const r=_qrr;if(!r)return;
-  const url=window.location.href.split('?')[0]+'?scan=1&rid='+r.id;
-  const pz=document.getElementById('pz');pz.style.display='flex';
-  pz.innerHTML=`<div style="font-family:Inter,sans-serif;background:#fff;color:#000;padding:20px;border-radius:8px;width:256px;text-align:center;border:2px solid #ef4444;"><div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:3px;">⚠ EMERGENCY USE ONLY</div><div style="font-size:17px;font-weight:700;margin-bottom:1px">${r.fn} ${r.ln}</div><div style="font-size:11px;color:#555;margin-bottom:11px">Room ${r.rm} · Green Meadows</div><div id="pqr" style="background:#fff;display:inline-block;padding:6px;border:1px solid #eee;border-radius:3px;margin-bottom:9px"></div><div style="font-size:10px;color:#444;line-height:1.6;border-top:1px solid #eee;padding-top:7px">Scan to immediately notify emergency dispatch.<br><strong style="color:#ef4444">Also call 911 if life-threatening.</strong><br><span style="color:#aaa;font-size:9px">ID: ${r.id}</span></div></div>`;
-  setTimeout(()=>{new QRCode(document.getElementById('pqr'),{text:url,width:140,height:140,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.H});setTimeout(()=>{window.print();pz.style.display='none';},300);},50);
+/* --- mobile emergency form (uses same logic as desktop) --- */
+function MobileFormScreen({ resident, employees, nursingHome, onBack, onSubmit }) {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <div className="px-5 pt-5 pb-3 flex items-center gap-3 border-b border-[#1a1a1a]">
+        <button onClick={onBack} className="p-1 -ml-1 text-gray-400"><Icon.ArrowLeft className="w-5 h-5"/></button>
+        <div>
+          <div className="text-[15px] font-semibold tracking-tight">Contact Dispatcher</div>
+          <div className="text-[11px] text-gray-500">{resident.name} · Room {resident.room}</div>
+        </div>
+      </div>
+      <div className="flex-1 overflow-y-auto">
+        <MobileForm resident={resident} employees={employees} nursingHome={nursingHome} onSubmit={onSubmit}/>
+      </div>
+    </div>
+  );
 }
 
-/* ═══ EMPLOYEES ═══ */
-function pSearch(q){_pq=q.toLowerCase();redP();}
-function redP(){
-  let list=EMP.filter(e=>!_pq||(e.fn+' '+e.ln+e.em+e.dp).toLowerCase().includes(_pq));
-  const tb=document.getElementById('p-tb');
-  if(!list.length){tb.innerHTML='<tr><td colspan="6"><div class="empty"><span class="mio">badge</span><p>No employees found</p></div></td></tr>';return;}
-  tb.innerHTML=list.map(e=>`<tr onclick="openPanel('edit-p','${e.id}')" oncontextmenu="pCtx(event,'${e.id}')">
-    <td style="font-weight:500">${e.fn}</td><td>${e.ln}</td>
-    <td><span class="bdg ${e.rl==='Administrator'?'badm':'bemp'}">${e.rl}</span></td>
-    <td>${e.dp}</td><td class="m">${e.em}</td><td class="m">${e.ph}</td>
-  </tr>`).join('');
-}
-function pCtx(ev,id){
-  showCtx(ev,[
-    {icon:'edit',oi:true,label:'Edit',action:()=>openPanel('edit-p',id)},
-    {icon:'add',oi:false,label:'Add employee',action:()=>openPanel('add-p',null)},
-    {icon:'swap_horiz',oi:true,label:'Toggle role',action:()=>toggleRole(id)},
-    '-',
-    {icon:'delete',oi:true,label:'Delete',danger:true,action:()=>delP(id)},
-  ]);
-}
-function saveEmp(){
-  const fn=document.getElementById('pf-fn')?.value.trim();const ln=document.getElementById('pf-ln')?.value.trim();const em=document.getElementById('pf-em')?.value.trim();
-  if(!fn||!ln||!em){toast('Fill required fields','err');return;}
-  EMP.unshift({id:'P'+uid(),fn,ln,rl:document.getElementById('pf-rl')?.value||'Employee',dp:document.getElementById('pf-dp')?.value||'Medical',em,ph:document.getElementById('pf-ph')?.value.trim()||''});
-  closePanel();redP();toast('Employee added');
-}
-function saveEmpEdit(id){
-  const e=EMP.find(x=>x.id===id);if(!e)return;
-  const fn=document.getElementById('pf-fn')?.value.trim();const ln=document.getElementById('pf-ln')?.value.trim();const em=document.getElementById('pf-em')?.value.trim();
-  if(!fn||!ln||!em){toast('Fill required fields','err');return;}
-  e.fn=fn;e.ln=ln;e.rl=document.getElementById('pf-rl')?.value||e.rl;e.dp=document.getElementById('pf-dp')?.value||e.dp;e.em=em;e.ph=document.getElementById('pf-ph')?.value.trim()||e.ph;
-  closePanel();redP();toast('Employee saved');
-}
-function toggleRole(id){const e=EMP.find(x=>x.id===id);if(!e)return;e.rl=e.rl==='Administrator'?'Employee':'Administrator';redP();toast('Role updated to '+e.rl);}
-function delP(id){const i=EMP.findIndex(e=>e.id===id);if(i>-1)EMP.splice(i,1);redP();toast('Employee deleted');}
+function MobileForm({ resident, employees, nursingHome, onSubmit }) {
+  const [emergencyType, setEmergencyType] = useState('');
+  const [severity, setSeverity] = useState('medium');
+  const [description, setDescription] = useState('');
+  const [employeeMode, setEmployeeMode] = useState('select');
+  const [employeeName, setEmployeeName] = useState('');
+  const [manualName, setManualName] = useState('');
 
-/* ═══ SCAN PAGE ═══ */
-function initScan(){const p=new URLSearchParams(window.location.search);const rid=p.get('rid');const r=RES.find(x=>x.id===rid);document.getElementById('sc-name').textContent=r?r.fn+' '+r.ln:'Unknown Resident';document.getElementById('sc-meta').textContent=r?'Room '+r.rm+' · Green Meadows Care Center':'Green Meadows Care Center';}
-function submitScan(){
-  const tp=document.getElementById('sc-t').value.trim();const sv=document.getElementById('sc-s').value;const nu=document.getElementById('sc-n').value.trim();
-  if(!tp){toast('Please enter emergency type','err');return;}if(!sv){toast('Please select severity','err');return;}if(!nu){toast('Please enter your name','err');return;}
-  const p=new URLSearchParams(window.location.search);const rid=p.get('rid');const r=RES.find(x=>x.id===rid);
-  EMG.unshift({id:'E'+uid(),rid:rid||'UNKNOWN',tp,ds:document.getElementById('sc-d').value.trim()||tp,rm:r?r.rm:'—',ts:new Date(),st:'Accepted',sv,ch:[{w:'System',m:'Submitted via QR scan by '+nu+'. EMS contacted automatically.',t:new Date()}]});
-  document.getElementById('sc-form').style.display='none';document.getElementById('sc-ok').style.display='flex';
+  const finalEmployeeName = employeeMode === 'manual' ? manualName : employeeName;
+  const valid = emergencyType && severity && finalEmployeeName;
+
+  const submit = () => {
+    if (!valid) return;
+    const now = Date.now();
+    const id = 'CFS' + String(Math.floor(Math.random()*900000)+100000).padStart(6,'0');
+    const refNumber = String(260500000 + Math.floor(Math.random()*99999) + 1);
+    onSubmit({
+      id, refNumber, residentId: resident.id,
+      employeeName: finalEmployeeName,
+      employeeManual: employeeMode === 'manual',
+      emergencyType, severity, description,
+      status: 'active', createdAt: now, source: 'qr',
+      location: nursingHome.address,
+      callerNumber: nursingHome.callerNumber,
+      messages: [
+        { from: 'dispatcher', text: 'Hello, this is 911 dispatch. What is your emergency?', ts: now },
+        { from: 'caller', text: `${emergencyType} — ${severity} severity. ${description || ''}`.trim(), ts: now + 2000 },
+        { from: 'caller', type: 'location', address: `${nursingHome.address} — Room ${resident.room}`, ts: now + 3000 },
+      ],
+    });
+  };
+
+  return (
+    <div className="px-5 py-5 space-y-4 pb-32">
+      {/* Resident pinned card */}
+      <div className="px-4 py-3 rounded-xl bg-primary/10 border border-primary/30">
+        <div className="text-[10px] uppercase tracking-widest text-primary font-semibold mb-1">Resident (auto-filled)</div>
+        <div className="text-[14px] font-semibold">{resident.name}</div>
+        <div className="text-[12px] text-gray-300">Room {resident.room} · Age {resident.age}</div>
+        <div className="text-[11px] text-gray-400 mt-1">{resident.conditions}</div>
+      </div>
+
+      <Field label="Emergency Type">
+        <input className={inputCls} placeholder="e.g. Fall, Chest pain" value={emergencyType} onChange={e=>setEmergencyType(e.target.value)}/>
+      </Field>
+
+      <Field label="Severity">
+        <div className="grid grid-cols-3 gap-2">
+          {['low','medium','high'].map(s => (
+            <button key={s} type="button" onClick={()=>setSeverity(s)}
+              className={`py-2.5 rounded-lg text-[12px] font-semibold uppercase tracking-wider border ${
+                severity===s
+                  ? (s==='low' ? 'sev-low' : s==='medium' ? 'sev-medium' : 'sev-high')
+                  : 'bg-[#161616] border-[#262626] text-gray-500'
+              }`}>
+              {s}
+            </button>
+          ))}
+        </div>
+      </Field>
+
+      <Field label="Description (optional)">
+        <textarea rows={3} className={inputCls} placeholder="Symptoms, what happened…" value={description} onChange={e=>setDescription(e.target.value)}/>
+      </Field>
+
+      <div>
+        <div className="flex items-center justify-between mb-1.5">
+          <label className="block text-[11px] uppercase tracking-wider text-gray-500 font-semibold">Reporting Employee</label>
+          <div className="flex bg-[#161616] border border-[#262626] rounded-md p-0.5">
+            <button type="button" onClick={()=>setEmployeeMode('select')} className={`px-2.5 py-1 text-[11px] rounded ${employeeMode==='select' ? 'bg-[#2a2a2a] text-white' : 'text-gray-500'}`}>From list</button>
+            <button type="button" onClick={()=>setEmployeeMode('manual')} className={`px-2.5 py-1 text-[11px] rounded ${employeeMode==='manual' ? 'bg-[#2a2a2a] text-white' : 'text-gray-500'}`}>Manually</button>
+          </div>
+        </div>
+        {employeeMode === 'select' ? (
+          <select className={inputCls} value={employeeName} onChange={e=>setEmployeeName(e.target.value)}>
+            <option value="">Select employee…</option>
+            {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name} — {emp.role}</option>)}
+          </select>
+        ) : (
+          <input className={inputCls} placeholder="Type your name" value={manualName} onChange={e=>setManualName(e.target.value)}/>
+        )}
+      </div>
+
+      {/* Sticky submit */}
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md px-5 py-4 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/95 to-transparent">
+        <button disabled={!valid} onClick={submit}
+          className="w-full btn-primary py-3.5 rounded-xl font-semibold text-[14px] flex items-center justify-center gap-2 shadow-lg shadow-primary/30 disabled:opacity-40 disabled:cursor-not-allowed">
+          <Icon.Siren className="w-4 h-4"/>Submit & Open Chat
+        </button>
+      </div>
+    </div>
+  );
 }
 
-/* ═══ INIT ═══ */
-(function(){const p=new URLSearchParams(window.location.search);if(p.get('scan')==='1'){sv('view-scan');initScan();}else{sv('view-login');}})();
+/* --- mobile chat screen — matches uploaded design --- */
+function MobileChatScreen({ cfs, resident, onSendMessage, onSendLocation }) {
+  const [input, setInput] = useState('');
+  const [attachOpen, setAttachOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [cfs.messages.length]);
+
+  const send = () => {
+    if (!input.trim()) return;
+    onSendMessage(input.trim());
+    setInput('');
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <div className="px-3 pt-4 pb-3 flex items-center gap-2 border-b border-[#1a1a1a] sticky top-0 bg-[#0a0a0a] z-10">
+        <button className="p-1 text-gray-400"><Icon.ArrowLeft className="w-5 h-5"/></button>
+        <div className="flex-1">
+          <div className="text-[15px] font-semibold tracking-tight">Chat with Dispatcher</div>
+          <div className="flex items-center gap-1.5 text-[11px] text-primary">
+            <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot"/>
+            <span className="font-medium">LIVE · Ref #{cfs.refNumber}</span>
+          </div>
+        </div>
+        <button onClick={()=>setDetailsOpen(true)} className="p-2 rounded-lg bg-[#1a1a1a] border border-[#262626]">
+          <Icon.File className="w-4 h-4 text-gray-300"/>
+        </button>
+      </div>
+
+      {/* Messages */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3 no-scrollbar">
+        {cfs.messages.map((m, i) => <ChatBubble key={i} msg={m}/>)}
+      </div>
+
+      {/* Attach popover */}
+      {attachOpen && (
+        <div className="absolute bottom-20 left-3 bg-[#161616] border border-[#262626] rounded-xl py-1 shadow-xl z-20 w-44">
+          {[
+            { icon: <Icon.Camera className="w-4 h-4"/>, label: 'Photo', action: ()=>{} },
+            { icon: <Icon.Video className="w-4 h-4"/>, label: 'Video', action: ()=>{} },
+            { icon: <Icon.File className="w-4 h-4"/>, label: 'File', action: ()=>{} },
+            { icon: <Icon.MapPin className="w-4 h-4"/>, label: 'Location', action: () => { onSendLocation(); setAttachOpen(false); }},
+          ].map((it, i) => (
+            <button key={i} onClick={it.action}
+              className="w-full flex items-center gap-3 px-3.5 py-2.5 text-[13px] text-gray-200 hover:bg-[#1f1f1f] transition">
+              <span className="text-gray-400">{it.icon}</span>{it.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Input bar */}
+      <div className="px-3 py-3 border-t border-[#1a1a1a] flex items-center gap-2 sticky bottom-0 bg-[#0a0a0a]">
+        <button onClick={()=>setAttachOpen(o=>!o)} className="p-2.5 rounded-full bg-primary text-white flex-shrink-0">
+          <Icon.Plus className="w-4 h-4"/>
+        </button>
+        <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&send()}
+          placeholder="Message…"
+          className="flex-1 bg-[#161616] border border-[#262626] rounded-full px-4 py-2.5 text-[13px] focus:outline-none focus:border-[#3a3a3a]"/>
+        <button className="p-2 text-gray-500"><Icon.Mic className="w-4 h-4"/></button>
+        <button onClick={send} className="p-2 text-primary"><Icon.Send className="w-4 h-4"/></button>
+      </div>
+
+      {/* Details overlay (matches "Caller Details" + "Media and files" combined) */}
+      {detailsOpen && (
+        <div className="fixed inset-0 bg-[#0a0a0a] z-30 max-w-md mx-auto flex flex-col">
+          <div className="px-3 pt-4 pb-3 flex items-center gap-2 border-b border-[#1a1a1a]">
+            <button onClick={()=>setDetailsOpen(false)} className="p-1 text-gray-400"><Icon.ArrowLeft className="w-5 h-5"/></button>
+            <div className="text-[15px] font-semibold tracking-tight">Caller Details</div>
+          </div>
+          <div className="flex-1 overflow-y-auto px-5 py-5 space-y-4 no-scrollbar text-[13px]">
+            <DetailRow label="Call Reference" value={`${cfs.refNumber} (${cfs.id})`}/>
+            <DetailRow label="Location" value={cfs.location}/>
+            <DetailRow label="Caller Number" value={cfs.callerNumber}/>
+            <DetailRow label="Caller Requested" value={`${formatDate(cfs.createdAt)}, ${formatTime(cfs.createdAt)}`}/>
+            <DetailRow label="Severity" value={
+              <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase sev-${cfs.severity}`}>{severityLabel(cfs.severity)}</span>
+            }/>
+            <div className="border-t border-[#1f1f1f] pt-4 space-y-3">
+              <div className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold">Resident</div>
+              <DetailRow label="Name" value={resident.name}/>
+              <DetailRow label="Room" value={resident.room}/>
+              <DetailRow label="Age" value={resident.age}/>
+              <DetailRow label="Conditions" value={resident.conditions}/>
+              <DetailRow label="Emergency Contact" value={`${resident.emergencyContact} · ${resident.contactPhone}`}/>
+            </div>
+            <div className="border-t border-[#1f1f1f] pt-4 space-y-3">
+              <div className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold">Reporter</div>
+              <DetailRow label="Employee" value={`${cfs.employeeName}${cfs.employeeManual ? ' (manual entry)' : ''}`}/>
+              <DetailRow label="Description" value={cfs.description || '—'}/>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ========================================================================
+   MOUNT
+   ======================================================================== */
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App/>);
 </script>
 </body>
 </html>
